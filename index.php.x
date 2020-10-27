@@ -1,0 +1,1 @@
+<?php echo "<center>Access to this website has been terminated.</center>";
