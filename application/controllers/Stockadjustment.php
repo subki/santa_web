@@ -14,7 +14,6 @@ class Stockadjustment extends IO_Controller {
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->helper('file');
-
     }
 
     function index(){

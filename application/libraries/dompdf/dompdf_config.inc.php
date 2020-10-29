@@ -242,7 +242,7 @@ def("DOMPDF_DEFAULT_FONT", "serif");
  *
  * @var int
  */
-def("DOMPDF_DPI", 96);
+def("DOMPDF_DPI", 72); //subki edit dari 96 menjadi 72
 
 /**
  * Enable inline PHP

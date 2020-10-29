@@ -36,7 +36,7 @@
  * @since	Version 1.0.0
  * @filesource
  */
-session_start();
+//session_start();
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.use_cookies', 1);
