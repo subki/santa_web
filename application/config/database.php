@@ -96,6 +96,7 @@ $db['default'] = array(
     'save_queries' 	=> TRUE
 );
 
+
 $db['defaultx'] = array(
     'dsn'			=> '',
     'hostname' 		=> 'localhost',
