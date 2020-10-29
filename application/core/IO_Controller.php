@@ -55,7 +55,6 @@ class IO_Controller extends CI_Controller {
             $this->session->set_userdata(array($row->kunci => $row->nilai));
         }
 //        $this->checkPeriod('ABC','2020-06-03');
-//        var_dump($this->session->userdata());die;
         if (!$this->session->userdata('logged_in')
             || $this->session->userdata('logged_in')==null) {
 

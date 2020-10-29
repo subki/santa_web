@@ -42,10 +42,7 @@ class Auth extends CI_Controller {
                     'logged_in' => TRUE
                 );
 
-
                 $this->session->set_userdata($sess_array);
-//                var_dump($this->session->userdata());die;
-
 
                 redirect(base_url() . 'welcome', 'refresh');
             }else{
