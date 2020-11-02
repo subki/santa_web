@@ -37,10 +37,20 @@ class Pickup extends IO_Controller {
         try {
             $read = $this->model->read_data_by_so($code);
             if ($read->num_rows() > 0) { 
-                $result = 1;
-                $status = 'Pick Up';
-                $msg="SO ini sudah di Pickup";
-                $data = $read->result()[0];
+                $statuspick=$read->row()->status; 
+                if($statuspick=='Open'){
+                    $result = 0;
+                    $status = 'Unpost';
+                    $msg="OK";
+                    $data = $read->result()[0];
+                }
+                else{
+                    $result = 1;
+                    $status = 'Pick Up';
+                    $msg="SO ini sudah di Pickup";
+                    $data = $read->result()[0];
+                }
+                
             } else {
                 $result = 0;
                 $status = 'Unpost';
@@ -422,19 +432,30 @@ class Pickup extends IO_Controller {
 
             $pickup = $this->input->post("pickup");
             $pickupdate = $this->input->post("pickupdate");
-            // var_dump($pickup);
-            // var_dump($pickupdate);
             $data = array(
                     'user' => $pickup,
                     'tgl_pickup' => $this->formatDate("Y-m-d",$pickupdate),
                     'updby' => $this->session->userdata('user_id'),
                     'upddt' => date('Y-m-d H:i:s') 
                 );
-            $result = 0;
-            $msg="OK";
-            $this->model->updatestatuspickdetail($docno); 
-            $this->model->updatestatuspick($docno);
-            $this->model->update_data($docno, $data); 
+            $cek = $this->model->cekstatusSOonline($docno);  
+           foreach ($cek->result() as $row)
+                   { 
+                      $msg= $cek->row()->docno; 
+                   };
+            if($cek->num_rows() > 0){
+                $result = 0;
+                $msg="SO Online masih keadaan Open, Silahkan melakukan Posting pada No ini ".$cek->row()->docno;
+                
+            }
+            else{
+
+                $result = 0;
+                $msg="OK";
+                $this->model->updatestatuspickdetail($docno); 
+                $this->model->updatestatuspick($docno);
+                $this->model->update_data($docno, $data); 
+            }
             echo json_encode(array(
                 "status" => $result, "isError" => ($result==1),
                 "msg" => $msg, "message" => $msg 

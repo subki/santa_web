@@ -158,14 +158,20 @@ function pickupget() {
                     pickupdate:pickupdate 
                 },
                 success:function(result){  
-                console.log(result.status)
+               //console.log(result.status)
                        if(result.status===0) { 
-                         window.location.href = base_url + "Pickup/form/edit?id=" + docno
+                            $.messager.show({
+                                title: 'Error',
+                                msg: result.message, 
+                                handler:function () {
+                                   window.location.href = base_url + "Pickup/form/edit?id=" + docno
+                                }
+                            }); 
                         }
                         else {
                             $.messager.show({
                                 title: 'Error',
-                                msg: e.message,
+                                msg: result.message,
                                 handler:function () {
                                     window.location.href = base_url+"Pickup";
                                 }
