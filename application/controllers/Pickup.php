@@ -3,20 +3,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pickup extends IO_Controller {
 
-    function __construct(){
+    function __construct(){ 
 
         parent::__construct();
         $this->load->model('Pickup_model','model');
         $this->load->library('form_validation');
         $this->load->helper('file');
     }
-
+  
     function index($aksi=""){
         $data['title'] = 'Pickup List';
         $data['content'] = $this->load->view('vPickup', $data, TRUE);
         $this->load->view('main',$data);
     }
-
+ 
     function form($aksi=""){
         $data['aksi']=$aksi;
         if($aksi=="add"){
@@ -552,6 +552,7 @@ class Pickup extends IO_Controller {
             $result = 1;
             $msg="Kode tidak valid";
         }
+        
         echo json_encode(array(
             "status" => $result, "isError" => ($result==1),
             "msg" => $msg, "message" => $msg
