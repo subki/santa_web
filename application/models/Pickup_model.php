@@ -69,6 +69,10 @@ class Pickup_model extends CI_Model {
         $q = $this->query." where id='$code'";
         return $this->db->query($q);
     }
+    function cekfase_data($tgl,$cscode){
+        $q = "SELECT *  from pickup_h where tgl='$tgl' and ekspedisiby ='$cscode' and status='Open'";
+        return $this->db->query($q);
+    }
     function read_datadetail($code){
         $q = "SELECT count(*) jumlah from pickup_d where pickup_h_id='$code'";
         return $this->db->query($q);
@@ -534,4 +538,5 @@ class Pickup_model extends CI_Model {
         $this->db->query($sql); 
         return $this->db->query($sql);
     }
+     
 }

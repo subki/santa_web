@@ -3,20 +3,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pickup extends IO_Controller {
 
-    function __construct(){ 
+    function __construct(){
 
         parent::__construct();
         $this->load->model('Pickup_model','model');
         $this->load->library('form_validation');
         $this->load->helper('file');
     }
-  
+
     function index($aksi=""){
         $data['title'] = 'Pickup List';
         $data['content'] = $this->load->view('vPickup', $data, TRUE);
         $this->load->view('main',$data);
     }
- 
+
     function form($aksi=""){
         $data['aksi']=$aksi;
         if($aksi=="add"){
@@ -92,9 +92,12 @@ class Pickup extends IO_Controller {
 
     }
     function save_data_header(){
-       $input =$this->input->post();  
-    $docno = $this->model->generate_auto_number($input['so_number']);
-      $data = array( 
+        $input =$this->input->post();  
+        $docno = $this->model->generate_auto_number($input['so_number']);
+        $tgl=$this->formatDate("Y-m-d",$input['doc_date']);
+        $cscode=$input['customer_code'];
+
+             $data = array( 
                     'tgl' => $this->formatDate("Y-m-d",$input['doc_date']),
                     'ekspedisi' => $input['pickupby'],
                     'fase_pickup' => $input['fase'],
@@ -107,7 +110,43 @@ class Pickup extends IO_Controller {
                     'crtby' => $this->session->userdata('user_id'),
                     'crtdt' => date('Y-m-d H:i:s'),
                 ); 
-                $id=$this->model->insert_data($data);
+
+        $data1 = $this->model->cekdatapickup($tgl)->row();
+        $cekrecord=$this->model->cekdatapickup($tgl)->num_rows(); 
+        $cekfase = $this->model->cekfase_data($tgl,$cscode);
+        if ($cekfase->num_rows() > 0) {
+            $id=$cekfase->row()->id;
+                $data = array( 
+                    'tgl' => $this->formatDate("Y-m-d",$input['doc_date']),
+                    'ekspedisi' => $input['pickupby'],
+                    'fase_pickup' => $cekfase->row()->fase_pickup,
+                    'status' => $input['status'], 
+                    'line' => $input['fase'],
+                    'user' => $input['pickup_by'], 
+                    'ekspedisiby' => $input['customer_code'], 
+                    'ekspedisiname' => $input['customer_name'],
+                     
+                    'crtby' => $this->session->userdata('user_id'),
+                    'crtdt' => date('Y-m-d H:i:s'),
+                );  
+        }else{ 
+                $data = array( 
+                    'tgl' => $this->formatDate("Y-m-d",$input['doc_date']),
+                    'ekspedisi' => $input['pickupby'],
+                    'fase_pickup' => $data1->fase,
+                    'status' => $input['status'], 
+                    'line' => $input['fase'],
+                    'user' => $input['pickup_by'], 
+                    'ekspedisiby' => $input['customer_code'], 
+                    'ekspedisiname' => $input['customer_name'],
+                     
+                    'crtby' => $this->session->userdata('user_id'),
+                    'crtdt' => date('Y-m-d H:i:s'),
+                );  
+            $id=$this->model->insert_data($data); 
+               
+        }
+         
                 $this->insert_log("pickup_h", "ekspedisi", "Add Header Data");
                 $result = 0;
                 $msg = "OK";
@@ -552,7 +591,6 @@ class Pickup extends IO_Controller {
             $result = 1;
             $msg="Kode tidak valid";
         }
-        
         echo json_encode(array(
             "status" => $result, "isError" => ($result==1),
             "msg" => $msg, "message" => $msg
@@ -579,8 +617,7 @@ class Pickup extends IO_Controller {
             if($cekrecord==0){
                $data=1;
             }
-            else{
-
+            else{ 
                $data=$data1->fase;
             }
         echo json_encode(array(

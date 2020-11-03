@@ -77,7 +77,7 @@
                         </div> -->
                         <div style="float:right; width:15%;">
                             <input name="fase" id="fase" class="easyui-textbox" label="Fase#"  labelPosition="top" tipPosition="bottom"
-                                   required="true" readonly="true" label=" " style="width:100%">
+                                   readonly="true" label=" " style="width:100%">
                         </div>
                          <div style="float:left; width: 50%; padding-right: 5px;">
                             <input name="pickup_by" id="pickup_by" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="PickUp By:" style="width:100%">

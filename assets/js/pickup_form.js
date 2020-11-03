@@ -22,15 +22,15 @@ $(document).ready(function () {
                 tgl: tglset 
             },
             success:function(result){ 
-                console.log(result);
+              //  console.log(result);
                 if(result.data==0){ 
                     var faseadd=1; 
                 }
                 else{ 
                     var faseadd=result.data; 
                 }
-                $("#fase").textbox('setText',faseadd); 
-                $("#fase").textbox('setValue',faseadd); 
+                $("#fase").textbox('setText',''); 
+                $("#fase").textbox('setValue',''); 
             }
         });
  
