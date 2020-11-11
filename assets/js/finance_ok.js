@@ -183,7 +183,12 @@ function unpostingWSSelected(){
 function viewData(){
     let row = getRow();
     if(row==null) return
-    window.location.href = base_url+"wholesales/form/view?id="+row.id
+    var jenis = $("#jenis").val()
+    if(jenis==="WHOLESALES") window.open(base_url+"wholesales/form/view?id="+row.id,'_blank')
+    else if(jenis==="SHOWROOM") window.open(base_url+"wholesales/form/view?id="+row.id,'_blank')
+    else if(jenis==="SALES ONLINE") window.open(base_url+"wholesales/form/view?id="+row.id,'_blank')
+    else if(jenis==="OUTLET") window.open(base_url+"wholesales/form/view?id="+row.id,'_blank')
+    else $.messager.alert('Error','Please select the data')
 }
 function exportData() {
     getParamOption("dg", function (x, x1, x2) {
