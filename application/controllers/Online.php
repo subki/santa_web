@@ -143,8 +143,7 @@ class Online extends IO_Controller {
                 );
                 if($input['status']=="ON ORDER"){
                     $data['posting_date'] = date('Y-m-d');
-                }
-
+                } 
                 $this->insert_log("sales_order_header", $input['docno'], $input['status'].": Update Header Data");
                 $this->model->update_data($input['docno'], $data);
 

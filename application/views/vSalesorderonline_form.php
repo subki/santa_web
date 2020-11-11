@@ -164,7 +164,7 @@
                     </div> 
                     <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                         <div style=" padding-right: 10px; width: 45%">
-                            <input name="disc1_persen" id="disc1_persen" class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Disc 1:" style="width:100%">
+                            <input name="disc1_persen" id="disc1_persen" class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom"  label="Disc 1:" style="width:100%">
                         </div>
                         <div style="width: 45%">
                             <input name="disc2_persen" id="disc2_persen" class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" label="Disc 2:" style="width:100%">

@@ -95,7 +95,7 @@ function initHeader() {
 
     initGrid();
  
-    // $("#update").show();
+    $("#update").show();
     $("#submit").hide();
     if(so_item.status==="ON ORDER"){
         $("#posting").linkbutton({text:"UnSubmit"});
@@ -934,8 +934,8 @@ function read_pickinglist(callback) {
         url:base_url+"Pickup/read_data_by_so/"+so_item.docno,
         dataType:"json",
         success:function(result){
-           //console.log(result.result)
-           if(result.result > 0) callback("Sudah ada transaksi Pickup. Unposting transaksi gagal.")
+         // console.log(result)
+           if(result.result > 0) callback("Transaksi sudah Pickup. Unposting transaksi gagal.")
            else callback("OK")
         }
     });

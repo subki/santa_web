@@ -13,7 +13,8 @@ class Pickup_model extends CI_Model {
          DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddtformat,IFNULL(u1.fullname, a.updby) AS updby2 from $this->table  a
                 LEFT JOIN users u1 ON a.updby=u1.user_id";
         $this->query2 = "SELECT * from $this->table2";
-        $this->query3 = "SELECT * from $this->tabledetail";
+        $this->query3 = "SELECT d.*,s.status onlinestatus FROM pickup_d d
+                        INNER JOIN so_online_header s ON s.docno=d.barcode";
     }
 
     function get_list_data($page,$rows,$sort,$order,$role,$fltr){
@@ -35,7 +36,7 @@ class Pickup_model extends CI_Model {
     }
 
     function read_data_by_so($code){
-        $q = $this->query3." where barcode='$code'";
+        $q = $this->query3." where barcode='$code' AND s.status IN('OPEN','ON ORDER')";
         return $this->db->query($q);
     }
     function get_list_dataexpedisi($page,$rows,$sort,$order,$role,$fltr){
@@ -66,6 +67,10 @@ class Pickup_model extends CI_Model {
     }
     function read_data($code){
         $q = $this->query." where id='$code'";
+        return $this->db->query($q);
+    }
+    function cekfase_data($tgl,$cscode){
+        $q = "SELECT *  from pickup_h where tgl='$tgl' and ekspedisiby ='$cscode' and status='Open'";
         return $this->db->query($q);
     }
     function read_datadetail($code){
@@ -344,6 +349,14 @@ class Pickup_model extends CI_Model {
         return $this->db->query($sql)->row()->seqno;
     }
 
+    function cekstatusSOonline($docno){
+        $sql = "SELECT s.docno,s.status FROM pickup_h h
+                INNER JOIN pickup_d d ON d.pickup_h_id=h.id
+                INNER JOIN so_online_header s ON s.docno=d.barcode
+                WHERE h.id='$docno' AND s.status='OPEN'";
+        return $this->db->query($sql);
+    }
+
     function cek_detail($docno, $nobar, $tipe){
         $this->db->where('docno',$docno);
         $this->db->where('nobar',$nobar);
@@ -525,4 +538,5 @@ class Pickup_model extends CI_Model {
         $this->db->query($sql); 
         return $this->db->query($sql);
     }
+     
 }
