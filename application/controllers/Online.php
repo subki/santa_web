@@ -236,7 +236,7 @@ class Online extends IO_Controller {
       function print_so($docno){
           $read = $this->model->read_data($docno);
           $readcount = $this->model->count_data($docno)->row(); 
-          $path = FCPATH."assets/barcode/".$docno.".jpg";
+          $path = FCPATH."assets/barcode/".$docno.".png";
           $this->barcode($path,$docno,"50","horizontal","Code128","true",1);
           $data=array();
           if ($read->num_rows() > 0) {
@@ -249,13 +249,51 @@ class Online extends IO_Controller {
               $data['det'] = $this->model->get_list_data_detailprint($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
               $data['barcode'] = $path;
           }
-          
-          // $this->load->library('pdf');
-          // $this->pdf->load_view('print/salesorderonline', $data);
-          // $this->pdf->render();
 
-          // $this->pdf->stream($docno.'.pdf',array("Attachment"=>0));
-           $this->load->view('print/salesorderonline',$data);
+          $this->load->library('escpos');
+          $connector = new Escpos\PrintConnectors\WindowsPrintConnector("EPSON TM-U220 Receipt");
+          $printer = new Escpos\Printer($connector);
+
+          $printer->initialize();
+          $tux = Escpos\EscposImage::load($data['barcode'], true);
+          $printer -> bitImageColumnFormat($tux, Escpos\Printer::IMG_DOUBLE_WIDTH | Escpos\Printer::IMG_DOUBLE_HEIGHT);
+          $printer -> feed();
+
+          $printer->initialize();
+          $printer->setLineSpacing(25);
+          $printer->text("No. / Cust : ".$data['so']->ak_docno." / ".$data['so']->customer_name."\n");
+          $printer->text("SO Date    : ".$data['so']->ak_doc_date."\n");
+          $printer->text("SO         : ".$data['so']->so_no."\n");
+
+          $width = array(8,18,12);
+          $printer->initialize();
+          $printer->setLineSpacing(25);
+          $printer->setFont(Escpos\Printer::FONT_B);
+          $printer->text("----------------------------------------\n");
+          $printer->text($this->createRowColumn(array("No","Item#","Qty"),array("text","text","text"),$width));
+          $printer->text("----------------------------------------\n");
+          $qty = 0;
+          foreach ($data['det'] as $i => $detail){
+              $qty += $detail->qty_order;
+              $printer->text($this->createRowColumn(array($i+1,$detail->product_code,number_format($detail->qty_order).$detail->uom_id), array("text","text","curr"),$width));
+          }
+          $printer->text("----------------------------------------\n");
+          $printer->text("Item       : ".count($data['det'])."\n");
+          $printer->text("Qty        : ".number_format($qty)."\n");
+          $printer->text("----------------------------------------\n");
+          $printer->text("Print      : ".$data['so']->crtby."\n");
+          $printer->text(date('d/m/Y H:i:s')."\n");
+          if($data['so']->jumlah_print>=1){
+              $printer->text("Copied ".$data['so']->jumlah_print."\n");
+          }
+
+          $printer->initialize();
+          $printer->setLineSpacing(25);
+          $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+          $printer -> feed();
+          $printer->text($this->createRowColumn(array("Disiapkan","Packing","Checked"),array("text","text","text"),array(13,12,13)));
+          $printer -> feed(4);
+          $printer->text($this->createRowColumn(array("(___________)","(__________)","(___________)"),array("text","text","text"),array(13,12,13)));
 
       }
 

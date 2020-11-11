@@ -1,5 +1,11 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+function pre($data, $next = 0){
+    echo '<pre>';
+    print_r($data);
+    echo '</pre>';
+    if(!$next){ exit; }
+}
 function io_date_format($var,$format){
 
     if(trim($var)==''){
