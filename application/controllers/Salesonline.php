@@ -233,7 +233,7 @@ class Salesonline extends IO_Controller {
 
 
     function load_grid_detail($docno){
-        $f = $this->getParamGrid(" a.docno='$docno' ","seqno");
+        $f = $this->getParamGrid(" a.docno='$docno' GROUP BY a.docno,a.nobar ","seqno");
         $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,

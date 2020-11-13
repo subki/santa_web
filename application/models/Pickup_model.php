@@ -436,10 +436,11 @@ class Pickup_model extends CI_Model {
        $this->db->query("INSERT INTO sales_online_header(docno,doc_date,store_code,so_number,jenis_faktur,remark,customer,sales,tipe_komisi,komisi,
                         disc1_persen,disc2_persen,qty_item,qty,gross_sales,total_ppn,total_discount,sales_before_tax,sales_after_tax,posting_date,
                         STATUS,sales_toko,so_no,jumlah_print,crtby,crtdt,updby,upddt) 
-                        SELECT h.docno,h.doc_date,h.store_code,h.so_no,h.jenis_faktur,h.remark,h.customer_code,h.salesman_id,
+                        SELECT h.docno,p.tgl,h.store_code,h.so_no,h.jenis_faktur,h.remark,h.customer_code,h.salesman_id,
                         h.tipe_komisi,h.komisi_persen,h.disc1_persen,h.disc2_persen,h.qty_item,h.qty_order,h.gross_sales,h.total_ppn,h.total_discount,
                         h.sales_before_tax,h.sales_after_tax,
                         h.posting_date,'OPEN',h.sales_pada_toko,h.so_no,h.jumlah_print,h.crtby,h.crtdt,h.updby,h.upddt FROM pickup_d d
+                        INNER JOIN pickup_h p ON p.id= d.pickup_h_id 
                         INNER JOIN so_online_header h ON h.docno= d.barcode 
                         WHERE d.pickup_h_id='$docno'"); 
         $this->db->query("INSERT INTO sales_online_detail(docno,sales_date,so_number,seqno,product_tipe,nobar,product_code,TYPE,komisi,qty_order,qty_sales,UOM,

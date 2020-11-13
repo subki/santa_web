@@ -22,8 +22,10 @@
         filter: alpha(opacity=60);
     }
 </style>
+
 <div id="tt">
     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+        <a href="javascript:void(0)" id="getdate" class="easyui-linkbutton" iconCls="icon-search" onclick="Opendialog()" style="width:90px; height: 20px;">Get Date</a>
         <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
         <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Update</a>
         <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-posting" onclick="submit('CLOSED')" style="width:90px; height: 20px;">Posting</a>
@@ -32,7 +34,7 @@
         <a href="javascript:void(0)" id="customer" class="easyui-linkbutton" iconCls="icon-customer" onclick="showCustomer()" style="width:90px; height: 20px;">Customer</a>
         <a href="javascript:void(0)" id="crt_faktur" class="easyui-linkbutton" iconCls="icon-tax" onclick="createFaktur()" style="width:140px; height: 20px;">Create Faktur</a>
         <a href="javascript:void(0)" id="btn_seri_pajak" class="easyui-linkbutton" iconCls="icon-tax" onclick="createSeriPajak()" style="width:90px; height: 20px;">Get FP</a>
-        <a href="javascript:void(0)" id="verify_fa" class="easyui-linkbutton" iconCls="icon-ok" onclick="verifyFA()" style="width:110px; height: 20px;">Finance</a>
+       <!--  <a href="javascript:void(0)" id="verify_fa" class="easyui-linkbutton" iconCls="icon-ok" onclick="verifyFA()" style="width:110px; height: 20px;">Finance</a> -->
     </div>
 </div>
 <div class="easyui-layout" style="width:100%;height:100%">
@@ -102,13 +104,10 @@
                             <input name="provinsi_name" id="provinsi_name" class="easyui-combogrid" labelPosition="top" tipPosition="bottom"
                                    readonly="true" label="Provinsi:"style="width:100%">
                         </div>
-                    </div>
-                    <div style="margin-bottom:1px">
-                        <input name="base_so" id="base_so" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="SO Number:" style="width:100%">
                     </div> 
                     <div style="margin-bottom:1px">
                         <div style="float:left; width: 85%; padding-right: 5px;">
-                            <input name="customer_code" readonly="true" id="customer_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Customer:" style="width:100%">
+                            <input name="customer_code" id="customer_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Customer:" style="width:100%">
                         </div>
                         <div style="float:right; width: 15%; padding-right: 5px;">
                             <input name="beda_fp" id="beda_fp" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
@@ -129,7 +128,7 @@
                     </div>
                 </div>
                 <div style="width: 40%; padding: 10px;">
-                    <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+                    <!-- <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                         <div style=" padding-right: 10px; width: 30%">
                             <input readonly="true" name="disc1_persen" id="disc1_persen" class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Disc 1:" style="width:100%">
                         </div>
@@ -139,14 +138,14 @@
                         <div style=" padding-right: 10px; width: 30%">
                             <input readonly="true" name="disc3_persen" id="disc3_persen" class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Disc 3:" style="width:100%">
                         </div>
-                    </div>
+                    </div> -->
                     <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                         <div style=" padding-right: 10px; width: 50%">
                             <input name="qty_item" id="qty_item" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                                    readonly="true" label="#ITEM:" style="width:100%">
                         </div>
                         <div style=" padding-right: 10px; width: 50%">
-                            <input name="qty" id="qty" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
+                            <input name="qty_order" id="qty_order" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                                    readonly="true" label="QTY SALES:" style="width:100%">
                         </div>
 <!--                        <div style=" padding-right: 10px; width: 25%">-->
@@ -159,9 +158,9 @@
 <!--                        </div>-->
                     </div>
 					<div style="margin-bottom:1px">
-                        <div style="float:left; width: 50%; padding-right: 5px;">
+                       <!--  <div style="float:left; width: 50%; padding-right: 5px;">
 							<input readonly="true" name="store_code" id="store_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Sales Toko:" style="width:100%">
-                        </div>
+                        </div> -->
                         <!-- <div style="float:right; width: 50%; padding-left: 5px;">
                             <input readonly="true" name="location_code" id="location_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Gudang:" style="width:100%">
                         </div> -->
@@ -212,4 +211,101 @@
             </div>
         </form>
     </div>
-</div>
+</div>    
+            <div id="w" class="easyui-dialog" data-options="iconCls:'icon-save',closed:true,modal:true,border:'thin',buttons:'#dlg-buttons'" style="width:80%;height:300px;padding:10px;"> 
+                <form action="" name="frm2" class="frm2" method="POST">
+                   <div style="margin-bottom:20px"> 
+                        <input id="dd"  class="easyui-datebox" label="Start Date:" data-options="labelPosition:'top',onSelect:onSelect"  labelPosition="top" style="width:50%;">
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input id="tdd" class="easyui-datebox" label="End Date:" labelPosition="top" style="width:50%;">
+                    </div> 
+                    <div style="margin-bottom:20px"> 
+                        <a href="javascript:void(0)" id="searchdate" class="easyui-linkbutton save" iconCls="icon-search"  style="width:90px; height: 20px;">Search</a>
+                    </div>  
+                    <div style="margin-bottom:20px"> 
+                        <span id="l"></span> <br>
+                        <a href="javascript:void(0)" id="postdetail" class="easyui-linkbutton postdetail" iconCls="icon-posting" style="width:90px; height: 20px;">Post</a>
+                    </div>  
+                 </form> 
+            </div> 
+<script> 
+    function Opendialog(){
+            $('#w').dialog('open').dialog('center').dialog('setTitle','Cari Tanggal Transaksi Daily'); 
+        }
+    function onSelect(date){ 
+ 
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var fulldate=y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
+            getdatefrom(fulldate); 
+         }
+         function getdatefrom(fulldate){
+
+            //console.log(fulldate);
+             $('#tdd').datebox().datebox('calendar').calendar({
+                validator: function(date){
+
+                    $("#postdetail").hide();
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate(); 
+                    var fulldateto=y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);  
+                    return fulldateto>=fulldate;
+                }
+            });
+         }
+  
+  
+          $("#postdetail").hide();
+          $(".save").click(function(){
+            var fromdate = $('#dd').datebox('getValue');
+            var todate = $('#tdd').datebox('getValue');  
+            var customer_code = $('#customer_code').combogrid('getValue'); 
+                $.ajax({
+                  type: 'POST',
+                  dataType:"json",
+                  url:base_url+"Rekapdaily/getDate", 
+                   data: {
+                       customer_code:customer_code,
+                       from:fromdate,
+                       to:todate
+                   },
+                  success: function(result) {
+                    console.log(result); 
+                    $("#l").text(result.total+" Data Dok. Daily Sales Online");
+                    if(result.total >= 1){ 
+                        $("#postdetail").show();
+                    } else{ 
+                        $("#postdetail").hide();
+                    }  
+                  }
+                });
+          }); 
+          $(".postdetail").click(function(){
+            var fromdate = $('#dd').datebox('getValue');
+            var todate = $('#tdd').datebox('getValue'); 
+            var customer_code = $('#customer_code').combogrid('getValue');  
+                $.ajax({
+                  type: 'POST',
+                  dataType:"json",
+                  url:base_url+"Rekapdaily/postdaily", 
+                   data: {
+                       docno:docno,
+                       customer_code:customer_code,
+                       from:fromdate,
+                       to:todate
+                   },
+                  success: function(result) { 
+                    if(result.status==1){
+                      alert(result.msg);
+                        location.reload(); 
+                    }else{
+                      alert(result.msg);
+                        location.reload(); 
+                    }
+                  }
+                });
+          }); 
+    </script>
