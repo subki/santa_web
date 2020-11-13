@@ -75,57 +75,57 @@ class Subki extends IO_Controller {
         }
 
         // Membuat judul
-//        $printer->initialize();
-//        $printer->setLineSpacing(25);
-//        $printer->selectPrintMode(Escpos\Printer::MODE_DOUBLE_HEIGHT); // Setting teks menjadi lebih besar
-//        $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER); // Setting teks menjadi rata tengah
-//        $printer->text("Nama Toko\n");
-//        $printer->text("\n");
+        $printer->initialize();
+        $printer->setLineSpacing(25);
+        $printer->selectPrintMode(Escpos\Printer::MODE_DOUBLE_HEIGHT); // Setting teks menjadi lebih besar
+        $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER); // Setting teks menjadi rata tengah
+        $printer->text("Nama Toko\n");
+        $printer->text("\n");
 
         // Data transaksi
-//        $printer->initialize();
-//        $printer->setLineSpacing(25);
-//        $printer->text("Kasir : Badar Wildanie\n");
-//        $printer->text("Waktu : 13-10-2019 19:23:22\n");
+        $printer->initialize();
+        $printer->setLineSpacing(25);
+        $printer->text("Kasir : Badar Wildanie\n");
+        $printer->text("Waktu : 13-10-2019 19:23:22\n");
 
         // Membuat tabel
-//        $printer->initialize(); // Reset bentuk/jenis teks
-//        $printer->setLineSpacing(25);
-//        $printer->setFont(Escpos\Printer::FONT_B);
-//        $printer->text("----------------------------------------\n");
-//        $printer->text(buatBaris4Kolom("Barang", "qty", "Harga", "Subtotal"));
-//        $printer->text("----------------------------------------\n");
-//        $printer->text(buatBaris4Kolom("Makaroni 250gr", "2pcs", "15.000", "30.000"));
-//        $printer->text(buatBaris4Kolom("Telur", "2pcs", "5.000", "10.000"));
-//        $printer->text(buatBaris4Kolom("Tepung terigu", "1pcs", "8.200", "16.400"));
-//        $printer->text("----------------------------------------\n");
-//        $printer->text(buatBaris4Kolom('', '', "Total", "56.400"));
-//        $printer->text("\n");
+        $printer->initialize(); // Reset bentuk/jenis teks
+        $printer->setLineSpacing(25);
+        $printer->setFont(Escpos\Printer::FONT_B);
+        $printer->text("----------------------------------------\n");
+        $printer->text(buatBaris4Kolom("Barang", "qty", "Harga", "Subtotal"));
+        $printer->text("----------------------------------------\n");
+        $printer->text(buatBaris4Kolom("Makaroni 250gr", "2pcs", "15.000", "30.000"));
+        $printer->text(buatBaris4Kolom("Telur", "2pcs", "5.000", "10.000"));
+        $printer->text(buatBaris4Kolom("Tepung terigu", "1pcs", "8.200", "16.400"));
+        $printer->text("----------------------------------------\n");
+        $printer->text(buatBaris4Kolom('', '', "Total", "56.400"));
+        $printer->text("\n");
 
 //         Pesan penutup
-//        $printer->initialize();
-//        $printer->setLineSpacing(25);
-//        $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
-//        $printer->text("Terima kasih telah berbelanja\n");
-//        $printer->text("http://badar-blog.blogspot.com\n");
-//        var_dump(FCPATH. 'assets\barcode\200918000001.jpg');
-//        die;
         $printer->initialize();
-        $tux = Escpos\EscposImage::load("resources/barcodes.png", false);
-        $printer -> bitImage($tux);
-        $printer -> text("Regular Tux (bit image).\n");
-        $printer -> feed();
-
-        $printer -> bitImage($tux, Escpos\Printer::IMG_DOUBLE_WIDTH);
-        $printer -> text("Wide Tux (bit image).\n");
-        $printer -> feed();
-
-        $printer -> bitImage($tux, Escpos\Printer::IMG_DOUBLE_HEIGHT);
-        $printer -> text("Tall Tux (bit image).\n");
-        $printer -> feed();
-
-        $printer -> bitImage($tux, Escpos\Printer::IMG_DOUBLE_WIDTH | Escpos\Printer::IMG_DOUBLE_HEIGHT);
-        $printer -> text("Large Tux in correct proportion (bit image).\n");
+        $printer->setLineSpacing(25);
+        $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+        $printer->text("Terima kasih telah berbelanja\n");
+        $printer->text("http://badar-blog.blogspot.com\n");
+        var_dump(FCPATH. 'assets\barcode\200918000001.jpg');
+//        die;
+//        $printer->initialize();
+//        $tux = Escpos\EscposImage::load("resources/barcodes.png", false);
+//        $printer -> bitImage($tux);
+//        $printer -> text("Regular Tux (bit image).\n");
+//        $printer -> feed();
+//
+//        $printer -> bitImage($tux, Escpos\Printer::IMG_DOUBLE_WIDTH);
+//        $printer -> text("Wide Tux (bit image).\n");
+//        $printer -> feed();
+//
+//        $printer -> bitImage($tux, Escpos\Printer::IMG_DOUBLE_HEIGHT);
+//        $printer -> text("Tall Tux (bit image).\n");
+//        $printer -> feed();
+//
+//        $printer -> bitImage($tux, Escpos\Printer::IMG_DOUBLE_WIDTH | Escpos\Printer::IMG_DOUBLE_HEIGHT);
+//        $printer -> text("Large Tux in correct proportion (bit image).\n");
 
 //        $printer -> cut();
 //        $printer -> pulse();

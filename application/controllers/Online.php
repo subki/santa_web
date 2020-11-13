@@ -231,11 +231,10 @@ class Online extends IO_Controller {
             "msg" => $msg, "message" => $msg
         ));
     }
-   
-  
+
       function print_so($docno){
           $read = $this->model->read_data($docno);
-          $readcount = $this->model->count_data($docno)->row(); 
+          $readcount = $this->model->count_data($docno)->row();
           $path = FCPATH."assets/barcode/".$docno.".png";
           $this->barcode($path,$docno,"50","horizontal","Code128","true",1);
           $data=array();
@@ -243,7 +242,7 @@ class Online extends IO_Controller {
               $r = $read->row();
               $this->model->update_data($docno, array("jumlah_print"=>$r->jumlah_print+1));
               $data['so']=$r;
-              $data['totalitem'] = $readcount->item; 
+              $data['totalitem'] = $readcount->item;
               $data['qty'] = $readcount->qty;
               $f = $this->getParamGrid(" a.docno='$docno' ","seqno");
               $data['det'] = $this->model->get_list_data_detailprint($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
@@ -261,9 +260,9 @@ class Online extends IO_Controller {
 
           $printer->initialize();
           $printer->setLineSpacing(25);
-          $printer->text("No. / Cust : ".$data['so']->ak_docno." / ".$data['so']->customer_name."\n");
-          $printer->text("SO Date    : ".$data['so']->ak_doc_date."\n");
-          $printer->text("SO         : ".$data['so']->so_no."\n");
+          $printer->text($this->createRowColumn(array("No. / Cust :",$data['so']->ak_docno." / ".$data['so']->customer_name), array("text","text"),array(13,25)));
+          $printer->text($this->createRowColumn(array("SO Date    :",$data['so']->ak_doc_date), array("text","text"),array(13,25)));
+          $printer->text($this->createRowColumn(array("SO         :",$data['so']->so_no), array("text","text"),array(13,25)));
 
           $width = array(8,18,12);
           $printer->initialize();
@@ -275,7 +274,7 @@ class Online extends IO_Controller {
           $qty = 0;
           foreach ($data['det'] as $i => $detail){
               $qty += $detail->qty_order;
-              $printer->text($this->createRowColumn(array($i+1,$detail->product_code,number_format($detail->qty_order).$detail->uom_id), array("text","text","curr"),$width));
+              $printer->text($this->createRowColumn(array($i+1,$detail->product_code,number_format($detail->qty_order)." ".$detail->uom_id), array("text","text","text"),$width));
           }
           $printer->text("----------------------------------------\n");
           $printer->text("Item       : ".count($data['det'])."\n");
@@ -291,10 +290,15 @@ class Online extends IO_Controller {
           $printer->setLineSpacing(25);
           $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
           $printer -> feed();
-          $printer->text($this->createRowColumn(array("Disiapkan","Packing","Checked"),array("text","text","text"),array(13,12,13)));
+          $printer->text($this->createRowColumn(array("  Disiapkan  ","  Packing   ","   Checked   "),array("text","text","text"),array(13,12,13)));
           $printer -> feed(4);
           $printer->text($this->createRowColumn(array("(___________)","(__________)","(___________)"),array("text","text","text"),array(13,12,13)));
+          $printer->feed(6);
+          $printer->close();
 
+          echo json_encode(array(
+              "status"=>0
+          ));
       }
 
      
