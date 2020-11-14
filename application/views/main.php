@@ -8,9 +8,11 @@
     <title><?php echo $title; ?></title>
 
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/kube.css" type="text/css" />
-    <link rel="stylesheet" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/main.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/kube.css" type="text/css" />
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url() ?>assets/images/favicon.png" />
     <script type="text/javascript" src="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/jquery.min.js"></script>
+
+
 </head>
 
 
@@ -235,7 +237,7 @@
                     let main = main_menu[i];
                     let ls = localStorage['menu'] || 'subki';
                     let ms = localStorage['menu_selected'];
-                    console.log("local", ms)
+//                    console.log("local", ms)
                     let mn = {};
                     mn.id = main.id;
                     mn.text = main.name;
@@ -258,9 +260,9 @@
                                 iconCls: sub.icon,
                                 data:sub
                             }
-                            console.log("sub main", sub.id)
+//                            console.log("sub main", sub.id)
                             if(sub.id===ms) {
-                                console.log("sub main", "masuk")
+//                                console.log("sub main", "masuk")
                                 mn.state = 'open';
                                 mn_sub.selected = true;
                             }
