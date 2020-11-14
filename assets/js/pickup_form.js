@@ -159,7 +159,7 @@ function pickupget() {
                 },
                 success:function(result){  
                //console.log(result.status)
-                       if(result.status===0) { 
+                       if(result.status===1) { 
                             $.messager.show({
                                 title: 'Error',
                                 msg: result.message, 

@@ -131,7 +131,7 @@ class Salesonline_model extends CI_Model {
         $sql = "select a.*,
 	            (select count(a1.nobar) from tmp a1 ) as total
 	             from tmp a ";
-        $sql .="GROUP BY a.docno order by " .$sort." $order
+        $sql .=" order by " .$sort." $order
 	            limit ".($page-1)*$rows.",".$rows;
         return $this->db->query($sql)->result();
     }

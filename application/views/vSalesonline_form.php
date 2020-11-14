@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div style="margin-bottom:1px">
-                        <input name="tgl_so" id="tgl_so" class="easyui-datebox" labelPosition="top" tipPosition="bottom"
+                        <input name="ak_tgl_so" id="ak_tgl_so" class="easyui-datebox" labelPosition="top" tipPosition="bottom"
                                required="true" readonly="true" label="Trx. Date:" style="width:100%">
                     </div> 
                     <div style="margin-bottom:1px">
