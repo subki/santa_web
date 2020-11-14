@@ -132,5 +132,123 @@ class Subki extends IO_Controller {
         $printer->close();
     }
 
+    public function bulk_change_collation(){
+        $res  = $this->db->query('show tables')->result();
+        foreach ($res as $v){
+            $sql = "ALTER TABLE $v->Tables_in_u845881379_santa CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+            echo $sql."<br />";
+            $this->db->query($sql);
+        }
+        echo "done";
+    }
+
+    public function compare_db_server($dbgroup1,$dbgroup2){
+        $group1=$this->load->database($dbgroup1,true);
+        $group2=$this->load->database($dbgroup2,true);
+
+        $dbname1=$group1->database;
+        $dbname2=$group2->database;
+
+        $showtables1=$group1->query("SHOW TABLES")->result();
+        $showtables2=$group2->query("SHOW TABLES")->result();
+
+        $result_tbls=[];
+        $result_cols=[];
+
+
+        $col_show1='Tables_in_'.$dbname1;
+        $col_show2='Tables_in_'.$dbname2;
+
+        $tables1=[];
+        $tables2=[];
+        foreach($showtables1 as $tblname_row){
+            $tblname=$tblname_row->$col_show1;
+            $cols1=$group1->query("DESCRIBE `".$tblname."`")->result();
+            $tables1[$tblname]=[];
+            foreach($cols1 as $col_row){
+                $tables1[$tblname][]=$col_row;
+            }
+        }
+        foreach($showtables2 as $tblname_row){
+            $tblname=$tblname_row->$col_show2;
+            $cols2=$group2->query("DESCRIBE `".$tblname."`")->result();
+            $tables2[$tblname]=[];
+            foreach($cols2 as $col_row){
+                $tables2[$tblname][]=$col_row;
+            }
+        }
+        // echo "<pre>";var_dump($tables1);echo "</pre>";
+        // echo "<pre>";var_dump($tables2);echo "</pre>";
+        $sql_for_group1='';
+        $sql_for_group2='';
+        $create_table_colname='Create Table';
+        foreach($tables1 as $tblname=>$cols){
+            if(substr($tblname,0,1)=="_")continue;
+            if(!isset($tables2[$tblname])){
+                $result_tbls[]="<b>".$tblname."</b> exist in ".$dbgroup1." but not in ".$dbgroup2;
+                $showcreatetable=$group1->query("SHOW CREATE TABLE `".$tblname."`")->result();
+                $sql_for_group2.=$showcreatetable[0]->$create_table_colname.";<br>";
+            }
+            else{
+                foreach($cols as $col){
+                    $colfound=false;
+                    foreach($tables2[$tblname] as $cols_compare){
+                        if($col->Field==$cols_compare->Field){
+                            $colfound=true;
+                            break;
+                        }
+                    }
+                    if(!$colfound){
+                        $altertable="ALTER TABLE ".$tblname." ADD ".$col->Field." ".$col->Type." DEFAULT ".(($col->Default!=null)?"'".$col->Default."'":'NULL')." ".(($col->Extra==null)?'NULL':$col->Extra).";";
+                        $sql_for_group2.=$altertable."<br>";
+                        $result_cols[]="col:<b>".$col->Field."</b> in tbl:<b>".$tblname."</b> exist in ".$dbgroup1." but not in ".$dbgroup2." || <span style='color:blue;'>".$altertable."</span>";
+                    }
+                }
+            }
+        }
+        foreach($tables2 as $tblname=>$cols){
+            if(substr($tblname,0,1)=="_")continue;
+            if(!isset($tables1[$tblname])){
+                $result_tbls[]="<b>".$tblname."</b> exist in ".$dbgroup2." but not in ".$dbgroup1;
+                $showcreatetable=$group2->query("SHOW CREATE TABLE `".$tblname."`")->result();
+                $sql_for_group1.=$showcreatetable[0]->$create_table_colname.";<br>";
+            }
+            else{
+                foreach($cols as $col){
+                    $colfound=false;
+                    foreach($tables1[$tblname] as $cols_compare){
+                        if($col->Field==$cols_compare->Field){
+                            $colfound=true;
+                            break;
+                        }
+                    }
+                    if(!$colfound){
+                        $altertable="ALTER TABLE ".$tblname." ADD ".$col->Field." ".$col->Type." DEFAULT ".(($col->Default!=null)?"'".$col->Default."'":'NULL')." ".(($col->Extra==null)?'NULL':$col->Extra).";";
+                        $sql_for_group1.=$altertable."<br>";
+                        $result_cols[]="col:<b>".$col->Field."</b> in tbl:<b>".$tblname."</b> exist in ".$dbgroup2." but not in ".$dbgroup1." || <span style='color:blue;'>".$altertable."</span>";
+                    }
+                }
+            }
+        }
+        echo "<b>Comparing DB Group: ".$dbgroup1.".".$dbname1." WITH ".$dbgroup2.".".$dbname2."</b><br><br>";
+        if(!empty($result_tbls)){
+            echo "<b>DIFFERENCE IN TABLES:</b><br>";
+
+            foreach($result_tbls as $result){
+                echo "\t- ".$result."<br>";
+            }
+        }
+        if(!empty($result_cols)){
+            echo "<b>DIFFERENCE IN COLUMNS:</b><br>";
+
+            foreach($result_cols as $result){
+                echo "\t- ".$result."<br>";
+            }
+        }
+        echo "SQL FOR ".$dbgroup1.".".$dbname1." : <div style='width:100%;height:auto;background-color:lightgrey;'>".$sql_for_group1."</div>";
+        echo "SQL FOR ".$dbgroup2.".".$dbname2." : <div style='width:100%;height:auto;background-color:lightgrey;'>".$sql_for_group2."</div>";
+    }
+
+
 
 }

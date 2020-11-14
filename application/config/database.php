@@ -99,7 +99,7 @@ $db['default'] = array(
 
 $db['defaultx'] = array(
     'dsn'			=> '',
-    'hostname' 		=> 'localhost',
+    'hostname' 		=> 'sql264.main-hosting.eu',
     'username' 		=> 'u845881379_santa',
     'password' 		=> 'personal838431',
     'database' 		=> 'u845881379_santa',

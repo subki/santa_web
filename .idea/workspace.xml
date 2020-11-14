@@ -19,6 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="c9e7f85d-4aac-4fe6-84a7-5b97f18ab758" name="Default Changelist" comment="Rekap finish">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/controllers/Rekapdaily.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/controllers/Rekapdaily.php" afterDir="false" />
@@ -30,59 +31,219 @@
       <change beforePath="$PROJECT_DIR$/application/views/vSalesonline_form.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/views/vSalesonline_form.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/js/pickup_form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/pickup_form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/js/rekapdaily_form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rekapdaily_form.js" afterDir="false" />
+=======
+    <list default="true" id="4e56b623-5b6f-42df-9013-fc48508369a8" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/images/sort_asc.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/images/sort_asc_disabled.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/images/sort_both.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/images/sort_desc.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/images/sort_desc_disabled.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/Finance_model.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vFinanceAR_form.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/datatables/jquery.dataTables.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/datatables/jquery.dataTables.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/datatables/jquery.dataTables.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/adminlte/number-divider.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/finance_ar_form.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/config/database.php" afterPath="$PROJECT_DIR$/application/config/database.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/Finance.php" afterPath="$PROJECT_DIR$/application/controllers/Finance.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/Subki.php" afterPath="$PROJECT_DIR$/application/controllers/Subki.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/main.php" afterPath="$PROJECT_DIR$/application/views/main.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/vFinanceAR.php" afterPath="$PROJECT_DIR$/application/views/vFinanceAR.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/finance_ar.js" afterPath="$PROJECT_DIR$/assets/js/finance_ar.js" />
+>>>>>>> ec861052eb1872557e0751535185bac8c98ffb40
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="ComposerSettings">
     <execution />
+=======
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="Finance.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/controllers/Finance.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="271">
+              <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TABLE_FINANCE.TXT" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/TABLE_FINANCE.TXT">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2772">
+              <caret line="6256" column="29" lean-forward="false" selection-start-line="6256" selection-start-column="13" selection-end-line="6256" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vFinanceAR.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/views/vFinanceAR.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="424">
+              <caret line="27" column="75" lean-forward="false" selection-start-line="27" selection-start-column="68" selection-end-line="27" selection-end-column="75" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#table#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vFinanceAR_form.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/views/vFinanceAR_form.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1267">
+              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+              <folding>
+                <element signature="n#style#0;n#a#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#2;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#1;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#1;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#1;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#2;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#3;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#3;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#2;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#div#2;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Salesorder.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/controllers/Salesorder.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="32" column="56" lean-forward="true" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="56" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Subki.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/controllers/Subki.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="254">
+              <caret line="142" column="0" lean-forward="false" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+              <folding>
+                <marker date="1605374032241" expanded="true" signature="6241:6343" ph="ALTER TABLE ${$v-&gt;Tables_in_u845881379_santa}... " />
+                <marker date="1605374032241" expanded="true" signature="8703:8828" ph="ALTER TABLE ${$tblname}... " />
+                <marker date="1605374032241" expanded="true" signature="9095:9106" ph="..." />
+                <marker date="1605374032241" expanded="true" signature="10055:10180" ph="ALTER TABLE ${$tblname}... " />
+                <marker date="1605374032241" expanded="true" signature="10447:10458" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="database.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/config/database.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="72" column="25" lean-forward="false" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="finance_ar_form.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/js/finance_ar_form.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="97" column="1" lean-forward="false" selection-start-line="97" selection-start-column="1" selection-end-line="97" selection-end-column="1" />
+              <folding>
+                <element signature="n#!!block;n#populateCBType#0" expanded="false" />
+                <element signature="n#!!block;n#populateStore#0" expanded="false" />
+                <element signature="n#!!block;n#populateCustomer#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="util.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/js/util.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="46" column="20" lean-forward="false" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="finance_ar.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/js/finance_ar.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="518">
+              <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+>>>>>>> ec861052eb1872557e0751535185bac8c98ffb40
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sessi</find>
-      <find>session</find>
-      <find>l</find>
-      <find>load-</find>
-      <find>load-&gt;li</find>
-      <find>Printer</find>
-      <find>FilePrintConnector</find>
-      <find>rende</find>
-      <find>render</find>
-      <find>initialize</find>
-      <find>initialize`</find>
-      <find>E</find>
-      <find>Esc</find>
-      <find>Escposw</find>
-      <find>barc</find>
-      <find>Escposwq</find>
-      <find>b</find>
-      <find>barcode</find>
-      <find>load</find>
-      <find>TM-u2</find>
-      <find>WHOLESALES</find>
-      <find>.</find>
-      <find>REMARK</find>
-      <find>read_packinglist</find>
-      <find>packinglist</find>
-      <find>print</find>
-      <find>buatBaris4Kolom</find>
-      <find>XLSXWriter</find>
-      <find>print_so</find>
-      <find>.ale</find>
+      <find>199</find>
+      <find>198</find>
+      <find>cash bank</find>
+      <find>cash bank detail</find>
+      <find>include</find>
+      <find>inc</find>
+      <find>i</find>
+      <find>inc_</find>
+      <find>inc_c</find>
+      <find>inc_cs</find>
+      <find>inc_css</find>
+      <find>sub main</find>
+      <find>local</find>
+      <find>console</find>
+      <find>khusus</find>
+      <find>Jenis</find>
+      <find>regency_id</find>
+      <find>local</find>
+      <find>customer_name</find>
+      <find>documen</find>
+      <find>submitA</find>
+      <find>customer</find>
+      <find>Ledger</find>
+      <find>GL Account</find>
+      <find>Detail AR Receipt</find>
+      <find>Cost table</find>
+      <find>Chart Of Account</find>
     </findStrings>
-    <replaceStrings>
-      <replace />
-    </replaceStrings>
     <dirStrings>
-      <dir>C:\xampp7\htdocs\santa_web_git\santa_web\application</dir>
-      <dir>C:\xampp7133\htdocs\santa_web</dir>
-      <dir>C:\xampp7133\htdocs\santa_web\application\third_party</dir>
-      <dir>C:\xampp7133\htdocs\santa_web\application\third_party\Mike42\Escpos</dir>
-      <dir>C:\xampp7133\htdocs\santa_web\application\third_party\Mike42</dir>
       <dir>C:\xampp7133\htdocs\santa_web\application\views</dir>
-      <dir>C:\xampp7133\htdocs\santa_web\application\controllers</dir>
+      <dir>C:\xampp7133\htdocs\santa_web\assets\js</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -93,6 +254,7 @@
       </map>
     </option>
   </component>
+<<<<<<< HEAD
   <component name="ProjectId" id="1kDcbSGqJRhuq8ID0jetxDx93JH" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -100,21 +262,301 @@
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+=======
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/application/config/config.php" />
+        <option value="$PROJECT_DIR$/application/config/autoload.php" />
+        <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/application/controllers/Auth.php" />
+        <option value="$PROJECT_DIR$/application/controllers/Test.php" />
+        <option value="$PROJECT_DIR$/application/libraries/Pdf.php" />
+        <option value="$PROJECT_DIR$/application/third_party/Mike42/autoloader.php" />
+        <option value="$PROJECT_DIR$/application/third_party/Mike42/Escpos/resources/capabilities.json" />
+        <option value="$PROJECT_DIR$/application/views/print/salesorder2.php" />
+        <option value="$PROJECT_DIR$/application/controllers/Salesorder.php" />
+        <option value="$PROJECT_DIR$/application/views/vWholesales_view.php" />
+        <option value="$PROJECT_DIR$/application/controllers/Wholesales.php" />
+        <option value="$PROJECT_DIR$/assets/js/ws_view.js" />
+        <option value="$PROJECT_DIR$/assets/js/finance_ok.js" />
+        <option value="$PROJECT_DIR$/application/helpers/support_helper.php" />
+        <option value="$PROJECT_DIR$/application/core/IO_Controller.php" />
+        <option value="$PROJECT_DIR$/assets/js/soonline_form.js" />
+        <option value="$PROJECT_DIR$/application/controllers/Online.php" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/application/views/main.php" />
+        <option value="$PROJECT_DIR$/application/models/Finance_model.php" />
+        <option value="$PROJECT_DIR$/application/views/vFinanceAR.php" />
+        <option value="$PROJECT_DIR$/application/views/vFinanceAR_from.php" />
+        <option value="$PROJECT_DIR$/assets/js/finance_ar.js" />
+        <option value="$PROJECT_DIR$/application/controllers/Finance.php" />
+        <option value="$PROJECT_DIR$/application/views/vFinanceAR_form.php" />
+        <option value="$PROJECT_DIR$/assets/js/finance_ar_form.js" />
+        <option value="$PROJECT_DIR$/application/controllers/Subki.php" />
+        <option value="$PROJECT_DIR$/application/config/database.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource ProjectPane="true" />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.jetbrains.php.config.library.PhpExternalLibrariesNodePatcher$PatchedExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="adminlte" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="include" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="santa_web" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+>>>>>>> ec861052eb1872557e0751535185bac8c98ffb40
   </component>
   <component name="PropertiesComponent">
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
     <property name="vue.rearranger.settings.migration" value="true" />
+=======
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+>>>>>>> ec861052eb1872557e0751535185bac8c98ffb40
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\xampp7133\htdocs\santa_web\application\libraries" />
+      <recent name="C:\xampp7133\htdocs\santa_web\assets\adminlte" />
       <recent name="C:\xampp7133\htdocs\santa_web\assets\js" />
       <recent name="C:\xampp7133\htdocs\santa_web\application\views" />
-      <recent name="C:\xampp7133\htdocs\santa_web\application\views\print" />
-      <recent name="C:\xampp7133\htdocs\santa_web\application\third_party\Mike42\Escpos\resources" />
+      <recent name="C:\xampp7133\htdocs\santa_web\application\models" />
+      <recent name="C:\xampp7133\htdocs\santa_web\assets\adminlte\images" />
     </key>
   </component>
   <component name="RunManager">
@@ -145,7 +587,11 @@
       <workItem from="1604282133011" duration="217000" />
       <workItem from="1605109707680" duration="6835000" />
       <workItem from="1605227796954" duration="4728000" />
+<<<<<<< HEAD
       <workItem from="1605238677700" duration="431000" />
+=======
+      <workItem from="1605338949083" duration="9090000" />
+>>>>>>> ec861052eb1872557e0751535185bac8c98ffb40
     </task>
     <task id="LOCAL-00001" summary="benerin session">
       <created>1603998614035</created>
@@ -210,9 +656,53 @@
       <option name="project" value="LOCAL" />
       <updated>1605227833383</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <created>1605235382254</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1605235382254</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <created>1605235390323</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1605235390323</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="47588000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5030257" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.45171848" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.4969743" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28971255" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+>>>>>>> ec861052eb1872557e0751535185bac8c98ffb40
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
@@ -238,6 +728,7 @@
     <MESSAGE value="add library esc\pos" />
     <MESSAGE value="direct print sales online" />
     <MESSAGE value="excel library" />
+<<<<<<< HEAD
     <MESSAGE value="Rekap finish" />
     <option name="LAST_COMMIT_MESSAGE" value="Rekap finish" />
   </component>
@@ -246,5 +737,534 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="393" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1605238843083" />
+=======
+    <MESSAGE value="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/application/third_party/Mike42/autoloader.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/libraries/EscPos.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="65" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/third_party/Mike42/Escpos/CapabilityProfile.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4930">
+          <caret line="300" column="64" lean-forward="false" selection-start-line="300" selection-start-column="64" selection-end-line="300" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/third_party/Mike42/Escpos/ImagickEscposImage.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="20" column="6" lean-forward="false" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/third_party/Mike42/Escpos/resources/capabilities.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17986">
+          <caret line="1058" column="31" lean-forward="false" selection-start-line="1058" selection-start-column="17" selection-end-line="1058" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Sales.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/print/salesorder2.php" />
+    <entry file="file://$PROJECT_DIR$/application/views/vFinanceOK.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="35" column="74" lean-forward="false" selection-start-line="35" selection-start-column="74" selection-end-line="35" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/vWholesales_form.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="12" lean-forward="false" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/pickup_form.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8041">
+          <caret line="479" column="16" lean-forward="false" selection-start-line="479" selection-start-column="16" selection-end-line="479" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/vWholesales_view.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="49" lean-forward="false" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Wholesales.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="30" column="23" lean-forward="false" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/ws_view.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2975">
+          <caret line="175" column="15" lean-forward="false" selection-start-line="175" selection-start-column="15" selection-end-line="175" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Salesonline.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="215" column="18" lean-forward="false" selection-start-line="215" selection-start-column="13" selection-end-line="215" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/helpers/support_helper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="1" lean-forward="false" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+          <folding>
+            <marker date="1605235117585" expanded="true" signature="228:406" ph="..." />
+            <marker date="1605235117585" expanded="true" signature="253:283" ph="..." />
+            <marker date="1605235117585" expanded="true" signature="294:383" ph="..." />
+            <marker date="1605235117585" expanded="true" signature="449:584" ph="..." />
+            <marker date="1605235117585" expanded="true" signature="625:948" ph="..." />
+            <marker date="1605235117585" expanded="true" signature="839:915" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/print/salesorderonline.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1666">
+          <caret line="98" column="94" lean-forward="false" selection-start-line="98" selection-start-column="85" selection-end-line="98" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/standard_defines.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="724" column="9" lean-forward="false" selection-start-line="724" selection-start-column="9" selection-end-line="724" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4981">
+          <caret line="328" column="47" lean-forward="false" selection-start-line="328" selection-start-column="47" selection-end-line="328" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/third_party/Mike42/Escpos/Printer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7565">
+          <caret line="459" column="36" lean-forward="false" selection-start-line="459" selection-start-column="36" selection-end-line="459" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/third_party/Mike42/Escpos/EscposImage.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3111">
+          <caret line="193" column="23" lean-forward="false" selection-start-line="193" selection-start-column="23" selection-end-line="193" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/barcode/201013000001.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/libraries/Xlsxwriter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="7" column="16" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/soonline_form.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2261">
+          <caret line="133" column="1" lean-forward="false" selection-start-line="133" selection-start-column="1" selection-end-line="133" selection-end-column="1" />
+          <folding>
+            <marker date="1605235117639" expanded="true" signature="44749:44827" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Online.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5644">
+          <caret line="332" column="10" lean-forward="false" selection-start-line="332" selection-start-column="10" selection-end-line="332" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/TABLE inventory.TXT">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146965">
+          <caret line="8645" column="10" lean-forward="false" selection-start-line="8645" selection-start-column="7" selection-end-line="8645" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/adminlte/datatables/jquery.dataTables.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/main2.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="17" lean-forward="false" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/adminlte/datatables/jquery.dataTables.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/core/IO_Controller.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-213">
+          <caret line="163" column="13" lean-forward="false" selection-start-line="163" selection-start-column="13" selection-end-line="163" selection-end-column="13" />
+          <folding>
+            <marker date="1605235117585" expanded="true" signature="9575:9678" ph="select * fro... closing_location" />
+            <marker date="1605235117585" expanded="true" signature="10264:10293" ph="select a.* f... log_update" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="240" column="32" lean-forward="false" selection-start-line="240" selection-start-column="32" selection-end-line="240" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/vSalesorderonline.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/jquery-easyui-1.9.4/themes/icon.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/finance_ok.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="186" column="93" lean-forward="false" selection-start-line="186" selection-start-column="29" selection-end-line="186" selection-end-column="93" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/so_grid.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="65" lean-forward="true" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="65" />
+          <folding>
+            <marker date="1603835186000" expanded="true" signature="4362:5810" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="4383:4407" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="4408:4513" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="4534:4558" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="4559:4681" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="4702:4726" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="4727:4842" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="4863:4887" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="4888:4982" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="5003:5027" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="5028:5128" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="5149:5173" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="5174:5268" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="5289:5313" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="5314:5440" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="5461:5485" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="5486:5610" ph="..." />
+            <marker date="1603835186000" expanded="false" signature="5631:5655" ph="..." />
+            <marker date="1603835186000" expanded="true" signature="5656:5797" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/vFinanceAR_form.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Storeprofile.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-459">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/Finance_model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="73" lean-forward="false" selection-start-line="8" selection-start-column="73" selection-end-line="8" selection-end-column="73" />
+          <folding>
+            <marker date="1605367796070" expanded="true" signature="155:1028" ph="SELECT , ifn... " />
+            <marker date="1605367796070" expanded="true" signature="155:1059" ph="SELECT a.doc... cashbank_history" />
+            <marker date="1605367796070" expanded="true" signature="498:1028" ph="select a.doc... do_header" />
+            <marker date="1605367796070" expanded="true" signature="1146:1193" ph="create tempo... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="1256:1304" ph="create tempo... tmp" />
+            <marker date="1605367796070" expanded="true" signature="1286:1304" ph="select * fro... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="1417:1513" ph="select a.*, tmp" />
+            <marker date="1605367796070" expanded="true" signature="1443:1477" ph="select count... tmp" />
+            <marker date="1605367796070" expanded="true" signature="1745:2053" ph="create tempo... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="1792:2053" ph="select a.loc... location" />
+            <marker date="1605367796070" expanded="true" signature="2105:2153" ph="create tempo... tmp" />
+            <marker date="1605367796070" expanded="true" signature="2135:2153" ph="select * fro... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="2266:2370" ph="select a.*, tmp" />
+            <marker date="1605367796070" expanded="true" signature="2292:2334" ph="select count... tmp" />
+            <marker date="1605367796070" expanded="true" signature="2598:2708" ph="create tempo... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="2645:2708" ph="select a.sto... profile_p" />
+            <marker date="1605367796070" expanded="true" signature="2760:2808" ph="create tempo... tmp" />
+            <marker date="1605367796070" expanded="true" signature="2790:2808" ph="select * fro... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="2921:3022" ph="select a.*, tmp" />
+            <marker date="1605367796070" expanded="true" signature="2947:2986" ph="select count... tmp" />
+            <marker date="1605367796070" expanded="true" signature="3242:3567" ph="SELECT IFNUL... do_header" />
+            <marker date="1605367796070" expanded="true" signature="3712:4178" ph="SELECT IFNUL... do_header" />
+            <marker date="1605367796070" expanded="true" signature="4329:4798" ph="SELECT IFNUL... do_header" />
+            <marker date="1605367796070" expanded="true" signature="6012:7149" ph="create tempo... temp" />
+            <marker date="1605367796070" expanded="true" signature="6059:7149" ph="select a.doc... do_detail" />
+            <marker date="1605367796070" expanded="true" signature="6643:6703" ph="/**, (select... " />
+            <marker date="1605367796070" expanded="true" signature="7201:7251" ph="create tempo... tmp" />
+            <marker date="1605367796070" expanded="true" signature="7231:7251" ph="select * fro... temp" />
+            <marker date="1605367796070" expanded="true" signature="7365:7461" ph="select a.*, tmp" />
+            <marker date="1605367796070" expanded="true" signature="7391:7425" ph="select count... tmp" />
+            <marker date="1605367796070" expanded="true" signature="7656:7670" ph="drop table t... " />
+            <marker date="1605367796070" expanded="true" signature="7721:7736" ph="drop table t... " />
+            <marker date="1605367796070" expanded="true" signature="7897:8550" ph="create tempo... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="7944:8550" ph="select a.pro... product_barang" />
+            <marker date="1605367796070" expanded="true" signature="8496:8549" ph="select c.nob... do_detail" />
+            <marker date="1605367796070" expanded="true" signature="8601:8649" ph="create tempo... tmp" />
+            <marker date="1605367796070" expanded="true" signature="8631:8649" ph="select * fro... tmp2" />
+            <marker date="1605367796070" expanded="true" signature="8762:8964" ph="select a.pro... tmp" />
+            <marker date="1605367796070" expanded="true" signature="8894:8928" ph="select count... tmp" />
+            <marker date="1605367796070" expanded="true" signature="9721:10026" ph="create tempo... temp" />
+            <marker date="1605367796070" expanded="true" signature="9768:10026" ph="select a.id,... discount_for" />
+            <marker date="1605367796070" expanded="true" signature="9859:9910" ph="select count... discount_for" />
+            <marker date="1605367796070" expanded="true" signature="10078:10100" ph="select a.* f... temp" />
+            <marker date="1605367796070" expanded="true" signature="10321:10336" ph="drop table t... " />
+            <marker date="1605367796070" expanded="true" signature="10695:10817" ph="insert into discount_for... " />
+            <marker date="1605367796070" expanded="true" signature="10749:10817" ph="select '${$c... location" />
+            <marker date="1605367796070" expanded="true" signature="12300:12343" ph="select * fro... do_detail" />
+            <marker date="1605367796070" expanded="true" signature="12697:12740" ph="select * fro... do_detail" />
+            <marker date="1605367796070" expanded="true" signature="12840:12893" ph="update do_de... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/Storeprofile_model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1603835186000" expanded="true" signature="205:1250" ph="create tempo... tmp2" />
+            <marker date="1603835186000" expanded="true" signature="254:1250" ph="select a.sto... profile_p" />
+            <marker date="1603835186000" expanded="true" signature="420:521" ph="/* , a.regis... " />
+            <marker date="1603835186000" expanded="true" signature="1303:1351" ph="create tempo... tmp" />
+            <marker date="1603835186000" expanded="true" signature="1333:1351" ph="select * fro... tmp2" />
+            <marker date="1603835186000" expanded="true" signature="1464:1565" ph="select a.*, tmp" />
+            <marker date="1603835186000" expanded="true" signature="1490:1529" ph="select count... tmp" />
+            <marker date="1603835186000" expanded="true" signature="2393:2509" ph="CREATE TEMPO... tmp2" />
+            <marker date="1603835186000" expanded="true" signature="2440:2509" ph="SELECT CAST(... profile_p" />
+            <marker date="1603835186000" expanded="true" signature="2561:2623" ph="SELECT ifnul... tmp2" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/vSalesorder_form.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="80" column="38" lean-forward="false" selection-start-line="80" selection-start-column="37" selection-end-line="80" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/vFinanceAR.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="424">
+          <caret line="27" column="75" lean-forward="false" selection-start-line="27" selection-start-column="68" selection-end-line="27" selection-end-column="75" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#table#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/adminlte/number-divider.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/finance_ar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="46" column="20" lean-forward="false" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Finance.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/finance_ar_form.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="97" column="1" lean-forward="false" selection-start-line="97" selection-start-column="1" selection-end-line="97" selection-end-column="1" />
+          <folding>
+            <element signature="n#!!block;n#populateCBType#0" expanded="false" />
+            <element signature="n#!!block;n#populateStore#0" expanded="false" />
+            <element signature="n#!!block;n#populateCustomer#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/vFinanceAR_form.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1267">
+          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#a#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#2;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#2;n#div#0;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#2;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#3;n#div#1;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#2;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#2;n#div#0;n#form#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/TABLE_FINANCE.TXT">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2772">
+          <caret line="6256" column="29" lean-forward="false" selection-start-line="6256" selection-start-column="13" selection-end-line="6256" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Salesorder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="32" column="56" lean-forward="true" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/config/database.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="72" column="25" lean-forward="false" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/Subki.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="142" column="0" lean-forward="false" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+          <folding>
+            <marker date="1605374032241" expanded="true" signature="6241:6343" ph="ALTER TABLE ${$v-&gt;Tables_in_u845881379_santa}... " />
+            <marker date="1605374032241" expanded="true" signature="8703:8828" ph="ALTER TABLE ${$tblname}... " />
+            <marker date="1605374032241" expanded="true" signature="9095:9106" ph="..." />
+            <marker date="1605374032241" expanded="true" signature="10055:10180" ph="ALTER TABLE ${$tblname}... " />
+            <marker date="1605374032241" expanded="true" signature="10447:10458" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+>>>>>>> ec861052eb1872557e0751535185bac8c98ffb40
   </component>
 </project>

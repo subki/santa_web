@@ -1,7 +1,7 @@
 var options={
     title:"List Data",
     method:"POST",
-    url : base_url+"wholesales/load_grid",
+    url : base_url+"finance/ar_grid",
     pagePosition:"top",
     resizeHandle:"right",
     resizeEdge:10,
@@ -10,7 +10,7 @@ var options={
     remoteFilter: true,
     rownumbers: false,
     pagination:true, striped:true, nowrap:false,
-    sortName:"no_faktur",
+    sortName:"payment_date",
     sortOrder:"desc",
     toolbar:"#toolbar",
     singleSelect:false,
@@ -22,12 +22,10 @@ var options={
         return data;
     },
     columns:[[
-        {field:"no_faktur",   title:"No Faktur",      width:120, sortable: true},
-        {field:"seri_pajak",   title:"Seri Pajak",      width: 100, sortable: true},
-        {field:"doc_date",   title:"Trx Date",      width: 100, sortable: true, formatter:function (index, row) {
-            return row.ak_doc_date;
-        }},
-        {field:"base_so",   title:"Base SO",      width: 120, sortable: true},
+        {field:"docno",   title:"No Trx",      width:120, sortable: true},
+        {field:"store_code",   title:"Store",      width: 100, sortable: true},
+        {field:"customer_code",   title:"Cust/Vendor",      width: 120, sortable: true},
+        {field:"payment_amount",   title:"Amount",      width: 300, sortable: true},
         {field:"remark",   title:"Remark",      width: 300, sortable: true},
         {field:"status",   title:"Status",      width: 100, sortable: true},
         {field:"crtby",   title:"Create By",      width: 100, sortable: true},
@@ -41,30 +39,27 @@ var options={
 };
 
 $(document).ready(function() {
-    // showData()
+    showData()
 });
 
-function initGrid(jenis, prd) {
+function initGrid(tahun, bulan) {
     $('#dg').datagrid(options);
     $('#dg').datagrid('destroyFilter');
     $('#dg').datagrid('enableFilter');
-    $('#dg').datagrid('addFilterRule', {field: 'jenis_faktur', op: 'equal', value: jenis });
-    $('#dg').datagrid('addFilterRule', {field: 'doc_date',op: 'beginwith',value: prd});
-    $('#dg').datagrid('addFilterRule', {field: 'statushd',op: 'equal',value: 'CLOSED'});
-    $('#dg').datagrid('addFilterRule', {field: 'verifikasi_finance',op: 'equal',value: ''});
-    $('#dg').datagrid('addFilterRule', {field: 'sales_invoice_id',op: 'equal',value: 0});
+    $('#dg').datagrid('addFilterRule', {field: 'payment_type', op: 'equal', value: 'AR RECEIPT' });
+    $('#dg').datagrid('addFilterRule', {field: 'tahun',op: 'equal',value: tahun});
+    $('#dg').datagrid('addFilterRule', {field: 'bulan',op: 'equal',value: bulan});
     $('#dg').datagrid('doFilter');
 }
 function showData(){
-    var jenis = $("#jenis").val()
     var tahun = $("#tahun").val()
     var bln = $("#bulan").val();
-    if(jenis==="" || tahun==="" || bln===""){
+    if(tahun==="" || bln===""){
         $.messager.alert("Alert","Filter harus diisi.")
         return
     }
     bln = bln.padStart(2,'0')
-    initGrid(jenis, tahun+"-"+bln)
+    initGrid(tahun,bln)
 }
 function getRow() {
     var row = $('#dg').datagrid('getSelected');
@@ -78,4 +73,7 @@ function getRow() {
         row.record = $('#dg').datagrid("getRowIndex", row);
     }
     return row;
+}
+function addData() {
+    window.location.href = base_url+"Finance/ar/add"
 }
