@@ -9,7 +9,7 @@
     var docno = "<?php echo $docno; ?>";
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/rekapdaily_form.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/rekapoutlet_form.js"></script>
 <style>
     .panel-titleq .panel-tool{
         height:50px;

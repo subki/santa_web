@@ -1,32 +1,32 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Rekapdaily extends IO_Controller {
+class Rekapoutlet extends IO_Controller {
 
     function __construct(){
 
         parent::__construct();
-        $this->load->model('Rekapdaily_model','model');
+        $this->load->model('Rekapoutlet_model','model');
         $this->load->model('Salesonline_model','modelonline');
         $this->load->library('form_validation');
         $this->load->helper('file');
     }
 
     function index(){
-        $data['title'] = 'Rekapdaily';
-        $data['content'] = $this->load->view('vRekapdaily', $data, TRUE);
+        $data['title'] = 'Rekapoutlet';
+        $data['content'] = $this->load->view('vRekapoutlet', $data, TRUE);
         $this->load->view('main',$data);
     }
 
     function form($aksi=""){
         $data['aksi']=$aksi;
         if($aksi=="add"){
-            $data['title'] = 'Add Rekapdaily';
-            $data['content'] = $this->load->view('vRekapdaily_form', $data, TRUE);
+            $data['title'] = 'Add Rekapoutlet';
+            $data['content'] = $this->load->view('vRekapoutlet_form', $data, TRUE);
         }else{
-            $data['title'] = 'Edit Rekapdaily';
+            $data['title'] = 'Edit Rekapoutlet';
             $data['docno'] = $this->input->get('id');
-            $data['content'] = $this->load->view('vRekapdaily_form', $data, TRUE);
+            $data['content'] = $this->load->view('vRekapoutlet_form', $data, TRUE);
         }
         $this->load->view('main',$data);
     }
@@ -78,7 +78,7 @@ class Rekapdaily extends IO_Controller {
                         $nomor = $this->model->generate_auto_number($input['store_code']);
                         if($nomor==""){
                             $result = 1;
-                            $msg = "Gagal generate Nomor Rekapdaily Non PKP, cek sales toko";
+                            $msg = "Gagal generate Nomor Rekapoutlet Non PKP, cek sales toko";
                         }else{
                             $data['no_faktur'] = $nomor;
                             $data['no_faktur2'] = $nomor;

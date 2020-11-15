@@ -1,6 +1,6 @@
 <?php
 
-class Rekapdaily_model extends CI_Model {
+class Rekapoutlet_model extends CI_Model {
 
     private $table;
     private $query;
