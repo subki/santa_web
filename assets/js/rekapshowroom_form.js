@@ -89,7 +89,7 @@ $(document).ready(function () {
     })
 
     if(aksi==="add"){
-        flag = "Rekapdaily/save_data_header";
+        flag = "Rekapshowroom/save_data_header";
         var date = new Date();
         var y = date.getFullYear();
         var m = date.getMonth()+1;
@@ -101,6 +101,7 @@ $(document).ready(function () {
         $("#faktur_date").datebox('setText', tgl);
         $("#dis_faktur1").show();
         $("#dis_faktur2").hide();
+        $("#getdate").hide();
 
         $("#store_code").combogrid('setValue',store_code);
         $("#location_code").combogrid('setValue',location_code);
@@ -114,10 +115,10 @@ $(document).ready(function () {
         $("#crt_faktur").hide();
         $("#btn_seri_pajak").hide();
     }else{
-        flag = "Rekapdaily/edit_data_header";
+        flag = "Rekapshowroom/edit_data_header";
         $.ajax({
             type:"POST",
-            url:base_url+"Rekapdaily/read_data/"+docno,
+            url:base_url+"Rekapshowroom/read_data/"+docno,
             dataType:"json",
             success:function(result){
                 console.log(result.data)
@@ -131,7 +132,7 @@ $(document).ready(function () {
                         title: 'Error',
                         msg: result.msg,
                         handler:function () {
-                            window.location.href = base_url+"Rekapdaily";
+                            window.location.href = base_url+"Rekapshowroom";
                         }
                     });
                 }
@@ -147,7 +148,7 @@ function initHeader() {
     $('#regency_name').combogrid('setValue',so_item.regency)
     $('#provinsi_name').combogrid('setValue',so_item.provinsi)
     $('#customer_code').combogrid('setValue',so_item.customer_code)
-    $('#sales').textbox('setText','ONLINE')
+    $('#sales').textbox('setText',so_item.salesman_id)
 
     $('#credit_limit').textbox('setValue', numberFormat(so_item.credit_limit))
     $('#outstanding').textbox('setValue', numberFormat(so_item.outstanding))
@@ -237,7 +238,7 @@ function initHeader() {
 function verifyFA() {
     $.ajax({
         type:"POST",
-        url:base_url+"Rekapdaily/update_finance_verify",
+        url:base_url+"Rekapshowroom/update_finance_verify",
         dataType:"json",
         data:so_item,
         success:function(result){
@@ -250,7 +251,7 @@ function verifyFA() {
                     title: 'Error',
                     msg: e.message,
                     handler:function () {
-                        window.location.href = base_url+"Rekapdaily";
+                        window.location.href = base_url+"Rekapshowroom";
                     }
                 });
             }
@@ -306,7 +307,7 @@ function createSeriPajak() {
     if(so_item===undefined) return
     $.ajax({
         type:"POST",
-        url:base_url+"Rekapdaily/get_seripajak",
+        url:base_url+"Rekapshowroom/get_seripajak",
         dataType:"json",
         data:so_item,
         success:function(result){
@@ -319,7 +320,7 @@ function createSeriPajak() {
                     title: 'Error',
                     msg: e.message,
                     handler:function () {
-                        window.location.href = base_url+"Rekapdaily";
+                        window.location.href = base_url+"Rekapshowroom";
                     }
                 });
             }
@@ -328,7 +329,7 @@ function createSeriPajak() {
     });
 }
 function printSOss() {
-    window.open(base_url+'Rekapdaily/print_so/'+docno, '_blank');
+    window.open(base_url+'Rekapshowroom/print_so/'+docno, '_blank');
 }
 
 
@@ -355,7 +356,7 @@ function printSO() {
                  />`,
         fn: function(r){
             if (r){
-                let urlss = `${base_url}Rekapdaily/print_ws?id=${so_item.id}&tipe=${print_selected.label}&pkp=${so_item.pkp}`;
+                let urlss = `${base_url}Rekapshowroom/print_ws?id=${so_item.id}&tipe=${print_selected.label}&pkp=${so_item.pkp}`;
                 window.open(urlss, '_blank')
             }
         }
@@ -365,7 +366,7 @@ function printSO() {
 function reload_header() {
     $.ajax({
         type:"POST",
-        url:base_url+"Rekapdaily/read_data/"+docno,
+        url:base_url+"Rekapshowroom/read_data/"+docno,
         dataType:"json",
         success:function(result){
             console.log(result.data)
@@ -379,7 +380,7 @@ function reload_header() {
                     title: 'Error',
                     msg: e.message,
                     handler:function () {
-                        window.location.href = base_url+"Rekapdaily";
+                        window.location.href = base_url+"Rekapshowroom";
                     }
                 });
             }
@@ -393,10 +394,10 @@ function initGrid() {
     $("#dg").edatagrid({
         fitColumns: false,
         width: "100%",
-        url: base_url + "Rekapdaily/load_grid_detail/"+so_item.id,
-        saveUrl: base_url + "Rekapdaily/save_data_detail/"+so_item.id,
-        updateUrl: base_url + "Rekapdaily/edit_data_detail",
-        destroyUrl: base_url + "Rekapdaily/delete_data_detail",
+        url: base_url + "Rekapshowroom/load_grid_detail/"+so_item.id,
+        saveUrl: base_url + "Rekapshowroom/save_data_detail/"+so_item.id,
+        updateUrl: base_url + "Rekapshowroom/edit_data_detail",
+        destroyUrl: base_url + "Rekapshowroom/delete_data_detail",
         idField: 'id',
         method: "POST",
         pagePosition: "top",
@@ -506,7 +507,7 @@ function initGrid() {
                 if(so_item.status!=="OPEN") {
                     $.messager.show({
                         title: 'Warning',
-                        msg: "Rekapdaily sudah di posting"
+                        msg: "Rekapshowroom sudah di posting"
                     });
                     setTimeout(function () {
                         $("#dg").edatagrid('cancelRow');
@@ -930,7 +931,7 @@ function submit(stt){
             }else if(so_item.status === status){
                 submit_reason("")
             }else{
-                myConfirm("Confirm", "Anda yakin ingin mengubah status Rekapdaily ini?", "Yes", "No", function (r) {
+                myConfirm("Confirm", "Anda yakin ingin mengubah status Rekapshowroom ini?", "Yes", "No", function (r) {
                     console.log(r)
                     if (r === "Yes") {
                         submit_reason("")
@@ -944,7 +945,7 @@ function read_packinglist() {
     if(so_item===undefined) return
     $.ajax({
         type:"POST",
-        url:base_url+"Rekapdaily/read_data/"+docno,
+        url:base_url+"Rekapshowroom/read_data/"+docno,
         dataType:"json",
         success:function(result){
             console.log(result.data)
@@ -1066,12 +1067,12 @@ function submit_reason(reason) {
                         myConfirm("Success", "Posting berhasil, apakah anda ingin mencetak doc.?", "Cetak", "Tidak", function (r) {
                             if (r === "Cetak") {
                                 printSO()
-                                window.location.href = base_url + "Rekapdaily/form/edit?id=" + res.id
-                            }else window.location.href = base_url + "Rekapdaily/form/edit?id=" + res.id
+                                window.location.href = base_url + "Rekapshowroom/form/edit?id=" + res.id
+                            }else window.location.href = base_url + "Rekapshowroom/form/edit?id=" + res.id
 
                         })
                     }else{
-                        window.location.href = base_url + "Rekapdaily/form/edit?id=" + res.id
+                        window.location.href = base_url + "Rekapshowroom/form/edit?id=" + res.id
                     }
                 } else {
                     $.messager.show({
@@ -1106,7 +1107,7 @@ function showCustomer() {
                         title: 'Error',
                         msg: result.message,
                         handler:function () {
-                            window.location.href = base_url+"Rekapdaily";
+                            window.location.href = base_url+"Rekapshowroom";
                         }
                     });
                 }
@@ -1242,14 +1243,14 @@ function showCustomer2(r) {
 function populateJenisSO() {
     $('#jenis_faktur').combobox({
         data:[ 
-            {value:'SALES ONLINE',text:'SALES ONLINE'}
+            {value:'SHOWROOM',text:'SHOWROOM'}
         ],
         prompt:'-Please Select-',
         validType:'inList["#jenis_faktur"]',
     });
 
     $('#jenis_faktur').combobox('readonly',true)
-    $('#jenis_faktur').combobox('setValue','SALES ONLINE')
+    $('#jenis_faktur').combobox('setValue','SHOWROOM')
 }
 // function populateVerifyFA() {
 //     $('#verifikasi_finance').combobox({
@@ -1460,7 +1461,7 @@ function populateCustomer() {
     gr.datagrid('addFilterRule', {
         field: 'gol_customer',
         op: 'equal',
-        value: "Customer Online"
+        value: "Showroom"
     });
     gr.datagrid('doFilter');
 }
@@ -1506,7 +1507,7 @@ function populateRegency() {
             gr.datagrid('addFilterRule', {
                 field: 'gol_customer',
                 op: 'equal',
-                value: "Rekapdaily"
+                value: "Rekapshowroom"
             });
             gr.datagrid('doFilter');
         },
@@ -1560,7 +1561,7 @@ function populateRegency() {
             gr.datagrid('addFilterRule', {
                 field: 'gol_customer',
                 op: 'equal',
-                value: "Rekapdaily"
+                value: "Rekapshowroom"
             });
             gr.datagrid('doFilter');
         },

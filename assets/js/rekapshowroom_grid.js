@@ -1,6 +1,6 @@
 var options={
-    url: base_url+"Rekapdaily/load_grid",
-    title:"Rekap Daily Sales Online",
+    url: base_url+"Rekapshowroom/load_grid",
+    title:"Rekap Showroom Sales Online",
     method:"POST",
     pagePosition:"top",
     resizeHandle:"right",
@@ -51,7 +51,7 @@ function editData(){
     let row = getRow();
     if(row==null) return
     // console.log(row)
-    window.location.href = base_url+"Rekapdaily/form/edit?id="+row.id
+    window.location.href = base_url+"Rekapshowroom/form/edit?id="+row.id
 }
 function exportData() {
     getParamOption("dg", function (x, x1, x2) {

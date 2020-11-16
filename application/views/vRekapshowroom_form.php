@@ -9,7 +9,7 @@
     var docno = "<?php echo $docno; ?>";
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/rekapdaily_form.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/rekapshowroom_form.js"></script>
 <style>
     .panel-titleq .panel-tool{
         height:50px;
@@ -266,7 +266,7 @@
                 $.ajax({
                   type: 'POST',
                   dataType:"json",
-                  url:base_url+"Rekapdaily/getDate", 
+                  url:base_url+"Rekapshowroom/getDate", 
                    data: {
                        customer_code:customer_code,
                        from:fromdate,
@@ -274,7 +274,7 @@
                    },
                   success: function(result) {
                     console.log(result); 
-                    $("#l").text(result.total+" Data Dok. Daily Sales Online");
+                    $("#l").text(result.total+" Data Dok. Sales Showroom");
                     if(result.total >= 1){ 
                         $("#postdetail").show();
                     } else{ 
@@ -290,7 +290,7 @@
                 $.ajax({
                   type: 'POST',
                   dataType:"json",
-                  url:base_url+"Rekapdaily/postdaily", 
+                  url:base_url+"Rekapshowroom/postdaily", 
                    data: {
                        docno:docno,
                        customer_code:customer_code,
