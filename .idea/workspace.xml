@@ -2,43 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4e56b623-5b6f-42df-9013-fc48508369a8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/controllers/Outlet.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/controllers/Rekapoutlet.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/controllers/Rekapshowroom.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/controllers/Showroomsales.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/Rekapoutlet_model.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/Rekapshowroom_model.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/Salesorderoutlet_model.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/Showroomsales_model.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/print/PKP_OU_INVOICE.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/print/PKP_OU_SURJAL.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/print/PKP_SH_INVOICE.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/print/PKP_SH_SURJAL.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/print/Showroomsales.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/print/outlet.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vRekapoulet_form.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vRekapoutlet.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vRekapoutlet_form.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vRekapshowroom.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vRekapshowroom_form.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vSalesorderoutlet.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vSalesorderoutlet_form.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vShowroomsales.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/vShowroomsales_form.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/rekapoutlet_form.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/rekapoutlet_grid.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/rekapshowroom_form.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/rekapshowroom_grid.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/sooutlet_form.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/sooutlet_grid.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/soshowroom_form.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/js/soshowroom_grid.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/Rekapdaily.php" afterPath="$PROJECT_DIR$/application/controllers/Rekapdaily.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/Salesonline.php" afterPath="$PROJECT_DIR$/application/controllers/Salesonline.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/Rekapdaily_model.php" afterPath="$PROJECT_DIR$/application/models/Rekapdaily_model.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/vRekapdaily_form.php" afterPath="$PROJECT_DIR$/application/views/vRekapdaily_form.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/rekapdaily_form.js" afterPath="$PROJECT_DIR$/assets/js/rekapdaily_form.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/salesonline_form.js" afterPath="$PROJECT_DIR$/assets/js/salesonline_form.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -144,7 +108,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="proforma_invoice.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="proforma_invoice.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/views/print/proforma_invoice.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
@@ -183,6 +147,18 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#16909#16913#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="salesorder.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/views/print/salesorder.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -208,16 +184,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="4199">
               <caret line="247" column="54" lean-forward="false" selection-start-line="233" selection-start-column="8" selection-end-line="247" selection-end-column="54" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="database.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/config/database.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1258">
-              <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -329,6 +295,7 @@
         <option value="$PROJECT_DIR$/assets/js/finance_inv.js" />
         <option value="$PROJECT_DIR$/application/controllers/Finance.php" />
         <option value="$PROJECT_DIR$/application/views/print/proforma_invoice.php" />
+        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
       </list>
     </option>
   </component>
@@ -815,11 +782,18 @@
       <option name="project" value="LOCAL" />
       <updated>1605580969182</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <created>1605581175818</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1605581175818</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58368000" />
+    <option name="totallyTimeSpent" value="58682000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -828,12 +802,12 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2987897" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.45171848" sideWeight="0.5075643" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3289689" sideWeight="0.5121029" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.45171848" sideWeight="0.4924357" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45171848" sideWeight="0.48940998" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.49394855" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3289689" sideWeight="0.48789713" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -896,10 +870,10 @@
     <MESSAGE value="add library esc\pos" />
     <MESSAGE value="direct print sales online" />
     <MESSAGE value="excel library" />
-    <MESSAGE value="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="Finance&#10;AR Receipt (baru form nya)" />
     <MESSAGE value="push" />
-    <option name="LAST_COMMIT_MESSAGE" value="push" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/subki/santa_web&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -908,13 +882,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/application/controllers/Wholesales.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" column="23" lean-forward="false" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/assets/js/ws_view.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2975">
@@ -1185,6 +1152,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1904">
           <caret line="215" column="18" lean-forward="false" selection-start-line="215" selection-start-column="13" selection-end-line="215" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1372,6 +1340,16 @@
             <element signature="e#6943#6949#0#HTML" expanded="true" />
             <element signature="e#6949#6955#0#HTML" expanded="true" />
             <element signature="e#6955#6961#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#16909#16913#0" expanded="true" />
           </folding>
         </state>
       </provider>
