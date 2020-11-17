@@ -27,4 +27,5 @@
 <div id="toolbar">
     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="viewData()" iconCls="icon-eye" plain="true">View</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="proformaInvoice();" iconCls="icon-finance-inv" plain="true">Create Proforma Invoice</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cetakProforma();" iconCls="icon-print" plain="true">Cetak Proforma Invoice</a>
 </div>

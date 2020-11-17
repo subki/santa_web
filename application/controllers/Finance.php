@@ -167,4 +167,24 @@ class Finance extends IO_Controller {
         ));
     }
 
+    public function print_proforma(){
+        $input = $this->input->get();
+        $dt = $this->db->where('docno',$input['docno'])->get('sales_proforma')->row();
+        $invoice = json_decode($dt->sales_invoice_data);
+        $query = $this->db->select('a.*, c.customer_name, c.address1, c.address2, rg.name as regency_name')
+            ->where_in('a.id',$invoice)
+            ->join('customer c', 'c.customer_code=a.customer_code')
+            ->join('regencies rg', 'rg.id=c.regency_id');
+//        pre($sales_inv);
+
+        $data['header'] = $query->get('sales_invoice a')->row();
+        $data['detail'] = $query->get('sales_invoice a')->result();
+        $this->load->library('pdf');
+        $this->pdf->load_view('print/proforma_invoice', $data);
+        $this->pdf->render();
+
+        $this->pdf->stream($input['docno'].'.pdf',array("Attachment"=>0));
+//        $this->load->view('print/proforma_invoice',$data);
+    }
+
 }

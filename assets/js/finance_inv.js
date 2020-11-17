@@ -23,13 +23,11 @@ var options={
     },
     columns:[[
         {field:"no_faktur",   title:"No Faktur",      width:120, sortable: true},
-        {field:"seri_pajak",   title:"Seri Pajak",      width: 100, sortable: true},
+        {field:"proforma_no",   title:"Proforma",      width: 200, sortable: true},
         {field:"doc_date",   title:"Trx Date",      width: 100, sortable: true, formatter:function (index, row) {
             return row.ak_doc_date;
         }},
-        {field:"base_so",   title:"Base SO",      width: 120, sortable: true},
-        {field:"remark",   title:"Remark",      width: 300, sortable: true},
-        {field:"status",   title:"Status",      width: 100, sortable: true},
+        {field:"customer_name",   title:"Customer",      width: 300, sortable: true},
         {field:"crtby",   title:"Create By",      width: 100, sortable: true},
         {field:"crtdt",   title:"Create Date",      width: 160, sortable: true},
         {field:"updby",   title:"Update By",      width: 100, sortable: true},
@@ -55,6 +53,11 @@ function initGrid(jenis, prd) {
     $('#dg').datagrid('addFilterRule', {field: 'sales_invoice_id',op: 'greater',value: 0});
     $('#dg').datagrid('doFilter');
 }
+function cetakProforma() {
+    var row = getRow(true);
+    if(row===null) return
+    window.location.href = base_url+"finance/print_proforma?docno="+row.proforma_no;
+}
 function proformaInvoice(){
     myConfirm("Confirm","Are you sure to create proforma invoice?","Yes","No", function (res) {
         if(res==="Yes"){
@@ -72,7 +75,7 @@ function proformaInvoice(){
                     break;
                 }
                 ids.push(dt[i].id)
-                tot_inv += dt[i].sales_after_tax;
+                tot_inv += parseFloat(dt[i].sales_after_tax);
                 customer_code = dt[i].customer_code;
             }
             if(customer_code==="XXX"){
@@ -122,13 +125,15 @@ function showData(){
     bln = bln.padStart(2,'0')
     initGrid(jenis, tahun+"-"+bln)
 }
-function getRow() {
+function getRow(show) {
     var row = $('#dg').datagrid('getSelected');
     if (!row){
-        $.messager.show({    // show error message
-            title: 'Error',
-            msg: 'Please select data to edit.'
-        });
+        if(show) {
+            $.messager.show({    // show error message
+                title: 'Error',
+                msg: 'Please select data to edit.'
+            });
+        }
         return null;
     }else{
         row.record = $('#dg').datagrid("getRowIndex", row);
