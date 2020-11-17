@@ -9,7 +9,7 @@
     var docno = "<?php echo $docno; ?>";
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/rekapdaily_form.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/rekapoutlet_form.js"></script>
 <style>
     .panel-titleq .panel-tool{
         height:50px;
@@ -25,8 +25,8 @@
 
 <div id="tt">
     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-        <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
         <a href="javascript:void(0)" id="getdate" class="easyui-linkbutton" iconCls="icon-search" onclick="Opendialog()" style="width:90px; height: 20px;">Get Date</a>
+        <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
         <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Update</a>
         <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-posting" onclick="submit('CLOSED')" style="width:90px; height: 20px;">Posting</a>
         <a href="javascript:void(0)" id="close" class="easyui-linkbutton" iconCls="icon-close" onclick="submit('CLOSE')" style="width:90px; height: 20px;">Close</a>

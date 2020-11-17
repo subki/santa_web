@@ -113,14 +113,14 @@ class Salesonline extends IO_Controller {
                 }
 
 
-                if($rd->so_number!=$input['so_number']){
-                    $data['docno']=$input['docno'];
-                    $data['so_number']=$input['so_number'];
-                    $total = $this->model->copySOtoPL($data);
-                    if($total>0){
-                        $data['so_number']=$rd->so_number;
-                    }
-                }
+                // if($rd->so_number!=$input['so_number']){
+                //     $data['docno']=$input['docno'];
+                //     $data['so_number']=$input['so_number'];
+                //     $total = $this->model->copySOtoPL($data);
+                //     if($total>0){
+                //         $data['so_number']=$rd->so_number;
+                //     }
+                // }
                 $this->model->update_data($input['docno'], $data);
 
                 $result = 0;

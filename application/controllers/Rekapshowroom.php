@@ -1,32 +1,32 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Rekapdaily extends IO_Controller {
+class Rekapshowroom extends IO_Controller {
 
     function __construct(){
 
         parent::__construct();
-        $this->load->model('Rekapdaily_model','model');
-        $this->load->model('Salesonline_model','modelonline');
+        $this->load->model('Rekapshowroom_model','model');
+        $this->load->model('Showroomsales_model','modelonline');
         $this->load->library('form_validation');
         $this->load->helper('file');
     }
 
     function index(){
-        $data['title'] = 'Rekapdaily';
-        $data['content'] = $this->load->view('vRekapdaily', $data, TRUE);
+        $data['title'] = 'Rekapshowroom';
+        $data['content'] = $this->load->view('vRekapshowroom', $data, TRUE);
         $this->load->view('main',$data);
     }
 
     function form($aksi=""){
         $data['aksi']=$aksi;
         if($aksi=="add"){
-            $data['title'] = 'Add Rekapdaily';
-            $data['content'] = $this->load->view('vRekapdaily_form', $data, TRUE);
+            $data['title'] = 'Add Rekapshowroom';
+            $data['content'] = $this->load->view('vRekapshowroom_form', $data, TRUE);
         }else{
-            $data['title'] = 'Edit Rekapdaily';
+            $data['title'] = 'Edit Rekapshowroom';
             $data['docno'] = $this->input->get('id');
-            $data['content'] = $this->load->view('vRekapdaily_form', $data, TRUE);
+            $data['content'] = $this->load->view('vRekapshowroom_form', $data, TRUE);
         }
         $this->load->view('main',$data);
     }
@@ -78,7 +78,7 @@ class Rekapdaily extends IO_Controller {
                         $nomor = $this->model->generate_auto_number($input['store_code']);
                         if($nomor==""){
                             $result = 1;
-                            $msg = "Gagal generate Nomor Rekapdaily Non PKP, cek sales toko";
+                            $msg = "Gagal generate Nomor Rekapshowroom Non PKP, cek sales toko";
                         }else{
                             $data['no_faktur'] = $nomor;
                             $data['no_faktur2'] = $nomor;
@@ -327,15 +327,15 @@ class Rekapdaily extends IO_Controller {
 
         if($input['pkp']=="YES") {
             if ($input['tipe'] == 1) {
-                $view = "print/PKP_WS_INVOICE";
+                $view = "print/PKP_SH_INVOICE";
             } else if ($input['tipe'] == 2) {
-                $view = "print/PKP_WS_SURJAL";
+                $view = "print/PKP_SH_SURJAL";
             }
         }else{
             if($input['tipe']==1){
-                $view = "print/NON_WS_INVOICE";
+                $view = "print/NON_OU_INVOICE";
             }else if($input['tipe']==2){
-                $view = "print/NON_WS_SURJAL";
+                $view = "print/NON_SH_SURJAL";
             }
         }
 
@@ -529,7 +529,7 @@ class Rekapdaily extends IO_Controller {
         $to=$this->formatDate("Y-m-d", $input['to']); 
         $customer_code=$input['customer_code'];  
         $docno=$input['docno']; 
-        // var_dump($customer_code);
+        // var_dump($docno);
         // die();
         try { 
             $read = $this->model->read_datadailypost($from,$to,$customer_code,$docno); 

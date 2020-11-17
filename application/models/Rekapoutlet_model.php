@@ -1,6 +1,6 @@
 <?php
 
-class Rekapdaily_model extends CI_Model {
+class Rekapoutlet_model extends CI_Model {
 
     private $table;
     private $query;
@@ -27,7 +27,7 @@ class Rekapdaily_model extends CI_Model {
                                 DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , a.verifikasi_finance, c.top_day ,a.doc_date tgl_so, 
                                 DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, a.status, 
                                 a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , c.customer_code,
-                                c.customer_name,  c.address1, c.address2, 
+                                c.customer_name,  c.address1, c.address2,c.salesman_id, 
                                 r.name AS regency_name , c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, 
                                 IFNULL(u2.fullname, a.updby) AS updby , a.crtdt tanggal_crt, a.upddt tanggal_upd, 
                                 DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
@@ -42,7 +42,7 @@ class Rekapdaily_model extends CI_Model {
 
     function get_list_data($page,$rows,$sort,$order,$role,$fltr){
         $sql = "create temporary table tmp2 as
-                $this->query where a.jenis_faktur='SALES ONLINE'";
+                $this->query where a.jenis_faktur='CONSIGNMENT'";
         $this->db->query($sql);
         $sql = "create temporary table tmp as select * from tmp2 ";
         if($fltr!=''){
@@ -91,27 +91,27 @@ class Rekapdaily_model extends CI_Model {
                     , unit_price, disc1_persen, disc1_amount, disc2_persen, disc2_amount
                     , disc_total, disc_open, net_unit_price
                     , bruto_before_tax, total_tax, netto_after_tax, status_detail, crtby, crtdt)
-                SELECT $docno,b.docno, p.product_code, bg.nobar, b.type
+                 SELECT $docno,b.docno, p.product_code, bg.nobar, b.tipe
                   , 0, b.qty_order, b.qty_order, 0, p.satuan_jual
-                  , b.unitprice, b.disc1_persen, b.disc1_amount, b.disc2_persen, b.disc2_amount
+                  , b.unit_price, b.disc1_persen, b.disc1_amount, b.disc2_persen, b.disc2_amount
                   , b.disc_total, 0, b.net_unit_price
                   , b.bruto_before_tax, b.total_tax, b.bruto_before_tax-b.total_tax, 'OPEN', '$crtby', NOW()
-                FROM  sales_online_detail b
-                LEFT JOIN sales_online_header b1 ON b1.docno = b.docno
+                FROM  so_outlet_detail b
+                LEFT JOIN so_outlet_header b1 ON b1.docno = b.docno
                 LEFT JOIN product_barang bg ON bg.nobar=b.nobar
                 LEFT JOIN product p ON p.id = bg.product_id 
-                WHERE b1.customer='$customer_code' AND b1.status='POSTING' AND b1.doc_date BETWEEN '$from' AND '$to'";
+                WHERE b1.customer_code='$customer_code' AND b1.status='ON ORDER' AND b1.doc_date BETWEEN '$from' AND '$to'";
         $this->db->query($sql);
         $sql3 = "UPDATE sales_trans_header AS dest , 
-                (SELECT COUNT(nobar) item, SUM(qty_order) qty , 
-                    SUM(CEILING(sales_online_detail.unitprice)) bruto , 
-                    SUM(CEILING(sales_online_detail.disc_total)) disc , 
-                    SUM(CEILING(sales_online_detail.bruto_before_tax)) before_tax , 
-                    SUM(CEILING(sales_online_detail.net_after_tax)) after_tax , 
-                    SUM(CEILING(sales_online_detail.total_tax)) ppn 
-                    FROM sales_online_detail
-                    LEFT JOIN sales_online_header b1 ON b1.docno = sales_online_detail.docno
-                    WHERE b1.customer='$customer_code' AND b1.status='POSTING' AND b1.doc_date BETWEEN '$from' AND '$to') AS src 
+                (SELECT COUNT(so_outlet_detail.nobar) item, SUM(so_outlet_detail.qty_order) qty , 
+                    SUM(CEILING(so_outlet_detail.unit_price)) bruto , 
+                    SUM(CEILING(so_outlet_detail.disc_total)) disc , 
+                    SUM(CEILING(so_outlet_detail.bruto_before_tax)) before_tax , 
+                    SUM(CEILING(so_outlet_detail.net_total_price)) after_tax , 
+                    SUM(CEILING(so_outlet_detail.total_tax)) ppn 
+                    FROM so_outlet_detail
+                    LEFT JOIN so_outlet_header b1 ON b1.docno = so_outlet_detail.docno
+                    WHERE b1.customer_code='$customer_code' AND b1.status='ON ORDER' AND b1.doc_date BETWEEN '$from' AND '$to') AS src 
                     SET dest.gross_sales = src.bruto,
                         dest.total_ppn = src.ppn,
                         dest.total_disc = src.disc ,
@@ -119,9 +119,9 @@ class Rekapdaily_model extends CI_Model {
                         dest.sales_after_tax = src.after_tax
                 WHERE dest.id='$docno'";
         $this->db->query($sql3);
-          $sql2 = "UPDATE sales_online_header so 
+          $sql2 = "UPDATE so_outlet_header so 
                     SET so.status='CLOSED'
-                    WHERE so.customer='$customer_code' AND so.status='POSTING' and so.doc_date between '$from' and '$to'";
+                    WHERE so.customer_code='$customer_code' AND so.status='ON ORDER' and so.doc_date between '$from' and '$to'";
         $this->db->query($sql2);
         //   $sql2 = "UPDATE sales_online_detail so 
         //             INNER JOIN sales_online_header b1 ON b1.docno = b.docno
@@ -293,24 +293,22 @@ class Rekapdaily_model extends CI_Model {
         return $this->db->query($sql)->result();
     }
     function read_datadaily($from,$to,$customer_code){
-       $query = "SELECT DATE_FORMAT(p.tgl_pickup, '%d/%b/%Y') tgl_pickup,so.docno,so.remark
+       $query = "SELECT DATE_FORMAT(so.doc_date, '%d/%b/%Y') tgl_pickup,so.docno,so.remark
                   , a.sales_date, DATE_FORMAT(a.sales_date, '%d/%m/%Y') ak_doc_date
                   , DATE_FORMAT(so.doc_date, '%d/%b/%Y') tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so
-                  , a.so_number,so.so_no, so.status, c.address1, c.phone1, c.pkp, c.beda_fp
-                  , so.customer customer_code, c.customer_name, so.qty_item, so.qty, so.sales
+                  , a.docno,so.so_no, so.status, c.address1, c.phone1, c.pkp, c.beda_fp
+                  , so.customer_code customer_code, c.customer_name, so.qty_item, so.qty_order 
                   , so.disc1_persen, so.disc2_persen  
                   , so.gross_sales, so.total_discount, so.sales_before_tax, so.total_ppn, so.sales_after_tax
                   , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby
                   , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
                   , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
-                FROM sales_online_header so
-                LEFT JOIN  sales_online_detail a  ON so.docno=a.so_number
-                LEFT JOIN pickup_d d ON so.docno=d.barcode
-                LEFT JOIN pickup_h p ON p.id=d.pickup_h_id
-                LEFT JOIN customer c ON so.customer=c.customer_code
+                FROM so_outlet_header so
+                LEFT JOIN  so_outlet_detail a  ON so.docno=a.docno 
+                LEFT JOIN customer c ON so.customer_code=c.customer_code
                 LEFT JOIN users u1 ON a.crtby=u1.user_id
                 LEFT JOIN users u2 ON a.updby=u2.user_id
-                WHERE so.customer='$customer_code' and so.doc_date between '$from' and '$to' and so.status='POSTING'"; 
+                WHERE so.customer_code='$customer_code' AND so.doc_date BETWEEN '$from' AND '$to' AND so.status='ON ORDER'"; 
         return $this->db->query($query);
     }
 }
