@@ -2,3 +2,13 @@
 /application/config/config.php
 /application/config/database.php
 .idea/*
+/assets/adminlte/*
+/assets/barcode/*
+/assets/font/*
+/assets/images/*
+/assets/jeasyui_metro/*
+/assets/jquery-easyui-1.9.0/*
+/assets/jquery-easyui-1.9.4/*
+/assets/libraries/*
+/assets/upload/*
+/assets/upload_temp/*
