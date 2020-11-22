@@ -13,6 +13,7 @@ class Finance extends IO_Controller {
 
         parent::__construct();
         $this->load->model('Wholesales_model','model');
+        $this->load->model('Finance_model','fa');
         $this->load->library('form_validation');
         $this->load->helper('file');
     }
@@ -22,10 +23,17 @@ class Finance extends IO_Controller {
         $data['content'] = $this->load->view('vFinanceOK', $data, TRUE);
         $this->load->view('main',$data);
     }
-    function ar(){
-        $data['title'] = 'AR Receipt';
-        $data['content'] = $this->load->view('vFinanceAR', $data, TRUE);
-        $this->load->view('main',$data);
+    function ar($aksi=""){
+        if($aksi=="") {
+            $data['title'] = 'AR Receipt';
+            $data['content'] = $this->load->view('vFinanceAR', $data, TRUE);
+            $this->load->view('main', $data);
+        }else if($aksi=="add"){
+            $data['title'] = 'Add AR Receipt';
+            $data['aksi'] = $aksi;
+            $data['content'] = $this->load->view('vFinanceAR_form', $data, TRUE);
+            $this->load->view('main', $data);
+        }
     }
     function invoice(){
         $data['title'] = 'Sales Invoice';
@@ -36,6 +44,16 @@ class Finance extends IO_Controller {
     function load_grid(){
         $f = $this->getParamGrid("","doc_date");
         $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+        echo json_encode(array(
+                "status" => 1,
+                "msg" => "OK",
+                "total"=>(count($data)>0)?$data[0]->total:0,
+                "data" =>$data)
+        );
+    }
+    function ar_grid(){
+        $f = $this->getParamGrid("","doc_date");
+        $data = $this->fa->ar_grid($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
@@ -147,6 +165,26 @@ class Finance extends IO_Controller {
             "status" => $result, "isError" => ($result==1),
             "msg" => $msg, "message" => $msg
         ));
+    }
+
+    public function print_proforma(){
+        $input = $this->input->get();
+        $dt = $this->db->where('docno',$input['docno'])->get('sales_proforma')->row();
+        $invoice = json_decode($dt->sales_invoice_data);
+        $query = $this->db->select('a.*, c.customer_name, c.address1, c.address2, rg.name as regency_name')
+            ->where_in('a.id',$invoice)
+            ->join('customer c', 'c.customer_code=a.customer_code')
+            ->join('regencies rg', 'rg.id=c.regency_id');
+//        pre($sales_inv);
+
+        $data['header'] = $query->get('sales_invoice a')->row();
+        $data['detail'] = $query->get('sales_invoice a')->result();
+        $this->load->library('pdf');
+        $this->pdf->load_view('print/proforma_invoice', $data);
+        $this->pdf->render();
+
+        $this->pdf->stream($input['docno'].'.pdf',array("Attachment"=>0));
+//        $this->load->view('print/proforma_invoice',$data);
     }
 
 }

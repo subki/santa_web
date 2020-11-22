@@ -293,7 +293,7 @@ function submit(stt){
                                     //close sales order
                                     $.ajax({
                                         type:"POST",
-                                        url:base_url+"salesapp/edit_data_header",
+                                        url:base_url+"Salesonline/edit_data_header",
                                         dataType:"json",
                                         data:{
                                             docno : pl_item.so_number,
@@ -314,7 +314,7 @@ function submit(stt){
                     if(qtypl===qtyord){
                         $.ajax({
                             type:"POST",
-                            url:base_url+"salesapp/edit_data_header",
+                            url:base_url+"Salesonline/edit_data_header",
                             dataType:"json",
                             data:{
                                 docno : pl_item.so_number,

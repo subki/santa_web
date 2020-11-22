@@ -13,7 +13,8 @@ class Pickup_model extends CI_Model {
          DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddtformat,IFNULL(u1.fullname, a.updby) AS updby2 from $this->table  a
                 LEFT JOIN users u1 ON a.updby=u1.user_id";
         $this->query2 = "SELECT * from $this->table2";
-        $this->query3 = "SELECT * from $this->tabledetail";
+        $this->query3 = "SELECT d.*,s.status onlinestatus FROM pickup_d d
+                        INNER JOIN so_online_header s ON s.docno=d.barcode";
     }
 
     function get_list_data($page,$rows,$sort,$order,$role,$fltr){
@@ -35,7 +36,7 @@ class Pickup_model extends CI_Model {
     }
 
     function read_data_by_so($code){
-        $q = $this->query3." where barcode='$code'";
+        $q = $this->query3." where barcode='$code' AND s.status IN('OPEN','ON ORDER')";
         return $this->db->query($q);
     }
     function get_list_dataexpedisi($page,$rows,$sort,$order,$role,$fltr){
@@ -66,6 +67,10 @@ class Pickup_model extends CI_Model {
     }
     function read_data($code){
         $q = $this->query." where id='$code'";
+        return $this->db->query($q);
+    }
+    function cekfase_data($tgl,$cscode){
+        $q = "SELECT *  from pickup_h where tgl='$tgl' and ekspedisiby ='$cscode' and status='Open'";
         return $this->db->query($q);
     }
     function read_datadetail($code){
@@ -344,6 +349,14 @@ class Pickup_model extends CI_Model {
         return $this->db->query($sql)->row()->seqno;
     }
 
+    function cekstatusSOonline($docno){
+        $sql = "SELECT s.docno,s.status FROM pickup_h h
+                INNER JOIN pickup_d d ON d.pickup_h_id=h.id
+                INNER JOIN so_online_header s ON s.docno=d.barcode
+                WHERE h.id='$docno' AND s.status='OPEN'";
+        return $this->db->query($sql);
+    }
+
     function cek_detail($docno, $nobar, $tipe){
         $this->db->where('docno',$docno);
         $this->db->where('nobar',$nobar);
@@ -423,10 +436,11 @@ class Pickup_model extends CI_Model {
        $this->db->query("INSERT INTO sales_online_header(docno,doc_date,store_code,so_number,jenis_faktur,remark,customer,sales,tipe_komisi,komisi,
                         disc1_persen,disc2_persen,qty_item,qty,gross_sales,total_ppn,total_discount,sales_before_tax,sales_after_tax,posting_date,
                         STATUS,sales_toko,so_no,jumlah_print,crtby,crtdt,updby,upddt) 
-                        SELECT h.docno,h.doc_date,h.store_code,h.so_no,h.jenis_faktur,h.remark,h.customer_code,h.salesman_id,
+                        SELECT h.docno,p.tgl,h.store_code,h.so_no,h.jenis_faktur,h.remark,h.customer_code,h.salesman_id,
                         h.tipe_komisi,h.komisi_persen,h.disc1_persen,h.disc2_persen,h.qty_item,h.qty_order,h.gross_sales,h.total_ppn,h.total_discount,
                         h.sales_before_tax,h.sales_after_tax,
                         h.posting_date,'OPEN',h.sales_pada_toko,h.so_no,h.jumlah_print,h.crtby,h.crtdt,h.updby,h.upddt FROM pickup_d d
+                        INNER JOIN pickup_h p ON p.id= d.pickup_h_id 
                         INNER JOIN so_online_header h ON h.docno= d.barcode 
                         WHERE d.pickup_h_id='$docno'"); 
         $this->db->query("INSERT INTO sales_online_detail(docno,sales_date,so_number,seqno,product_tipe,nobar,product_code,TYPE,komisi,qty_order,qty_sales,UOM,
@@ -525,4 +539,5 @@ class Pickup_model extends CI_Model {
         $this->db->query($sql); 
         return $this->db->query($sql);
     }
+     
 }

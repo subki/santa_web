@@ -22,12 +22,13 @@ class Auth extends CI_Controller {
 		$data 	= $this->model->check_user($uid);
 //		var_dump($this->input->post('txt_pwd'));
 //		var_dump($pwd);
-//		var_dump($data);
+//		var_dump($data->pass);
+//		var_dump(strcmp($data->pass,$pwd));
 //		die();
 
 	   	if($data!=null){
 
-	   	    if($data->pass == $pwd) {
+	   	    if(strcmp($data->pass,$pwd) == 0) {
 
                 $sess_array = array(
                     'user_id' => $data->user_id,

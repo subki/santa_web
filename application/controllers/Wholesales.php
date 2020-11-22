@@ -28,10 +28,14 @@ class Wholesales extends IO_Controller {
         if($aksi=="add"){
             $data['title'] = 'Add Wholesales';
             $data['content'] = $this->load->view('vWholesales_form', $data, TRUE);
-        }else{
+        }else if($aksi=="edit"){
             $data['title'] = 'Edit Wholesales';
             $data['docno'] = $this->input->get('id');
             $data['content'] = $this->load->view('vWholesales_form', $data, TRUE);
+        }else{
+            $data['title'] = 'View Wholesales';
+            $data['docno'] = $this->input->get('id');
+            $data['content'] = $this->load->view('vWholesales_view', $data, TRUE);
         }
         $this->load->view('main',$data);
     }

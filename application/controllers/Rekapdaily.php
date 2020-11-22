@@ -46,10 +46,11 @@ class Rekapdaily extends IO_Controller {
         $docno=0;
         try {
             $input = $this->toUpper($this->input->post());
-
+            // var_dump($input);
+            // die();
             $pl = $this->modelonline->read_data($input['base_so']);
   
-            if($pl->num_rows()>0){
+           //if($pl->num_rows()>0){
                  $data = array(
                         'doc_date' => $this->formatDate("Y-m-d", $input['doc_date']),
                         'faktur_date' => $this->formatDate("Y-m-d", $input['faktur_date']),
@@ -59,12 +60,12 @@ class Rekapdaily extends IO_Controller {
                         'jenis_faktur' => $input['jenis_faktur'],
                         'remark' => $input['remark'],
                         'customer_code' => $input['customer_code'],
-                        'base_so' => $input['base_so'],
-                        'gross_sales' => $pl->row()->gross_sales,
-                        'total_ppn' => $pl->row()->total_ppn,
-                        'total_disc' => $pl->row()->total_discount,
-                        'sales_before_tax' => $pl->row()->sales_before_tax,
-                        'sales_after_tax' => $pl->row()->sales_after_tax,
+                      //  'base_so' => $input['base_so'],
+                        'gross_sales' =>0,// $pl->row()->gross_sales,
+                        'total_ppn' =>0,// $pl->row()->total_ppn,
+                        'total_disc' => 0,//$pl->row()->total_discount,
+                        'sales_before_tax' =>0,// $pl->row()->sales_before_tax,
+                        'sales_after_tax' =>0,// $pl->row()->sales_after_tax,
                         'total_dp' => $input['total_dp'],
                         'sisa_faktur' => $input['sisa_faktur'],
                         'total_hpp' => $input['total_hpp'],
@@ -122,10 +123,10 @@ class Rekapdaily extends IO_Controller {
                             }
                         }
                     } 
-            }else{
-                $result = 1;
-                $msg = "Base SO Number tidak ditemukan";
-            }
+          //  }else{
+         //    $result = 1;
+         //      $msg = "Base SO Number tidak ditemukan";
+        // }
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();
@@ -141,7 +142,7 @@ class Rekapdaily extends IO_Controller {
         try {
 
             $read = $this->model->read_data($input['id']);
-            var_dump($read->num_rows());
+            // var_dump($read->num_rows());
             if ($read->num_rows() > 0) {
                 $data = array(
                     'faktur_date' => $this->formatDate("Y-m-d", $input['faktur_date']),
@@ -239,7 +240,6 @@ class Rekapdaily extends IO_Controller {
             "msg" => $msg, "message" => $msg, "docno"=>$input['id']
         ));
     }
-
     function read_data($code){
         try {
             $read = $this->model->read_data($code);
@@ -261,7 +261,7 @@ class Rekapdaily extends IO_Controller {
             "msg" => $msg, "message" => $msg,
             "data" => $data
         ));
-    }
+    } 
 
     function read_data_by_so($code){
         try {
@@ -494,8 +494,57 @@ class Rekapdaily extends IO_Controller {
                 "data" =>$data)
         );
     }
+    function getDate(){
+        $input = $this->toUpper($this->input->post());
+        $from=$this->formatDate("Y-m-d", $input['from']);
+        $to=$this->formatDate("Y-m-d", $input['to']); 
+        $customer_code=$input['customer_code']; 
+        // var_dump($customer_code);
+        // die();
+        try {
+            $read = $this->model->read_datadaily($from,$to,$customer_code); 
+            if ($read->num_rows() > 0) {
+                $result = 0;
+                $msg="OK";
+                $data = $read->result();
+            } else {
+                $result = 1;
+                $msg="Data tidak ditemukan";
+                $data = null;
+            }
+        }catch (Exception $e){
+            $result = 1;
+            $msg=$e->getMessage();
+        }
+        echo json_encode(array(
+            "status" => $result, "isError" => ($result==1),
+            "msg" => $msg, "message" => $msg, "total" => $read->num_rows(),
+            "data" => $data
+        ));
+    }
 
-
+    function postdaily(){
+        $input = $this->toUpper($this->input->post());
+        $from=$this->formatDate("Y-m-d", $input['from']);
+        $to=$this->formatDate("Y-m-d", $input['to']); 
+        $customer_code=$input['customer_code'];  
+        $docno=$input['docno']; 
+        // var_dump($customer_code);
+        // die();
+        try { 
+            $read = $this->model->read_datadailypost($from,$to,$customer_code,$docno); 
+                $result = 0;
+                $msg = "OK";
+        }catch (Exception $e){
+            $result = 1;
+            $msg=$e->getMessage();
+        }
+        echo json_encode(array(
+            "status" => $result, "isError" => ($result==1),
+            "msg" => $msg, "message" => $msg,
+            "data" => ''
+        ));
+    }
     function export_data(){
         $filename = 'EFAKTUR_' . date('Ymd') . '.csv';
         $data = array();

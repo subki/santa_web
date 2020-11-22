@@ -53,6 +53,7 @@ var options={
     columns:[[
         {field:"tglformat",   title:"Tanggal",      width:130, sortable: true},
         {field:"ekspedisi",   title:"Ekspedisi",      width:130, sortable: true},
+        {field:"ekspedisiname",   title:"Nama Ekspedisi",      width:130, sortable: true},
         {field:"fase_pickup",   title:"Fase#",      width: 100, sortable: true},
         {field:"line",   title:"#Line",      width: 100, sortable: true},
         {field:"status",   title:"Status",      width: 90, sortable: true},

@@ -95,7 +95,7 @@ function initHeader() {
 
     initGrid();
  
-    // $("#update").show();
+    $("#update").show();
     $("#submit").hide();
     if(so_item.status==="ON ORDER"){
         $("#posting").linkbutton({text:"UnSubmit"});
@@ -114,8 +114,23 @@ function addform() {
          window.location.href = base_url+"Online/form/add?customer_code="+$('#customer_code').combogrid('getValue')+"&customer_name="+$('#customer_name').textbox('getValue');
    // window.open(base_url+'Online/print_so/'+docno, '_blank');
 }function printSO() {
-        window.open(base_url+'Online/print_so/'+docno, '_blank', 'location=yes,height=400,width=500,scrollbars=yes,status=yes');
+        // window.open(base_url+'Online/print_so/'+docno, '_blank', 'location=yes,height=400,width=500,scrollbars=yes,status=yes');
    // window.open(base_url+'Online/print_so/'+docno, '_blank');
+    $.ajax({
+        type:"get",
+        url:base_url+"Online/print_so/"+docno,
+        dataType:"json",
+        success:function(result){
+            //console.log(result.data)
+            if(result.status===0) {
+                $.messager.alert("Success","Print Berhasil")
+            }
+            else {
+                $.messager.alert("Info","Print Gagal")
+            }
+
+        }
+    });
 }
 
 function reload_header() {
@@ -934,8 +949,8 @@ function read_pickinglist(callback) {
         url:base_url+"Pickup/read_data_by_so/"+so_item.docno,
         dataType:"json",
         success:function(result){
-           //console.log(result.result)
-           if(result.result > 0) callback("Sudah ada transaksi Pickup. Unposting transaksi gagal.")
+         // console.log(result)
+           if(result.result > 0) callback("Transaksi sudah Pickup. Unposting transaksi gagal.")
            else callback("OK")
         }
     });

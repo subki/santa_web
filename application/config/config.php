@@ -24,7 +24,8 @@ date_default_timezone_set('Asia/Jakarta');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://santaproject.hol.es/';
+//$config['base_url'] = 'http://santaproject.hol.es/';
+$config['base_url'] = 'http://localhost:71/santa_web/';
 
 /*http://windu.isoft-iml.com/auth
 |--------------------------------------------------------------------------
@@ -160,7 +161,8 @@ $config['composer_autoload'] = FALSE;
 |
 */
 //$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-\=';
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-\=\+';
+//$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-\=\+';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:\_\=+%\&';
 
 /*
 |--------------------------------------------------------------------------
@@ -385,14 +387,20 @@ $config['encryption_key'] = 'pengkode';
 //$config['sess_time_to_update'] = 300;
 //$config['sess_regenerate_destroy'] = FALSE;
 
+//$config['sess_driver'] = 'database';
+//$config['sess_cookie_name'] = 'ci_session';
+//$config['sess_expiration'] = 7200;
+//$config['sess_save_path'] = 'ci_sessions';
+//$config['sess_match_ip'] = FALSE;
+//$config['sess_time_to_update'] = 300;
+//$config['sess_regenerate_destroy'] = FALSE;
 $config['sess_driver'] = 'database';
-$config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 7200;
-$config['sess_save_path'] = 'ci_sessions';
-$config['sess_match_ip'] = FALSE;
+$config['sess_cookie_name'] = 'newname_session';
+$config['sess_expiration'] = 72000;
+$config['sess_save_path'] ='newname_sessions';
+$config['sess_match_ip'] = TRUE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
-
 /*
 |--------------------------------------------------------------------------
 | Cookie Related Variables

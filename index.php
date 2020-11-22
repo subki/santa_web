@@ -1,5 +1,5 @@
 <?php
-	
+
 /**
  * CodeIgniter
  *
@@ -36,13 +36,24 @@
  * @since	Version 1.0.0
  * @filesource
  */
-session_start();
+//session_destroy();
+//session_start();
+//if (!isset($_SESSION)) {
+//    // server should keep session data for AT LEAST 24 hour
+//    ini_set('session.gc_maxlifetime', 60 * 60 * 24);
+//
+//    session_start();
+//
+//    // each client should remember their session id for EXACTLY 24 hour
+//    session_set_cookie_params(60 * 60 * 24);
+//}
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.use_cookies', 1);
 ini_set('session.use_only_cookies', 1);
 ini_set('session.hash_function', 1);
 ini_set('session.hash_bits_per_character', 4);
+session_start();
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

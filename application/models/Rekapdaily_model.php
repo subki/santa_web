@@ -7,20 +7,54 @@ class Rekapdaily_model extends CI_Model {
     public function __construct(){
         parent::__construct();
         $this->table = "sales_trans_header";
-        $this->query = "SELECT a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
-                        DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , 
-                        a.verifikasi_finance, c.top_day , so.doc_date tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, 
-                        a.status, a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , so.customer, c.customer_name, so.store_code, 
-                          so.sales , sl.salesman_name, c.address1, c.address2, r.name AS regency_name , store.store_name,c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby , 
-                        a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
-                        FROM sales_trans_header a 
-                        LEFT JOIN (sales_online_header so  
-                            LEFT JOIN salesman sl ON sl.salesman_id=so.sales 
-                            INNER JOIN customer c ON so.customer=c.customer_code 
-                            LEFT JOIN regencies r ON r.id = c.regency_id 
-                            LEFT JOIN profile_p store ON store.store_code=so.store_code) ON so.docno = a.base_so 
-                            LEFT JOIN users u1 ON a.crtby=u1.user_id LEFT JOIN users u2 ON a.updby=u2.user_id 
-                            ";
+        // $this->query = "SELECT a.iwd, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
+        //                 DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , 
+        //                 a.verifikasi_finance, c.top_day , so.doc_date tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, 
+        //                 a.status, a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , so.customer, c.customer_name, so.store_code, 
+        //                   so.sales , sl.salesman_name, c.address1, c.address2, r.name AS regency_name , store.store_name,c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby , 
+        //                 a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
+        //                 FROM sales_trans_header a 
+        //                 LEFT JOIN (sales_online_header so  
+        //                     LEFT JOIN salesman sl ON sl.salesman_id=so.sales 
+        //                     INNER JOIN customer c ON so.customer=c.customer_code 
+        //                     LEFT JOIN regencies r ON r.id = c.regency_id 
+        //                     LEFT JOIN profile_p store ON store.store_code=so.store_code) ON so.docno = a.base_so 
+        //                     LEFT JOIN users u1 ON a.crtby=u1.user_id LEFT JOIN users u2 ON a.updby=u2.user_id 
+        //                     ";
+        $this->query = "SELECT a.gross_sales,a.total_ppn,a.total_disc,a.sales_before_tax,a.sales_after_tax,a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date,  
+                                DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, 
+                                DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , a.verifikasi_finance, c.top_day ,a.doc_date tgl_so, 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, a.status, 
+                                a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , c.customer_code,
+                                c.customer_name,  c.address1, c.address2, 
+                                r.name AS regency_name , c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, 
+                                IFNULL(u2.fullname, a.updby) AS updby , a.crtdt tanggal_crt, a.upddt tanggal_upd, 
+                                DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
+                                FROM sales_trans_header a
+                                -- LEFT JOIN sales_trans_detail dd ON dd.sales_trans_header_id=a.id 
+                                LEFT JOIN customer c ON a.customer_code=c.customer_code 
+                                LEFT JOIN regencies r ON r.id = c.regency_id  
+                                LEFT JOIN users u1 ON a.crtby=u1.user_id 
+                                LEFT JOIN users u2 ON a.updby=u2.user_id 
+                            "; 
+         $this->query2 = "SELECT COUNT(dd.qty_order) qty_item,SUM(dd.qty_on_sales) qty_order, a.gross_sales,a.total_ppn,a.total_disc,a.sales_before_tax,a.sales_after_tax,a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, 
+                                DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, 
+                                DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , a.verifikasi_finance, c.top_day ,a.doc_date tgl_so, 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, a.status, 
+                                a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , c.customer_code,
+                                c.customer_name,  c.address1, c.address2, 
+                                r.name AS regency_name , c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, 
+                                IFNULL(u2.fullname, a.updby) AS updby , a.crtdt tanggal_crt, a.upddt tanggal_upd, 
+                                DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
+                                FROM sales_trans_header a
+                                INNER JOIN sales_trans_detail dd ON dd.sales_trans_header_id=a.id 
+                                INNER JOIN customer c ON a.customer_code=c.customer_code 
+                                LEFT JOIN regencies r ON r.id = c.regency_id  
+                                LEFT JOIN users u1 ON a.crtby=u1.user_id 
+                                LEFT JOIN users u2 ON a.updby=u2.user_id 
+                            "; 
     }
 
     function get_list_data($page,$rows,$sort,$order,$role,$fltr){
@@ -42,9 +76,26 @@ class Rekapdaily_model extends CI_Model {
     }
 
     function read_data($code){
-        $q = $this->query." where a.id='$code'";
+        $q = "SELECT(  SELECT COUNT(nobar) FROM
+                    ( SELECT DISTINCT nobar FROM sales_trans_detail WHERE sales_trans_header_id='$code'
+                    ) AS item)qty_item,SUM(dd.qty_on_sales) qty_order, a.gross_sales,a.total_ppn,a.total_disc,a.sales_before_tax,a.sales_after_tax,a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, 
+                                DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, 
+                                DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , a.verifikasi_finance, c.top_day ,a.doc_date tgl_so, 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, a.status, 
+                                a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , c.customer_code,
+                                c.customer_name,  c.address1, c.address2, 
+                                r.name AS regency_name , c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, 
+                                IFNULL(u2.fullname, a.updby) AS updby , a.crtdt tanggal_crt, a.upddt tanggal_upd, 
+                                DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
+                                FROM sales_trans_header a
+                                INNER JOIN sales_trans_detail dd ON dd.sales_trans_header_id=a.id 
+                                INNER JOIN customer c ON a.customer_code=c.customer_code 
+                                LEFT JOIN regencies r ON r.id = c.regency_id  
+                                LEFT JOIN users u1 ON a.crtby=u1.user_id 
+                                LEFT JOIN users u2 ON a.updby=u2.user_id  where a.id='$code'";
         return $this->db->query($q);
-    }
+    } 
     function cek_nofaktur($code){
         $q = $this->query." where a.no_faktur='$code'";
         return $this->db->query($q);
@@ -66,6 +117,51 @@ class Rekapdaily_model extends CI_Model {
         $insert_id = $this->db->insert_id();
         $this->copyPLtoWS($data, $insert_id);
         return $insert_id;
+    } 
+    function read_datadailypost($from,$to,$customer_code,$docno){ 
+        $sql = "INSERT into sales_trans_detail (
+                    sales_trans_header_id, base_so, item, nobar, tipe
+                    , komisi_persen, qty_order, qty_on_sales, qty_refund, uom_code
+                    , unit_price, disc1_persen, disc1_amount, disc2_persen, disc2_amount
+                    , disc_total, disc_open, net_unit_price
+                    , bruto_before_tax, total_tax, netto_after_tax, status_detail, crtby, crtdt)
+                SELECT $docno,b.docno, p.product_code, bg.nobar, b.type
+                  , 0, b.qty_order, b.qty_order, 0, p.satuan_jual
+                  , b.unitprice, b.disc1_persen, b.disc1_amount, b.disc2_persen, b.disc2_amount
+                  , b.disc_total, 0, b.net_unit_price
+                  , b.bruto_before_tax, b.total_tax, b.bruto_before_tax-b.total_tax, 'OPEN', '$crtby', NOW()
+                FROM  sales_online_detail b
+                LEFT JOIN sales_online_header b1 ON b1.docno = b.docno
+                LEFT JOIN product_barang bg ON bg.nobar=b.nobar
+                LEFT JOIN product p ON p.id = bg.product_id 
+                WHERE b1.customer='$customer_code' AND b1.status='POSTING' AND b1.doc_date BETWEEN '$from' AND '$to'";
+        $this->db->query($sql);
+        $sql3 = "UPDATE sales_trans_header AS dest , 
+                (SELECT COUNT(nobar) item, SUM(qty_order) qty , 
+                    SUM(CEILING(sales_online_detail.unitprice)) bruto , 
+                    SUM(CEILING(sales_online_detail.disc_total)) disc , 
+                    SUM(CEILING(sales_online_detail.bruto_before_tax)) before_tax , 
+                    SUM(CEILING(sales_online_detail.net_after_tax)) after_tax , 
+                    SUM(CEILING(sales_online_detail.total_tax)) ppn 
+                    FROM sales_online_detail
+                    LEFT JOIN sales_online_header b1 ON b1.docno = sales_online_detail.docno
+                    WHERE b1.customer='$customer_code' AND b1.status='POSTING' AND b1.doc_date BETWEEN '$from' AND '$to') AS src 
+                    SET dest.gross_sales = src.bruto,
+                        dest.total_ppn = src.ppn,
+                        dest.total_disc = src.disc ,
+                        dest.sales_before_tax = src.before_tax , 
+                        dest.sales_after_tax = src.after_tax
+                WHERE dest.id='$docno'";
+        $this->db->query($sql3);
+          $sql2 = "UPDATE sales_online_header so 
+                    SET so.status='CLOSED'
+                    WHERE so.customer='$customer_code' AND so.status='POSTING' and so.doc_date between '$from' and '$to'";
+        $this->db->query($sql2);
+        //   $sql2 = "UPDATE sales_online_detail so 
+        //             INNER JOIN sales_online_header b1 ON b1.docno = b.docno
+        //             SET so.status_detail='CLOSED'
+        //             WHERE b1.customer='$customer_code' and b1.doc_date between '$from' and '$to'";
+        // $this->db->query($sql2);
     }
     function copyPLtoWS($data, $insert_id){
         $base_so = $data['base_so'];
@@ -229,5 +325,26 @@ class Rekapdaily_model extends CI_Model {
         $sql .="order by " .$sort." $order
                 limit ".($page-1)*$rows.",".$rows;
         return $this->db->query($sql)->result();
+    }
+    function read_datadaily($from,$to,$customer_code){
+       $query = "SELECT DATE_FORMAT(p.tgl_pickup, '%d/%b/%Y') tgl_pickup,so.docno,so.remark
+                  , a.sales_date, DATE_FORMAT(a.sales_date, '%d/%m/%Y') ak_doc_date
+                  , DATE_FORMAT(so.doc_date, '%d/%b/%Y') tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so
+                  , a.so_number,so.so_no, so.status, c.address1, c.phone1, c.pkp, c.beda_fp
+                  , so.customer customer_code, c.customer_name, so.qty_item, so.qty, so.sales
+                  , so.disc1_persen, so.disc2_persen  
+                  , so.gross_sales, so.total_discount, so.sales_before_tax, so.total_ppn, so.sales_after_tax
+                  , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby
+                  , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
+                FROM sales_online_header so
+                LEFT JOIN  sales_online_detail a  ON so.docno=a.so_number
+                LEFT JOIN pickup_d d ON so.docno=d.barcode
+                LEFT JOIN pickup_h p ON p.id=d.pickup_h_id
+                LEFT JOIN customer c ON so.customer=c.customer_code
+                LEFT JOIN users u1 ON a.crtby=u1.user_id
+                LEFT JOIN users u2 ON a.updby=u2.user_id
+                WHERE so.customer='$customer_code' and so.doc_date between '$from' and '$to' and so.status='POSTING'"; 
+        return $this->db->query($query);
     }
 }

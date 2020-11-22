@@ -397,4 +397,47 @@ class IO_Controller extends CI_Controller {
         }
     }
 
+    /**
+     * @param $data     = text data yg mau di print. ex : array('A','B',200)
+     * @param $dataType = tipe data dari $data. ex : array('text','text','curr')
+     * @param $width    = lebar column tiap baris data(tergantung dari jenis lebar kertas).
+     *                      ex : ukuran 35mm => array(8,18,12)
+     * @return string   = hasil dari proses di kembalikan ke controller buat di print.
+     */
+    function createRowColumn($data,$dataType,$width) {
+        $calculateRows = array();
+        $columnData = array();
+        foreach ($data as $key => $d){
+            $column = wordwrap($d, $width[$key], "\n", true);
+//            if($key==count($data)-1)pre($column);
+            $exp = explode("\n", $column);
+//            if($key==count($data)-1)pre($exp);
+            $calculateRows[] = count($exp);
+            $columnData[] = $exp;
+        }
+//        pre($columnData);
+//        pre($calculateRows);
+//        pre($width);
+//        pre($dataType);
+//        pre($data);
+
+        $maxRows = max($calculateRows);
+//        pre($maxRows);
+        $tempRows = array();
+        for ($i = 0; $i < $maxRows; $i++) {
+            $tempColumns = "";
+            foreach ($columnData as $j => $row){
+                if ($dataType[$j] == "curr") {
+                    $tempColumns = str_pad((isset($row[$i]) ? $row[$i] : ""), $width[$j], " ", STR_PAD_LEFT);
+                } else $tempColumns .= str_pad((isset($row[$i]) ? $row[$i] : ""), $width[$j], " ");
+            }
+            $tempRows[] = $tempColumns;
+        };
+//        pre($tempRows);
+//        pre($maxRows);
+        $imp  = implode($tempRows, "\n") . "\n";
+//        pre($imp);
+        return $imp;
+    }
+
 }
