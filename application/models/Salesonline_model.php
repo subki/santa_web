@@ -12,7 +12,7 @@ class Salesonline_model extends CI_Model {
                   , DATE_FORMAT(so.doc_date, '%d/%b/%Y') tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so
                   , a.so_number,so.so_no, so.status, c.address1, c.phone1, c.pkp, c.beda_fp
                   , so.customer customer_code, c.customer_name, so.qty_item, so.qty, so.sales
-                  , so.disc1_persen, so.disc2_persen  
+                  , so.disc1_persen, so.disc2_persen  , so.doc_date  
                   , so.gross_sales, so.total_discount, so.sales_before_tax, so.total_ppn, so.sales_after_tax
                   , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby
                   , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
