@@ -249,6 +249,36 @@ class Subki extends IO_Controller {
         echo "SQL FOR ".$dbgroup2.".".$dbname2." : <div style='width:100%;height:auto;background-color:lightgrey;'>".$sql_for_group2."</div>";
     }
 
+    public function menu_finance(){
+    	$data = [];
+    	$data[] = array(
+    		"app_id"=>"M1001",
+				"seq"=>"",
+				"app_name"=>"Verifikasi Finance OK",
+				"url"=>"Finance",
+				"icon"=>"icon-finance-ok",
+				"parent"=>"M10"
+			);
+    	$data[] = array(
+    		"app_id"=>"M1001",
+				"seq"=>"",
+				"app_name"=>"Verifikasi Finance OK",
+				"url"=>"Finance",
+				"icon"=>"icon-finance-ok",
+				"parent"=>"M10"
+			);
+    	$data[] = array(
+    		"app_id"=>"M1002",
+				"seq"=>"1",
+				"app_name"=>"AR Receipt",
+				"url"=>"Finance/ar",
+				"icon"=>"icon-finance-ar",
+				"parent"=>"M10"
+			);
+    	$this->db->insert_batch('app',$data);
+
+		}
+
 
 
 }
