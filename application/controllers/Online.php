@@ -13,17 +13,20 @@ class Online extends IO_Controller {
 
     function index($aksi=""){
         $data['title'] = 'Sales Order Online';
+        $data['datenow'] = date("d/m/Y"); 
         $data['content'] = $this->load->view('vSalesorderonline', $data, TRUE);
         $this->load->view('main',$data);
     }
 
     function form($aksi=""){
         $data['aksi']=$aksi;
+       $get = $this->toUpper($this->input->post()); 
         if($aksi=="add"){
             $data['title'] = 'Add Sales Order Online';
             $docno = $this->model->generate_auto_number();
             $data['title'] = 'Add Sales Order Online';
             $data['docno'] = $docno;
+            $data['tgl'] = $get['tglnow'];  
             $customer_code=$this->input->get('customer_code');
             $data['customer_code'] = $customer_code;
             $customer_name=$this->input->get('customer_name');
@@ -48,7 +51,7 @@ class Online extends IO_Controller {
         }
         else{
             if($status=='ALL'){  
-                $f = $this->getParamGrid(" doc_date='$tgl' ","status");
+                $f = $this->getParamGrid(" doc_date <= '$tgl' and status='OPEN' ","status");
             }
             else{ 
                 $f = $this->getParamGrid(" status='$status' and doc_date='$tgl' ","status");

@@ -1,4 +1,40 @@
-var options={
+$(document).ready(function () {     
+ // var date = new Date();
+ //        var y = date.getFullYear();
+ //        var m = date.getMonth()+1;
+ //        var d = date.getDate();
+ //        var tgl =  (d<10?('0'+d):d)+'/'+(m<10?('0'+m):m)+'/'+y;
+ //        $("#doc_date").datebox('setValue', tgl);
+ //        $("#doc_date").datebox('setText', tgl);
+    $('#periode').datebox({
+        // formatter:function (date) {
+        //     var y = date.getFullYear();
+        //     var m = date.getMonth()+1;
+        //     var d = date.getDate();
+        //     return y+(m<10?('0'+m):m);
+        // }, 
+        onSelect: function(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var prd =  y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
+            var status = $('#jenis_status').combogrid('getValue'); 
+                // console.log(status);
+            if(status!==""){
+                $('#dg').datagrid({url:base_url+"Online/load_grid/"+status+"/"+prd});
+               
+                // $('#dg').datagrid({url:base_url+"Online/load_grid/", 
+                //    data: {
+                //        prd:prd,
+                //        status:status 
+                //    }});
+               // $('#dg').datagrid('destroyFilter');
+                $('#dg').datagrid('enableFilter');
+            }
+        }
+    });
+  
+var options={ 
     url: base_url+"Online/load_grid/ALL/ALL1",
     title:"Sales Order Online",
     method:"POST",
@@ -13,13 +49,15 @@ var options={
     sortName:"status",
     sortOrder:"asc",
     singleSelect:true,
-    toolbar:[{
+    toolbar:[
+    {
         iconCls: 'icon-add', id:'add',
         text:'New',
         handler: function(){
-            window.location.href = base_url+"Online/form/add"
+            addonline();
         }
-    },{
+    },
+    {
         id:'edit',
         iconCls: 'icon-edit',
         text:'Edit',
@@ -71,36 +109,6 @@ var options={
         authbutton();
     },
 };
-$(document).ready(function () {     
-
-    $('#periode').datebox({
-        // formatter:function (date) {
-        //     var y = date.getFullYear();
-        //     var m = date.getMonth()+1;
-        //     var d = date.getDate();
-        //     return y+(m<10?('0'+m):m);
-        // },
-        onSelect: function(date){
-            var y = date.getFullYear();
-            var m = date.getMonth()+1;
-            var d = date.getDate();
-            var prd =  y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
-            var status = $('#jenis_status').combogrid('getValue');
-                console.log(status);
-            if(status!==""){
-                $('#dg').datagrid({url:base_url+"Online/load_grid/"+status+"/"+prd});
-               
-                // $('#dg').datagrid({url:base_url+"Online/load_grid/", 
-                //    data: {
-                //        prd:prd,
-                //        status:status 
-                //    }});
-               // $('#dg').datagrid('destroyFilter');
-                $('#dg').datagrid('enableFilter');
-            }
-        }
-    });
-});  
 setTimeout(function () {
     initGrid();
 },500);
@@ -110,18 +118,13 @@ function initGrid() {
     $('#dg').datagrid('enableFilter');
 }
 
-function addnew(){
-
-}
 function editData(){
     let row = getRow();
     if(row==null) return
     window.location.href = base_url+"Online/form/edit?docno="+row.docno
 }
 
-function Refresh(){ 
-    window.location.href = base_url+"Online";
-}
+
 function deleteData(){
     let row = getRow();
     if(row==null) return
@@ -182,8 +185,7 @@ function showCustomer() {
 
         }
     });
-}
-
+} 
 function showCustomer2(r) {
     if(!r) return
     var msg = `
@@ -236,4 +238,13 @@ function showCustomer2(r) {
     </table>
     `;
     $.messager.alert("Customer Info",msg);
+}
+
+});   
+// function addonline(){
+//     var tglnow = $('#remarkd').datebox('getValue'); 
+//             $.redirect(base_url+"Online/form/add", {'tglnow': tglnow});  
+// }
+function Refresh(){ 
+    window.location.href = base_url+"Online";
 }

@@ -1,10 +1,11 @@
 <script type="text/javascript">
-    var base_url="<?php echo base_url();?>";
+    var base_url="<?php echo base_url();?>"; 
     var role = "<?php echo $this->session->userdata('role'); ?>";
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/soonline_grid.js"></script>
-<div id="p2" data-options="region:'north', height:80">
+<script src="<?php echo base_url(); ?>assets/js/soonline_grid.js"></script> 
+<script src="<?php echo base_url(); ?>assets/js/redirect.js"></script> 
+  <div id="p2" data-options="region:'north', height:80">
         <table style="width: 90%; margin:10px;">
             <tr style="width: 100%">
                 <td style="margin:10px; width: 10%;">
@@ -17,11 +18,11 @@
                     </select>
                 </td> 
                 <td style="margin:10px; width: 20%;">
-                    <input name="periode" id="periode" class="easyui-datebox" labelPosition="top" tipPosition="right" required="true" label="Tanggal:" style="width:50%;">
+                    <input name="periode" id="periode" value="<?php echo $datenow;?>" class="easyui-datebox" labelPosition="top" tipPosition="right" required="true" label="Tanggal:" style="width:50%;">
                     </input>
-                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Refresh()" iconCls="icon-reload" plain="true">Refresh</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Refresh()" iconCls="icon-reload" plain="true">Refresh</a> 
                 </td>
-                <td style="margin:10px; width: 30%;"> 
+                <td style="margin:10px; width: 30%;">   
                 </td>
             </tr>
         </table>
@@ -36,3 +37,12 @@
 <!--    <a href="--><?php //echo base_url(); ?><!--Salesorder/form/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">New</a>-->
 <!--    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="editData()" iconCls="icon-edit" plain="true">Edit</a>-->
 <!--</div>-->
+<!-- <div id="toolbar"> 
+	<input name="jenis_status" id="jenis_status" class="easyui-combobox" labelPosition="top" tipPosition="bottom" required="true" label="Jenis Status:" style="width:100%;">
+</div>  --> 
+<script type="text/javascript">
+    function addonline(){
+        var fromdate = $('#periode').datebox('getValue');
+             $.redirect(base_url+"Online/form/add", {'tglnow': fromdate}); 
+    } 
+</script>
