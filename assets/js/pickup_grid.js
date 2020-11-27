@@ -27,11 +27,11 @@ var options={
             editData()
         }
     },{
-        id:'customer',
-        iconCls: 'icon-customer',
-        text:'Customer Info',
+        id:'delete',
+        iconCls: 'icon-remove',
+        text:'Delete',
         handler: function(){
-            showCustomer()
+           deleteData();
         }
     }
     //     {
@@ -89,14 +89,14 @@ function editData(){
     if(row==null) return
     window.location.href = base_url+"Pickup/form/edit?id="+row.id
 }
-
+ 
 function deleteData(){
-    let row = getRow();
+    let row = getRow(true);
     if(row==null) return
     $.messager.confirm('Confirm','Are you sure you want to destroy this data?',function(r){
         if (r){
             $.post(
-                base_url+"productbrand/delete_data/"+row.brand_code,function(result){
+                base_url+"Pickup/delete_data/"+row.id,function(result){
                     var res = $.parseJSON(result);
                     if (res.status===1){
                         $.messager.show({    // show error message
@@ -110,7 +110,7 @@ function deleteData(){
             );
         }
     });
-}
+} 
 
 function getRow() {
     var row = $('#dg').datagrid('getSelected');

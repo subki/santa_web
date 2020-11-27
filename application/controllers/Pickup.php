@@ -231,11 +231,11 @@ class Pickup extends IO_Controller {
         try {
             $read = $this->model->read_data($code);
             if ($read->num_rows() > 0) {
-
-                $read = $this->model->read_transactions($code);
-                if ($read->num_rows() > 0) {
+ 
+                $readstatus = $read->row()->status; 
+                if ($readstatus=='Pickup') {
                     $result = 1;
-                    $msg="Data tidak bisa dihapus, sudah ada transaksi";
+                    $msg="Data tidak bisa dihapus";
                 }else{
                     $this->model->delete_data($code);
                     $result = 0;
@@ -243,7 +243,7 @@ class Pickup extends IO_Controller {
                 }
             } else {
                 $result = 1;
-                $msg="Kode tidak ditemukan";
+                $msg="Data tidak ditemukan";
             }
         }catch (Exception $e){
             $result = 1;

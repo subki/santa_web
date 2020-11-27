@@ -232,10 +232,12 @@ function initGrid() {
         sortName: "tgl",
         sortOrder: "desc",
         singleSelect: true, nowrap:false,
-        toolbar: [{
-            iconCls: 'icon-add', id:'add', text:'New',
-            handler: function(){$('#dg').edatagrid('addRow',0)}
-        },{
+        toolbar: [
+        // {
+        //     iconCls: 'icon-add', id:'add', text:'New',
+        //     handler: function(){$('#dg').edatagrid('addRow',0)}
+        // },
+        {
             id:'delete', iconCls: 'icon-remove', text:'Delete',
             handler: function(){
                 if (pickup.status!=="Open"){
@@ -247,19 +249,22 @@ function initGrid() {
                 }
                 $('#dg').edatagrid('destroyRow')
             }
-        },{
-            id:'submit', iconCls: 'icon-save', text:'Submit',
-            handler: function(){
-                var selectedrow = $("#dg").edatagrid("getSelected");
-                var rowIndex = $("#dg").edatagrid("getRowIndex", selectedrow);
+        },
+        // {
+        //     id:'submit', iconCls: 'icon-save', text:'Submit',
+        //     handler: function(){
+        //         var selectedrow = $("#dg").edatagrid("getSelected");
+        //         var rowIndex = $("#dg").edatagrid("getRowIndex", selectedrow);
  
-               $('#dg').edatagrid('saveRow')
+        //        $('#dg').edatagrid('saveRow')
 
-            }
-        },{
-            id:'cancel', iconCls: 'icon-undo', text:'Cancel',
-            handler: function(){$('#dg').edatagrid('cancelRow')}
-        }],
+        //     }
+        // }
+        // {
+        //     id:'cancel', iconCls: 'icon-undo', text:'Cancel',
+        //     handler: function(){$('#dg').edatagrid('cancelRow')}
+        // }
+        ],
         loadFilter: function (data) {
 
                     console.log(data)

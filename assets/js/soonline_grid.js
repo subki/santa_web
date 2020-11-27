@@ -19,9 +19,10 @@ $(document).ready(function () {
             var d = date.getDate();
             var prd =  y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
             var status = $('#jenis_status').combogrid('getValue'); 
-                // console.log(status);
+            var customer_code = $('#customer_code').val(); 
+                 console.log(customer_code);
             if(status!==""){
-                $('#dg').datagrid({url:base_url+"Online/load_grid/"+status+"/"+prd});
+                $('#dg').datagrid({url:base_url+"Online/load_grid/"+status+"/"+customer_code+"/"+prd});
                
                 // $('#dg').datagrid({url:base_url+"Online/load_grid/", 
                 //    data: {
@@ -35,7 +36,7 @@ $(document).ready(function () {
     });
   
 var options={ 
-    url: base_url+"Online/load_grid/ALL/ALL1",
+   // url: base_url+"Online/load_grid/ALL/Customer/ALL1",
     title:"Sales Order Online",
     method:"POST",
     pagePosition:"top",
@@ -55,6 +56,13 @@ var options={
         text:'New',
         handler: function(){
             addonline();
+        }
+    },{
+        id:'delete',
+        iconCls: 'icon-remove',
+        text:'Delete',
+        handler: function(){
+           deleteData();
         }
     },
     {
@@ -125,13 +133,14 @@ function editData(){
 }
 
 
+ 
 function deleteData(){
-    let row = getRow();
+    let row = getRow(true);
     if(row==null) return
     $.messager.confirm('Confirm','Are you sure you want to destroy this data?',function(r){
         if (r){
             $.post(
-                base_url+"productbrand/delete_data/"+row.brand_code,function(result){
+                base_url+"Online/delete_data/"+row.docno,function(result){
                     var res = $.parseJSON(result);
                     if (res.status===1){
                         $.messager.show({    // show error message
@@ -145,7 +154,7 @@ function deleteData(){
             );
         }
     });
-}
+} 
 
 function getRow() {
     var row = $('#dg').datagrid('getSelected');

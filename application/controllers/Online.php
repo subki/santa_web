@@ -41,20 +41,33 @@ class Online extends IO_Controller {
         $this->load->view('main',$data);
     }
 
-    function load_grid($status, $prd){  
+    function load_grid($status, $cust, $prd){  
+
         $d= substr($prd,6); 
         $y= substr($prd, 0, 4);
         $m= substr($prd, 4, 2);
         $tgl = $y."-".$m."-".$d;   
-        if($status=='ALL' AND $prd=='ALL1'){   
-            $f = $this->getParamGrid("  status='OPEN' ","status");
+        $kdcust = $cust; 
+        $dtnow=date('Y-m-d');
+        //var_dump($kdcust); $f = $this->getParamGrid("","status");
+        // $f = $this->getParamGrid(" CASE WHEN  status != '$status'  THEN doc_date <= '$tgl' ELSE  doc_date = '$tgl' END
+        //     AND (status )
+        //     AND CASE WHEN '$tgl' != '$dtnow' THEN status='OPEN' ELSE  status in('OPEN','BATAL','CLOSED','ON ORDER') END   
+        //                      ","status");
+        if($status=='ALL'){   
+            if($cust=='~'){
+                $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END ","status");
+             }
+             else{
+                 $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END  and customer_code like '%$cust%' ","status");
+             }
         }
         else{
-            if($status=='ALL'){  
-                $f = $this->getParamGrid(" doc_date <= '$tgl' and status='OPEN' ","status");
+            if($cust=='~'){  
+                $f = $this->getParamGrid(" doc_date <= '$tgl' AND status='$status'","status");
             }
             else{ 
-                $f = $this->getParamGrid(" status='$status' and doc_date='$tgl' ","status");
+                $f = $this->getParamGrid(" status='$status' and doc_date <='$tgl' and customer_code like '%$cust%' ","status");
             }
         }
         $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
@@ -66,6 +79,19 @@ class Online extends IO_Controller {
         );
     }
 
+    function load_gridcust(){
+        $gol = $this->input->get('golongan');
+        $f = $this->getParamGrid("","customer_code");
+        $data = $this->model->get_list_datacust($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],0,$gol);
+
+        echo json_encode(array(
+                "status" => 1,
+                "msg" => "OK",
+                "total"=>(count($data)>0)?$data[0]->total:0,
+                "data" =>$data)
+        );
+
+    }
     function save_data_header(){
        $input = $this->toUpper($this->input->post()); 
             $docno = $this->model->generate_auto_number($input['pkp'],$input['store_code']);
@@ -222,14 +248,15 @@ class Online extends IO_Controller {
     }
 
     function delete_data($code){
-        try {
+     try {
             $read = $this->model->read_data($code);
             if ($read->num_rows() > 0) {
+ 
+                $readstatus = $read->row()->status; 
 
-                $read = $this->model->read_transactions($code);
-                if ($read->num_rows() > 0) {
+                if ($readstatus=='CLOSED') {
                     $result = 1;
-                    $msg="Data tidak bisa dihapus, sudah ada transaksi";
+                    $msg="Data tidak bisa dihapus";
                 }else{
                     $this->model->delete_data($code);
                     $result = 0;
@@ -237,7 +264,7 @@ class Online extends IO_Controller {
                 }
             } else {
                 $result = 1;
-                $msg="Kode tidak ditemukan";
+                $msg="Data tidak ditemukan";
             }
         }catch (Exception $e){
             $result = 1;
