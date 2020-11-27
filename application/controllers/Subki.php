@@ -249,6 +249,10 @@ class Subki extends IO_Controller {
         echo "SQL FOR ".$dbgroup2.".".$dbname2." : <div style='width:100%;height:auto;background-color:lightgrey;'>".$sql_for_group2."</div>";
     }
 
+    public function test($p){
+			echo date("Y-m-d",strtotime("+0 month",strtotime($p."25")));
+		}
+
 
 
 }
