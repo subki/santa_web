@@ -1,5 +1,5 @@
 var options={
-    url: base_url+"Salesonline/load_grid",
+    url: base_url+"Salesonline/load_grid/ALL/ALL1",
     title:"Daily Sales Online",
     method:"POST",
     pagePosition:"top",
@@ -39,7 +39,36 @@ var options={
         authbutton();
     },
 };
+$(document).ready(function () {     
 
+    $('#periode').datebox({
+        // formatter:function (date) {
+        //     var y = date.getFullYear();
+        //     var m = date.getMonth()+1;
+        //     var d = date.getDate();
+        //     return y+(m<10?('0'+m):m);
+        // },
+        onSelect: function(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var prd =  y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
+            var status = $('#jenis_status').combogrid('getValue');
+                console.log(status);
+            if(status!==""){
+                $('#dg').datagrid({url:base_url+"Salesonline/load_grid/"+status+"/"+prd});
+               
+                // $('#dg').datagrid({url:base_url+"Online/load_grid/", 
+                //    data: {
+                //        prd:prd,
+                //        status:status 
+                //    }});
+               // $('#dg').datagrid('destroyFilter');
+                $('#dg').datagrid('enableFilter');
+            }
+        }
+    }); 
+});  
 setTimeout(function () {
     initGrid();
 },500);
@@ -55,6 +84,9 @@ function editData(){
     window.location.href = base_url+"Salesonline/form/edit?docno="+row.docno
 }
 
+function Refresh(){ 
+    window.location.href = base_url+"Salesonline";
+}
 function deleteData(){
     let row = getRow();
     if(row==null) return

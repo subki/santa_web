@@ -102,6 +102,7 @@ $(document).ready(function () {
         $("#dis_faktur1").show();
         $("#dis_faktur2").hide();
 
+        $("#getdate").hide();
         $("#store_code").combogrid('setValue',store_code);
         $("#location_code").combogrid('setValue',location_code);
         $("#status").textbox('setValue','OPEN');

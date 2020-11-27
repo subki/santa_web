@@ -31,8 +31,23 @@ class Salesonline extends IO_Controller {
         $this->load->view('main',$data);
     }
 
-    function load_grid(){
-        $f = $this->getParamGrid("","doc_date");
+     function load_grid($status, $prd){ 
+        $d= substr($prd,6); 
+        $y= substr($prd, 0, 4);
+        $m= substr($prd, 4, 2);
+        $tgl = $y."-".$m."-".$d;  
+        // var_dump($prd)  ;
+        if($status=='ALL' AND $prd=='ALL1'){   
+            $f = $this->getParamGrid("","doc_date");
+        }
+        else{
+            if($status=='ALL'){  
+                $f = $this->getParamGrid(" doc_date='$tgl' ","doc_date");
+            }
+            else{ 
+                $f = $this->getParamGrid(" status='$status' and doc_date='$tgl' ","doc_date");
+            }
+        } 
         //var_dump($f);
         $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(

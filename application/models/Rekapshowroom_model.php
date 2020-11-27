@@ -21,7 +21,26 @@ class Rekapshowroom_model extends CI_Model {
         //                     LEFT JOIN profile_p store ON store.store_code=so.store_code) ON so.docno = a.base_so 
         //                     LEFT JOIN users u1 ON a.crtby=u1.user_id LEFT JOIN users u2 ON a.updby=u2.user_id 
         //                     ";
-        $this->query = "SELECT COUNT(dd.qty_order) qty_item,SUM(dd.qty_on_sales) qty_order, a.gross_sales,a.total_ppn,a.total_disc,a.sales_before_tax,a.sales_after_tax,a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, 
+        $this->query = "SELECT a.gross_sales,a.total_ppn,a.total_disc,a.sales_before_tax,a.sales_after_tax,a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, 
+                                DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, 
+                                DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , a.verifikasi_finance, c.top_day ,a.doc_date tgl_so, 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, a.status, 
+                                a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , c.customer_code,
+                                c.customer_name,  c.address1, c.address2,c.salesman_id, 
+                                r.name AS regency_name , c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, 
+                                IFNULL(u2.fullname, a.updby) AS updby , a.crtdt tanggal_crt, a.upddt tanggal_upd, 
+                                DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
+                                FROM sales_trans_header a
+                                -- INNER JOIN sales_trans_detail dd ON dd.sales_trans_header_id=a.id 
+                                INNER JOIN customer c ON a.customer_code=c.customer_code 
+                                LEFT JOIN regencies r ON r.id = c.regency_id  
+                                LEFT JOIN users u1 ON a.crtby=u1.user_id 
+                                LEFT JOIN users u2 ON a.updby=u2.user_id 
+                            "; 
+        $this->query2 = "SELECT (  SELECT COUNT(nobar) FROM
+                    ( SELECT DISTINCT nobar FROM sales_trans_detail WHERE sasles_trans_header_id='$code'
+                    ) AS item)qty_item, SUM(dd.qty_on_sales) qty_order, a.gross_sales,a.total_ppn,a.total_disc,a.sales_before_tax,a.sales_after_tax,a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, 
                                 DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
                                 DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, 
                                 DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , a.verifikasi_finance, c.top_day ,a.doc_date tgl_so, 
@@ -59,7 +78,24 @@ class Rekapshowroom_model extends CI_Model {
     }
 
     function read_data($code){
-        $q = $this->query." where a.id='$code'";
+        $q = "SELECT (  SELECT COUNT(nobar) FROM
+                    ( SELECT DISTINCT nobar FROM sales_trans_detail WHERE sales_trans_header_id='$code'
+                    ) AS item)qty_item, SUM(dd.qty_on_sales) qty_order, a.gross_sales,a.total_ppn,a.total_disc,a.sales_before_tax,a.sales_after_tax,a.id, a.no_faktur,a.no_faktur2, a.seri_pajak , a.doc_date, 
+                                DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date , 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2 , a.faktur_date, 
+                                DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date , a.verifikasi_finance, c.top_day ,a.doc_date tgl_so, 
+                                DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_tgl_so , a.base_so, a.remark, a.status, 
+                                a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp , c.customer_code,
+                                c.customer_name,  c.address1, c.address2,c.salesman_id, 
+                                r.name AS regency_name , c.phone1 , IFNULL(u1.fullname,a.crtby) AS crtby, 
+                                IFNULL(u2.fullname, a.updby) AS updby , a.crtdt tanggal_crt, a.upddt tanggal_upd, 
+                                DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt 
+                                FROM sales_trans_header a
+                                INNER JOIN sales_trans_detail dd ON dd.sales_trans_header_id=a.id 
+                                INNER JOIN customer c ON a.customer_code=c.customer_code 
+                                LEFT JOIN regencies r ON r.id = c.regency_id  
+                                LEFT JOIN users u1 ON a.crtby=u1.user_id 
+                                LEFT JOIN users u2 ON a.updby=u2.user_id where a.id='$code'";
         return $this->db->query($q);
     } 
     function cek_nofaktur($code){

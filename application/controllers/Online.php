@@ -38,8 +38,22 @@ class Online extends IO_Controller {
         $this->load->view('main',$data);
     }
 
-    function load_grid(){
-        $f = $this->getParamGrid("","status");
+    function load_grid($status, $prd){  
+        $d= substr($prd,6); 
+        $y= substr($prd, 0, 4);
+        $m= substr($prd, 4, 2);
+        $tgl = $y."-".$m."-".$d;   
+        if($status=='ALL' AND $prd=='ALL1'){   
+            $f = $this->getParamGrid("  status='OPEN' ","status");
+        }
+        else{
+            if($status=='ALL'){  
+                $f = $this->getParamGrid(" doc_date='$tgl' ","status");
+            }
+            else{ 
+                $f = $this->getParamGrid(" status='$status' and doc_date='$tgl' ","status");
+            }
+        }
         $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
