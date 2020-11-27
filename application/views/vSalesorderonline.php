@@ -39,10 +39,13 @@
             </table>
         </div>
     </div> 
+
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery-easyui-1.9.4/datagrid-filter.js"></script>
 <script type="text/javascript">
     function addonline(){
         var fromdate = $('#periode').datebox('getValue');
-             $.redirect(base_url+"Online/form/add", {'tglnow': fromdate}); 
+        var cust = $('#customer_codeid').val();
+             $.redirect(base_url+"Online/form/add", {'tglnow': fromdate,'cust': cust}); 
     }  
     populateCustomer();
 
@@ -82,13 +85,12 @@
             columns: [[
                  {field:'customer_code', title:'Kode', width:200},
                  {field:'customer_name', title:'Customer', width:300},
-            ]]
-        }); 
-        var gr =  $('#customer_code').combogrid('grid') 
-                //    $('#customer_name').textbox('setValue','')
-            
-        gr.datagrid('destroyFilter'); 
-        gr.datagrid('enableFilter'); 
-        gr.datagrid('doFilter');
+                ]]
+            }); 
+            var gr =  $('#customer_code').combogrid('grid') 
+            gr.datagrid('destroyFilter');
+                    // / $('#customer_name').textbox('setValue','')  
+            gr.datagrid('enableFilter'); 
+            gr.datagrid('doFilter');
         }
 </script>

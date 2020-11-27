@@ -20,14 +20,18 @@ class Online extends IO_Controller {
 
     function form($aksi=""){
         $data['aksi']=$aksi;
-       $get = $this->toUpper($this->input->post()); 
+       $get = $this->toUpper($this->input->post());  
         if($aksi=="add"){
             $data['title'] = 'Add Sales Order Online';
             $docno = $this->model->generate_auto_number();
             $data['title'] = 'Add Sales Order Online';
             $data['docno'] = $docno;
             $data['tgl'] = $get['tglnow'];  
-            $customer_code=$this->input->get('customer_code');
+            if($get['cust']){
+                $customer_code=$get['cust'];
+            }else{ 
+                $customer_code=$this->input->get('customer_code');  
+            }
             $data['customer_code'] = $customer_code;
             $customer_name=$this->input->get('customer_name');
             $data['customer_name'] = $customer_name;
