@@ -6,7 +6,7 @@ $(document).ready(function () {
     var y = date.getFullYear();
     var m = date.getMonth()+1;
     // var prd =  (m<10?('0'+m):m)+"/"+y;
-    var prd2 =  y+(m<10?('0'+m):m);
+    var prd2 =  y+""+(m<10?('0'+m):m);
     // $('#prd').text('Periode : '+prd);
     // $('#periode').textbox('setValue',prd2)
     // $('#periode').textbox('hide')
