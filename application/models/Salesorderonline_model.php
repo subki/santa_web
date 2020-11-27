@@ -32,8 +32,29 @@ class Salesorderonline_model extends CI_Model {
 	            ) ON c.id=a.provinsi_id AND d.id=a.regency_id
 	            LEFT JOIN customer e on a.customer_code=e.customer_code 
 	            LEFT JOIN salesman f on a.salesman_id=f.salesman_id";
+        $this->querycust="select 
+                  a.status, a.gol_customer,  a.customer_class, a.customer_code
+                  , a.customer_name 
+                from customer a   ";
     }
 
+    function get_list_datacust($page,$rows,$sort,$order,$role,$fltr, $opt=0, $golongan=""){
+        $sql = "create temporary table tmp2 as
+                $this->querycust WHERE a.gol_customer='Customer Online'";
+        $this->db->query($sql);
+        $sql = "create temporary table tmp as select * from tmp2 ";
+        if($fltr!=''){
+            $sql .= $fltr;
+        }
+        $this->db->query($sql);
+
+        $sql = "select a.*,
+                (select count(a1.customer_code) from tmp a1 ) as total
+                 from tmp a ";
+        $sql .="order by " .$sort." $order
+                limit ".($page-1)*$rows.",".$rows;
+        return $this->db->query($sql)->result();
+    }
     function get_list_data($page,$rows,$sort,$order,$role,$fltr){
         $sql = "create temporary table tmp2 as
                 $this->query";
@@ -89,7 +110,7 @@ class Salesorderonline_model extends CI_Model {
         $this->db->delete($this->table);
     }
     function read_transactions($code){
-        $this->db->where('brand_code',$code);
+        $this->db->where('docno',$code);
         return $this->db->get('product');
     }
     function generate_auto_number(){

@@ -1,5 +1,42 @@
-var options={
-    url: base_url+"Online/load_grid",
+$(document).ready(function () {     
+ // var date = new Date();
+ //        var y = date.getFullYear();
+ //        var m = date.getMonth()+1;
+ //        var d = date.getDate();
+ //        var tgl =  (d<10?('0'+d):d)+'/'+(m<10?('0'+m):m)+'/'+y;
+ //        $("#doc_date").datebox('setValue', tgl);
+ //        $("#doc_date").datebox('setText', tgl);
+    $('#periode').datebox({
+        // formatter:function (date) {
+        //     var y = date.getFullYear();
+        //     var m = date.getMonth()+1;
+        //     var d = date.getDate();
+        //     return y+(m<10?('0'+m):m);
+        // }, 
+        onSelect: function(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var prd =  y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
+            var status = $('#jenis_status').combogrid('getValue'); 
+            var customer_code = $('#customer_code').val(); 
+                 console.log(customer_code);
+            if(status!==""){
+                $('#dg').datagrid({url:base_url+"Online/load_grid/"+status+"/"+customer_code+"/"+prd});
+               
+                // $('#dg').datagrid({url:base_url+"Online/load_grid/", 
+                //    data: {
+                //        prd:prd,
+                //        status:status 
+                //    }});
+               // $('#dg').datagrid('destroyFilter');
+                $('#dg').datagrid('enableFilter');
+            }
+        }
+    });
+  
+var options={ 
+   // url: base_url+"Online/load_grid/ALL/Customer/ALL1",
     title:"Sales Order Online",
     method:"POST",
     pagePosition:"top",
@@ -13,13 +50,22 @@ var options={
     sortName:"status",
     sortOrder:"asc",
     singleSelect:true,
-    toolbar:[{
+    toolbar:[
+    {
         iconCls: 'icon-add', id:'add',
         text:'New',
         handler: function(){
-            window.location.href = base_url+"Online/form/add"
+            addonline();
         }
     },{
+        id:'delete',
+        iconCls: 'icon-remove',
+        text:'Delete',
+        handler: function(){
+           deleteData();
+        }
+    },
+    {
         id:'edit',
         iconCls: 'icon-edit',
         text:'Edit',
@@ -71,7 +117,6 @@ var options={
         authbutton();
     },
 };
-
 setTimeout(function () {
     initGrid();
 },500);
@@ -81,22 +126,21 @@ function initGrid() {
     $('#dg').datagrid('enableFilter');
 }
 
-function addnew(){
-
-}
 function editData(){
     let row = getRow();
     if(row==null) return
     window.location.href = base_url+"Online/form/edit?docno="+row.docno
 }
 
+
+ 
 function deleteData(){
-    let row = getRow();
+    let row = getRow(true);
     if(row==null) return
     $.messager.confirm('Confirm','Are you sure you want to destroy this data?',function(r){
         if (r){
             $.post(
-                base_url+"productbrand/delete_data/"+row.brand_code,function(result){
+                base_url+"Online/delete_data/"+row.docno,function(result){
                     var res = $.parseJSON(result);
                     if (res.status===1){
                         $.messager.show({    // show error message
@@ -110,7 +154,7 @@ function deleteData(){
             );
         }
     });
-}
+} 
 
 function getRow() {
     var row = $('#dg').datagrid('getSelected');
@@ -150,8 +194,7 @@ function showCustomer() {
 
         }
     });
-}
-
+} 
 function showCustomer2(r) {
     if(!r) return
     var msg = `
@@ -204,4 +247,13 @@ function showCustomer2(r) {
     </table>
     `;
     $.messager.alert("Customer Info",msg);
+}
+
+});   
+// function addonline(){
+//     var tglnow = $('#remarkd').datebox('getValue'); 
+//             $.redirect(base_url+"Online/form/add", {'tglnow': tglnow});  
+// }
+function Refresh(){ 
+    window.location.href = base_url+"Online";
 }

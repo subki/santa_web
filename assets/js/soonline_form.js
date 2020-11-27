@@ -19,8 +19,8 @@ $(document).ready(function () {
         var m = date.getMonth()+1;
         var d = date.getDate();
         var tgl =  (d<10?('0'+d):d)+'/'+(m<10?('0'+m):m)+'/'+y;
-        $("#doc_date").datebox('setValue', tgl);
-        $("#doc_date").datebox('setText', tgl);
+        // $("#doc_date").datebox('setValue', tgl);
+        // $("#doc_date").datebox('setText', tgl);
 
         $("#store_code").combogrid('setValue',store_code);
         $("#location_code").combogrid('setValue',location_code);
@@ -844,10 +844,10 @@ function submit_cancel() {
                 status = "CLOSE"
             }
         }else{
-            status = "CANCEL"
+            status = "BATAL"
         }
     }else {
-        status = "CANCEL"
+        status = "BATAL"
     }
 
     if(status!==""){
@@ -855,10 +855,16 @@ function submit_cancel() {
             if(r==="Ya"){
                 $.ajax({
                     type:"POST",
-                    url:base_url+"salesapp/edit_data_header",
+                    url:base_url+"Online/edit_data_header",
                     dataType:"json",
                     data:{
                         docno:so_item.docno,
+                        doc_date:so_item.doc_date,
+                        store_code:so_item.store_code,
+                        location_code:so_item.location_code,
+                        so_no:so_item.so_no,
+                        disc1_persen:so_item.disc1_persen,
+                        disc2_persen:so_item.disc2_persen,
                         status:status
                     },
                     success:function(result){

@@ -9,7 +9,7 @@
     var aksi = "<?php echo $aksi; ?>";
     var docno = "<?php echo $docno; ?>";   
     var customer_code= "<?php echo $customer_code; ?>";
-    var customer_name= "<?php echo $customer_name; ?>";
+    var customer_name= "<?php echo $customer_name; ?>"; 
     
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
@@ -132,7 +132,7 @@
                                    required="true" readonly="true" label="Status:" style="width:100%">
                         </div>
                          <div style="float:left; width: 50%; padding-right: 5px;">
-                            <input name="doc_date" id="doc_date" class="easyui-datebox" required="true" labelPosition="top" tipPosition="bottom" label="Trx. Date:" style="width:100%">
+                            <input name="doc_date" id="doc_date" value="<?php echo $tgl;?>"  class="easyui-datebox" required="true" labelPosition="top" tipPosition="bottom" label="Trx. Date:" style="width:100%">
                         </div>
                         <div style="float:right; width:10%;">
                             <input name="jumlah_print" id="jumlah_print" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
@@ -212,7 +212,7 @@
             </div>
         </form>
     </div>
-    <div id="toolbar23" style="padding:2px;">
+<!--     <div id="toolbar23" style="padding:2px;">
         <form id="fromcopy" style="margin-bottom:-0px;">
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                 <input class="easyui-combogrid" id="combo" name="combo"
@@ -221,7 +221,7 @@
                 <a href="#" onclick="cancelUpload()" class="easyui-linkbutton" iconCls="icon-undo" plain="true">Cancel</a>
             </div>
         </form>
-    </div>
+    </div> -->
 </div>
 <script type="text/javascript">
      

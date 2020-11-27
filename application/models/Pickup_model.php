@@ -93,11 +93,11 @@ class Pickup_model extends CI_Model {
            return  $insert_id;
     }
     function delete_data($id){
-        $this->db->where('docno',$id);
+        $this->db->where('id',$id);
         $this->db->delete($this->table);
     }
     function read_transactions($code){
-        $this->db->where('brand_code',$code);
+        $this->db->where('id',$code);
         return $this->db->get('product');
     }
     function generate_auto_number(){

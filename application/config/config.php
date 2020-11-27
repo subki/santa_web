@@ -24,8 +24,8 @@ date_default_timezone_set('Asia/Jakarta');
 | a PHP script and you can easily do that on your own.
 |
 */
-//$config['base_url'] = 'http://santaproject.hol.es/';
-$config['base_url'] = 'http://localhost:71/santa_web/';
+$config['base_url'] = 'http://santaprojects.hol.es/santa/';
+//$config['base_url'] = 'http://localhost/santa/';
 
 /*http://windu.isoft-iml.com/auth
 |--------------------------------------------------------------------------
