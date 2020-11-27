@@ -47,7 +47,6 @@
         var cust = $('#customer_codeid').val();
              $.redirect(base_url+"Online/form/add", {'tglnow': fromdate,'cust': cust}); 
     }  
-    populateCustomer();
 
     function populateCustomer() {
     $('#customer_code').combogrid({
@@ -86,11 +85,11 @@
                  {field:'customer_code', title:'Kode', width:200},
                  {field:'customer_name', title:'Customer', width:300},
                 ]]
-            }); 
-            var gr =  $('#customer_code').combogrid('grid') 
+            });
+            var gr =  $('#customer_code').combogrid('grid')
             gr.datagrid('destroyFilter');
                     // / $('#customer_name').textbox('setValue','')  
             gr.datagrid('enableFilter'); 
-            gr.datagrid('doFilter');
+//            gr.datagrid('doFilter');
         }
 </script>
