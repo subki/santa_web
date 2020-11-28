@@ -13,24 +13,24 @@ class Online extends IO_Controller {
 
     function index($aksi=""){
         $data['title'] = 'Sales Order Online';
-        $data['datenow'] = date("d/m/Y"); 
+        $data['datenow'] = date("d/m/Y");
         $data['content'] = $this->load->view('vSalesorderonline', $data, TRUE);
         $this->load->view('main',$data);
     }
 
     function form($aksi=""){
         $data['aksi']=$aksi;
-       $get = $this->toUpper($this->input->post());  
+       $get = $this->toUpper($this->input->post());
         if($aksi=="add"){
             $data['title'] = 'Add Sales Order Online';
             $docno = $this->model->generate_auto_number();
             $data['title'] = 'Add Sales Order Online';
             $data['docno'] = $docno;
-            $data['tgl'] = $get['tglnow'];  
+            $data['tgl'] = $get['tglnow'];
             if($get['cust']){
                 $customer_code=$get['cust'];
-            }else{ 
-                $customer_code=$this->input->get('customer_code');  
+            }else{
+                $customer_code=$this->input->get('customer_code');
             }
             $data['customer_code'] = $customer_code;
             $customer_name=$this->input->get('customer_name');
@@ -45,20 +45,20 @@ class Online extends IO_Controller {
         $this->load->view('main',$data);
     }
 
-    function load_grid($status, $cust, $prd){  
+    function load_grid($status, $cust, $prd){
 
-        $d= substr($prd,6); 
+        $d= substr($prd,6);
         $y= substr($prd, 0, 4);
         $m= substr($prd, 4, 2);
-        $tgl = $y."-".$m."-".$d;   
-        $kdcust = $cust; 
+        $tgl = $y."-".$m."-".$d;
+        $kdcust = $cust;
         $dtnow=date('Y-m-d');
         //var_dump($kdcust); $f = $this->getParamGrid("","status");
         // $f = $this->getParamGrid(" CASE WHEN  status != '$status'  THEN doc_date <= '$tgl' ELSE  doc_date = '$tgl' END
         //     AND (status )
-        //     AND CASE WHEN '$tgl' != '$dtnow' THEN status='OPEN' ELSE  status in('OPEN','BATAL','CLOSED','ON ORDER') END   
+        //     AND CASE WHEN '$tgl' != '$dtnow' THEN status='OPEN' ELSE  status in('OPEN','BATAL','CLOSED','ON ORDER') END
         //                      ","status");
-        if($status=='ALL'){   
+        if($status=='ALL'){
             if($cust=='~'){
                 $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END ","status");
              }
@@ -67,10 +67,10 @@ class Online extends IO_Controller {
              }
         }
         else{
-            if($cust=='~'){  
+            if($cust=='~'){
                 $f = $this->getParamGrid(" doc_date <= '$tgl' AND status='$status'","status");
             }
-            else{ 
+            else{
                 $f = $this->getParamGrid(" status='$status' and doc_date <='$tgl' and customer_code like '%$cust%' ","status");
             }
         }
@@ -255,8 +255,8 @@ class Online extends IO_Controller {
      try {
             $read = $this->model->read_data($code);
             if ($read->num_rows() > 0) {
- 
-                $readstatus = $read->row()->status; 
+
+                $readstatus = $read->row()->status;
 
                 if ($readstatus=='CLOSED') {
                     $result = 1;
