@@ -77,3 +77,8 @@ function getRow() {
 function addData() {
     window.location.href = base_url+"Finance/ar/add"
 }
+function editData() {
+    var r = getRow();
+    if(r===null) return;
+    window.location.href = base_url+"Finance/ar/edit?id="+r.id;
+}

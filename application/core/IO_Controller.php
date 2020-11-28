@@ -67,13 +67,23 @@ class IO_Controller extends CI_Controller {
         return date('Y-m-d H:i:s');
     }
 
-    function toUpper($input){
-        $arr = array_keys($_POST);
-        foreach ($arr as $key){
-            $input[$key] = strtoupper($input[$key]);
-        }
-        return $input;
-    }
+	function toUpper($input){
+		$arr = array_keys($_POST);
+		foreach ($arr as $key){
+			if(is_array($input[$key])){
+				$arr2 = array_keys($input[$key]);
+				foreach ($arr2 as $key2){
+					if(is_array($input[$key][$key2])) {
+						$arr3 = array_keys($input[$key][$key2]);
+						foreach ($arr3 as $key3) {
+							$input[$key][$key2][$key3] = strtoupper($input[$key][$key2][$key3]);
+						}
+					}else $input[$key][$key2] = strtoupper($input[$key][$key2]);
+				}
+			}else $input[$key] = strtoupper($input[$key]);
+		}
+		return $input;
+	}
 
     function push_topic($title, $message, $jenis, $data){
 
@@ -439,5 +449,89 @@ class IO_Controller extends CI_Controller {
 //        pre($imp);
         return $imp;
     }
+
+	/**
+	 * @param $location_code = kode lokasi
+	 * @param $periode = periode yang akan di update ex : 202010
+	 * @param $nobarqty = nobarang yg akan di update dalam bentuk array(nobar[key]:qty[value]) : array('a'=>2,'b'=>1,'c'=>4)
+	 * @param $tipe_transaksi = tipe yang akan di update : 'do_masuk', 'do_keluar', 'penyesuaian', 'penjualan', 'pengembalian'
+	 * @param $data = untuk isi ke product_history berupa : docno, tanggal, remark
+	 */
+    function updateStock($location_code, $periode, $nobarqty, $tipe_transaksi, $data){
+    	if($location_code=="") return "Lokasi tidak ada";
+    	if($periode=="") return "Periode invalid";
+    	if(in_array($tipe_transaksi,array('do_masuk', 'do_keluar', 'penyesuaian', 'penjualan', 'pengembalian'))) return "Tipe Transaksi tidak dikenali";
+    	if(!isset($data->docno)) return "Nomor dokumen harus di sertakan";
+    	if(!isset($data->tanggal)) return "Tanggal dokumen harus di sertakan";
+    	if(!isset($data->remark)) return "Keterangan dokumen harus di sertakan";
+
+    	$stocks = $this->db->where('location_code',$location_code)
+				->where('periode', $periode)
+				->where_in('nobar', array_keys($nobarqty))
+				->get('stock')->result();
+
+			$arr_ins = [];
+			$arr_upd = [];
+			$template = array(
+				"nobar"=>"",
+				"location_code"=>$location_code,
+				"periode"=>$periode
+			);
+    	foreach ($nobarqty as $key => $r){
+    		if(!in_array($key, array_column($stocks,"nobar"))){
+    			$template['nobar'] = $key;
+    			$template[$tipe_transaksi] = $r;
+    			$arr_ins[] = $template;
+				}else{
+					$stk = (array) $stocks[array_search($key,array_column($stocks,"nobar"))];
+					$template['nobar'] = $key;
+					$template[$tipe_transaksi] = $stk[$tipe_transaksi];
+					$arr_upd[] = $template;
+				}
+			}
+			if(count($arr_ins) > 0) $this->db->insert_batch('stock',$arr_ins);
+			if(count($arr_upd) > 0) $this->db->update_batch('stock',$arr_upd,['nobar','location_code','periode']);
+			$store = $this->db->get_where('cabang',['location_code'=>$location_code])->row();
+
+			$tipe = "";
+			switch ($tipe_transaksi){
+				case 'do_masuk': $tipe = "DO IN"; break;
+				case 'do_keluar': $tipe = "DO OUT"; break;
+				case 'penyesuaian': $tipe = "ADJUSTMENT"; break;
+				case 'penjualan': $tipe = "PENJUALAN"; break;
+				case 'pengembalian': $tipe = "RETUR PENJUALAN"; break;
+			}
+
+			$prodhist = [];
+			$ctr = 1;
+			foreach ($nobarqty as $key => $r){
+				$temo["store_code"] = isset($store) ? $store->store_code : "";
+				$temo["trx_date"] = $data->tanggal;
+				$temo["trx_time"] = date('H:i:s');
+				$temo["trx_type"] = $tipe;
+				$temo["customer_code"] = $data->tanggal;
+				$temo["location_code"] = $location_code;
+				$temo["trx_no"] = $data->docno;
+				$temo["seqno"] = str_pad($ctr,3,"0",STR_PAD_LEFT);;
+				$temo["sku"] = $key;
+				$temo["qty"] = $r;
+				$temo["total"] = 0;
+				$temo["remark"] = $data->remark;
+				$prodhist[] = $temo;
+				$ctr++;
+			}
+
+			if(count($prodhist) > 0) $this->db->insert_batch('product_history',$prodhist);
+			$this->db->where_in('nobar',array_keys($nobarqty))
+				->where('periode',$periode)
+				->where('location_code',$location_code)
+				->update('stock', ['saldo_akhir=saldo_awal+do_masuk+do_keluar+penyesuaian+penjualan+pengembalian']);
+
+//			$sql = "UPDATE stock SET saldo_akhir=saldo_awal+do_masuk+do_keluar+penyesuaian+penjualan+pengembalian
+//                WHERE periode='$periode' ";
+//			$this->db->query($sql);
+
+			return "ok";
+		}
 
 }

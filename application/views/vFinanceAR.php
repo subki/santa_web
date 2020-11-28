@@ -26,4 +26,5 @@
 </div>
 <div id="toolbar" style="display: none">
     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="addData()" iconCls="icon-add" plain="true">Add</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="editData()" iconCls="icon-edit" plain="true">Edit</a>
 </div>
