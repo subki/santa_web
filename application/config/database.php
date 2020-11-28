@@ -94,6 +94,28 @@ $db['default'] = array(
     'failover' 		=> array(),
     'save_queries' 	=> TRUE
 );
+$db['localsubki'] = array(
+	'dsn'			=> '',
+	'port'          => '7133',
+	'hostname' 		=> 'localhost',
+	'username' 		=> 'root',
+	'password' 		=> '',
+	'database' 		=> 'u845881379_santa',
+	'dbdriver' 		=> 'mysqli',
+	'dbprefix' 		=> '',
+	'pconnect' 		=> FALSE,
+	'db_debug' 		=> (ENVIRONMENT !== 'production'),
+	'cache_on' 		=> FALSE,
+	'cachedir' 		=> '',
+	'char_set' 		=> 'utf8',
+	'dbcollat' 		=> 'utf8_general_ci',
+	'swap_pre' 		=> '',
+	'encrypt' 		=> FALSE,
+	'compress' 		=> FALSE,
+	'stricton' 		=> FALSE,
+	'failover' 		=> array(),
+	'save_queries' 	=> TRUE
+);
 
 
 $db['defaultx'] = array(
