@@ -456,6 +456,7 @@ class IO_Controller extends CI_Controller {
 	 * @param $nobarqty = nobarang yg akan di update dalam bentuk array(nobar[key]:qty[value]) : array('a'=>2,'b'=>1,'c'=>4)
 	 * @param $tipe_transaksi = tipe yang akan di update : 'do_masuk', 'do_keluar', 'penyesuaian', 'penjualan', 'pengembalian'
 	 * @param $data = untuk isi ke product_history berupa : docno, tanggal, remark
+	 * @return string =
 	 */
     function updateStock($location_code, $periode, $nobarqty, $tipe_transaksi, $data){
     	if($location_code=="") return "Lokasi tidak ada";
@@ -464,6 +465,8 @@ class IO_Controller extends CI_Controller {
     	if(!isset($data->docno)) return "Nomor dokumen harus di sertakan";
     	if(!isset($data->tanggal)) return "Tanggal dokumen harus di sertakan";
     	if(!isset($data->remark)) return "Keterangan dokumen harus di sertakan";
+
+    	$this->db->trans_start();
 
     	$stocks = $this->db->where('location_code',$location_code)
 				->where('periode', $periode)
@@ -526,6 +529,8 @@ class IO_Controller extends CI_Controller {
 				->where('periode',$periode)
 				->where('location_code',$location_code)
 				->update('stock', ['saldo_akhir=saldo_awal+do_masuk+do_keluar+penyesuaian+penjualan+pengembalian']);
+
+			$this->db->trans_complete();
 
 //			$sql = "UPDATE stock SET saldo_akhir=saldo_awal+do_masuk+do_keluar+penyesuaian+penjualan+pengembalian
 //                WHERE periode='$periode' ";
