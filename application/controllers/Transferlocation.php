@@ -111,6 +111,7 @@ class Transferlocation extends IO_Controller {
     function edit_data(){
         try {
             $input = $this->toUpper($this->input->post());
+            $this->db->trans_start();
 
             $read = $this->model_delivery->read_data($input['docno']);
             if ($read->num_rows() > 0) {
@@ -140,7 +141,98 @@ class Transferlocation extends IO_Controller {
                         if($this->checkPeriod($data['from_location_code'], $data['receive_date'])) {
                             $this->model_delivery->update_data($input['docno'], $data);
                             $this->model_delivery->update_status_data_detail($input['docno'], $data2);
-                            $result = 0;
+													//update stock
+													$det = $this->db->get_where("do_detail",["docno"=>$input['docno']])->result();$cust = $this->db->get_where('customer',['lokasi_stock'=>$input['to_location_code']])->row();
+													$detail = [];
+													$nobarqty = [];
+													$nobarqty_out = [];
+													foreach ($det as $r) {
+														$nobarqty[$r->nobar] = $r->qty;
+														$nobarqty_out[$r->nobar] = $r->qty_rcv;
+														$dt['journal_no'] = $input['docno']."I";
+														$dt['seqno'] = $r->id;
+														$dt['cost_center'] = $cust->customer_code;
+														$dt['account_no'] = $cust->gl_account;
+														$dt['dbcr'] = 'CREDIT';
+														$dt['remark'] = $input['keterangan'];
+														$dt['nilai_debet'] = 0;
+														$dt['nilai_credit'] = $r->qty_rcv*$r->net_price;
+														$detail[] = $dt;
+
+														$dt['journal_no'] = $input['docno']."O";
+														$dt['seqno'] = $r->id;
+														$dt['cost_center'] = $cust->customer_code;
+														$dt['account_no'] = $cust->gl_account;
+														$dt['dbcr'] = 'DEBET';
+														$dt['remark'] = $input['keterangan'];
+														$dt['nilai_debet'] = $r->qty*$r->net_price;
+														$dt['nilai_credit'] = 0;
+														$detail[] = $dt;
+													}
+													$dt['journal_no'] = $input['docno']."I";
+													$dt['seqno'] = '';
+													$dt['cost_center'] = $cust->customer_code;
+													$dt['account_no'] = $cust->gl_account;
+													$dt['dbcr'] = 'DEBET';
+													$dt['remark'] = $input['keterangan'];
+													$dt['nilai_debet'] = 0;
+													$dt['nilai_credit'] = array_sum(array_column(array_search($input['docno']."I",$detail),"nilai_debet"));
+
+													$dt['journal_no'] = $input['docno']."I";
+													$dt['seqno'] = '';
+													$dt['cost_center'] = $cust->customer_code;
+													$dt['account_no'] = $cust->gl_account;
+													$dt['dbcr'] = 'CREDIT';
+													$dt['remark'] = $input['keterangan'];
+													$dt['nilai_debet'] = array_sum(array_column(array_search($input['docno']."O",$detail),"nilai_credit"));
+													$dt['nilai_credit'] = 0;
+													$detail[] = $dt;
+
+													$header[] = array(
+														"journal_no"=>$input['docno']."I",
+														"store_code"=>$input['from_store_code'],
+														"fiscal_year"=>date('Y'),
+														"fiscal_month"=>date('m'),
+														"journal_date"=>date('Y-m-d'),
+														"entry_date"=>date('Y-m-d'),
+														"journal_code"=>$cust->gl_account,
+														"reference"=>"",
+														"keterangan"=>$input['keterangan'],
+														"total_debet"=>array_sum(array_column(array_search($input['docno']."I",$detail),"nilai_debet")),
+														"total_credit"=>array_sum(array_column(array_search($input['docno']."I",$detail),"nilai_credit")),
+														"status_journal"=>"POSTED",
+														"journal_type"=>"INVENTORY JOURNAL"
+													);
+
+													$header[] = array(
+														"journal_no"=>$input['docno']."O",
+														"store_code"=>$input['from_store_code'],
+														"fiscal_year"=>date('Y'),
+														"fiscal_month"=>date('m'),
+														"journal_date"=>date('Y-m-d'),
+														"entry_date"=>date('Y-m-d'),
+														"journal_code"=>$cust->gl_account,
+														"reference"=>"",
+														"keterangan"=>$input['keterangan'],
+														"total_debet"=>array_sum(array_column(array_search($input['docno']."O",$detail),"nilai_debet")),
+														"total_credit"=>array_sum(array_column(array_search($input['docno']."O",$detail),"nilai_credit")),
+														"status_journal"=>"POSTED",
+														"journal_type"=>"INVENTORY JOURNAL"
+													);
+
+
+													$this->updateStock($data['from_location_code']
+														,date('Ym', strtotime($data['receive_date']))
+														,$nobarqty,'do_masuk'
+														,['docno'=>$input['docno'],"tanggal"=>$data['doc_date'],"remark"=>$data['keterangan']]);
+
+													$this->updateStock($data['to_location_code']
+														,date('Ym', strtotime($data['receive_date']))
+														,$nobarqty_out,'do_keluar'
+														,['docno'=>$input['docno'],"tanggal"=>$data['doc_date'],"remark"=>$data['keterangan']]);
+
+													$this->journal_record($header, $detail);
+													$result = 0;
                             $msg="OK";
                         }else{
                             $result = 1;
@@ -156,6 +248,7 @@ class Transferlocation extends IO_Controller {
                 $result = 1;
                 $msg="Kode tidak ditemukan";
             }
+            $this->db->trans_complete();
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();

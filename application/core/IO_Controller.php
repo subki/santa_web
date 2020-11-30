@@ -466,8 +466,6 @@ class IO_Controller extends CI_Controller {
     	if(!isset($data->tanggal)) return "Tanggal dokumen harus di sertakan";
     	if(!isset($data->remark)) return "Keterangan dokumen harus di sertakan";
 
-    	$this->db->trans_start();
-
     	$stocks = $this->db->where('location_code',$location_code)
 				->where('periode', $periode)
 				->where_in('nobar', array_keys($nobarqty))
@@ -530,13 +528,63 @@ class IO_Controller extends CI_Controller {
 				->where('location_code',$location_code)
 				->update('stock', ['saldo_akhir=saldo_awal+do_masuk+do_keluar+penyesuaian+penjualan+pengembalian']);
 
-			$this->db->trans_complete();
-
 //			$sql = "UPDATE stock SET saldo_akhir=saldo_awal+do_masuk+do_keluar+penyesuaian+penjualan+pengembalian
 //                WHERE periode='$periode' ";
 //			$this->db->query($sql);
+//
+//			UPDATE product_barang a,
+//				(
+//				SELECT b.nobar, SUM(b.saldo_akhir) saldo
+//					FROM stock b
+//					WHERE b.periode=DATE_FORMAT(NOW(),'%Y%m')
+//					GROUP BY b.nobar
+//				) b1
+//			SET a.soh=b1.saldo
+//			WHERE a.nobar=b1.nobar;
+//
+//			UPDATE product a,
+//				(
+//				SELECT b.product_id, SUM(b.soh) saldo
+//					FROM product_barang b
+//					GROUP BY b.product_id
+//				) b1
+//			SET a.total_soh=b1.saldo
+//			WHERE a.id=b1.product_id;
+			$qtys = $this->db->select('b.nobar, sum(b.saldo_akhir) as soh')
+				->from('stock b')
+				->where('b.periode',"$periode")
+				->group_by("b.nobar")->get()->result();
+			if(count($qtys)>0) $this->db->update_batch("product_barang", $qtys, "nobar");
+			$qtysoh = $this->db->select('b.product_id as id, SUM(b.soh) total_soh')
+				->from('product_barang b')
+				->group_by("b.product_id")->get()->result();
+			if(count($qtysoh)>0) $this->db->update_batch("product", $qtysoh, "id");
+
 
 			return "ok";
+		}
+
+		function journal_record($header, $detail){
+    	$field_header = ["id","journal_no","store_code","fiscal_year","fiscal_month","journal_date","entry_date",
+				"journal_code","reference","keterangan","total_debet","total_credit","status_journal","journal_type","crtby","crtdt","updby","upddt"];
+    	$fiel_detail=["id","journal_headerid","journal_no","seqno","cost_center","account_no","dbcr","remark","nilai_debet","nilai_credit","crtby","crtdt","updby","upddt"];
+    	$this->db->trans_start();
+			foreach ($header as $key=> $r){
+				if(!in_array($key,$field_header)) unset($header[$key]);
+			}
+
+			foreach ($detail as $key => $row){
+				foreach ($row as $key2 => $r) {
+					if (!in_array($key2, $fiel_detail)) unset($detail[$key][$key2]);
+				}
+			}
+			$this->db->insert("journal_header",$header);
+			$id_header = $this->db->insert_id();
+			foreach ($detail as $key => $row){
+				$detail[$key]['journal_headerid'] = $id_header;
+			}
+			if(count($detail)>0) $this->db->insert_batch("journal_detail",$detail);
+    	$this->db->trans_complete();
 		}
 
 }

@@ -54,6 +54,11 @@ function initGrid(jenis, prd) {
     $('#dg').datagrid('doFilter');
 }
 function cetakProforma() {
+	var row = getRow(true);
+	if(row===null) return
+	$.redirect(base_url+"finance/print_proforma?docno="+row.proforma_no,null,"GET","_blank");
+}
+function cetakInvoice() {
     var row = getRow(true);
     if(row===null) return
     window.location.href = base_url+"finance/print_proforma?docno="+row.proforma_no;
