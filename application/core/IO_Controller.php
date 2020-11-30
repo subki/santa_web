@@ -564,25 +564,36 @@ class IO_Controller extends CI_Controller {
 			return "ok";
 		}
 
+	/**
+	 * @param $header : array
+	 * @param $detail : array
+	 */
 		function journal_record($header, $detail){
     	$field_header = ["id","journal_no","store_code","fiscal_year","fiscal_month","journal_date","entry_date",
 				"journal_code","reference","keterangan","total_debet","total_credit","status_journal","journal_type","crtby","crtdt","updby","upddt"];
     	$fiel_detail=["id","journal_headerid","journal_no","seqno","cost_center","account_no","dbcr","remark","nilai_debet","nilai_credit","crtby","crtdt","updby","upddt"];
     	$this->db->trans_start();
-			foreach ($header as $key=> $r){
-				if(!in_array($key,$field_header)) unset($header[$key]);
+			foreach ($header as $key => $row){
+				foreach ($row as $key2 => $r) {
+					if (!in_array($key2, $field_header)) unset($header[$key][$key2]);
+				}
 			}
-
 			foreach ($detail as $key => $row){
 				foreach ($row as $key2 => $r) {
 					if (!in_array($key2, $fiel_detail)) unset($detail[$key][$key2]);
 				}
 			}
-			$this->db->insert("journal_header",$header);
-			$id_header = $this->db->insert_id();
-			foreach ($detail as $key => $row){
-				$detail[$key]['journal_headerid'] = $id_header;
+			$lastID = $this->db->order_by("id desc")->limit(1)->get("journal_header")->row()->id;
+			if(isset($lastID)) $lastID = $lastID+1;
+			else $lastID = 1;
+			foreach ($header as $i => $r){
+				$header[$i]['id'] = $lastID;
+				$lastID++;
 			}
+			foreach ($detail as $key => $row){
+				$detail[$key]['journal_headerid'] = array_search($row->docno, $header)[0]->id;
+			}
+			if(count($header)>0) $this->db->insert_batch("journal_header",$header);
 			if(count($detail)>0) $this->db->insert_batch("journal_detail",$detail);
     	$this->db->trans_complete();
 		}
