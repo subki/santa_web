@@ -44,6 +44,12 @@ $(document).ready(function () {
         $("#new").hide();
         $("#getbarcode").hide();
         $("#pickup").hide();
+ 
+       $("#divparentstatus") .css ("display", "none");
+       $("#divparentfase") .css ("display", "none");
+       $("#divparentpickup_by") .css ("display", "none");
+       $("#divparenttgl_pickup") .css ("display", "none"); 
+        
 
     }else{
         flag = "Pickup/edit_data_header";
@@ -158,7 +164,7 @@ function pickupget() {
                     pickupdate:pickupdate 
                 },
                 success:function(result){  
-               //console.log(result.status)
+               // console.log(docno)
                        if(result.status===1) { 
                             $.messager.show({
                                 title: 'Error',
@@ -169,13 +175,7 @@ function pickupget() {
                             }); 
                         }
                         else {
-                            $.messager.show({
-                                title: 'Error',
-                                msg: result.message,
-                                handler:function () {
-                                    window.location.href = base_url+"Pickup";
-                                }
-                            });
+                            window.location.href = base_url+"Pickup/form/edit?id=" + docno;
                         }
                 }
             });  
@@ -217,21 +217,21 @@ function initGrid() {
         width: "100%",
         url: base_url + "Pickup/load_grid_detail/"+pickup.id,
         saveUrl: base_url + "Pickup/save_data_detail/"+pickup.id,
-        updateUrl: base_url + "Pickup/edit_data_detail",
-        destroyUrl: base_url + "Pickup/delete_data_detail",
+        updateUrl: base_url + "Pickup/edit_data_detail", 
         idField: 'barcode',
         method: "POST",
-        pagePosition: "top",
-        resizeHandle: "right",
-        resizeEdge: 10,
-        pageSize: 20,
-        clientPaging: false,
+        pagePosition:"top",
+        resizeHandle:"right",
+        resizeEdge:10,
+        pageSize:20,
+        clientPaging: true,
         remoteFilter: true,
         rownumbers: false,
-        pagination: true,
+        pagination:true, striped:true, nowrap:true, 
+        singleSelect:true,
         sortName: "tgl",
-        sortOrder: "desc",
-        singleSelect: true, nowrap:false,
+        sortOrder: "desc",  
+
         toolbar: [
         // {
         //     iconCls: 'icon-add', id:'add', text:'New',
@@ -247,7 +247,10 @@ function initGrid() {
                     });
                     return
                 }
-                $('#dg').edatagrid('destroyRow')
+                else{       
+                    deleteData(); 
+                }
+               
             }
         },
         // {
@@ -276,8 +279,8 @@ function initGrid() {
         },
         onLoadSuccess: function () {
             authbutton();
-            var dt = $("#dg").edatagrid('getData');
-            if(dt.data.length>0){
+            var dt = $("#dg").edatagrid('getData'); 
+            if(dt.rows.length>0){
                 // $('#customer_name').combogrid({"readonly":true});
                 // $('#customer_name').combogrid('setValue', pickup.customer_name);
                 $("#kopi").linkbutton({"disabled":true})
@@ -409,7 +412,8 @@ function initGrid() {
                 msg: e.message
             });
         }
-    })  
+    })
+    $('#dg').edatagrid('enableFilter');  
 } 
 function submit_cancel() {
     var dt = $("#dg").edatagrid('getData');
@@ -478,7 +482,7 @@ function submit(stt){
     $('#status').textbox('setValue',status);
 
     if(aksi==="add") {
-        submit_reason("")
+        submit_reason("Open")
     }else{
         if(pickup!==undefined){
             if(pickup.status==="ON Waiting" && status==="Open"){
@@ -533,7 +537,95 @@ function submit(stt){
     }
 
 }
+function submit_reason(reason,id) {
+   // console.log(reason);
+   //  console.log(base_url+flag);
+    $("#reason").textbox('setValue', reason);
+   $.ajax({
+        type:"POST", 
+        url:base_url+"Pickup/delete_data_detail",
+        dataType:"json",
+        data:{
+            reason:reason,
+            id:id
+        },
+        success:function(result){
+            console.log(result.data)
+            // if(result.status===0) {
+            //     window.location.href = base_url + "Pickup/form/edit?docno=" + pickup.id
+            // }
+            // else {
+            //     $.messager.show({
+            //         title: 'Error',
+            //         msg: e.message,
+            //         handler:function () {
+            //             window.location.href = base_url + "Pickup/form/edit?docno=" + pickup.id
+            //         }
+            //     });
+            // }
 
+        }
+    });
+}
+function getRow() {
+    var row = $('#dg').datagrid('getSelected');
+    if (!row){
+        $.messager.show({    // show error message
+            title: 'Error',
+            msg: 'Please select data to edit.'
+        });
+        return null;
+    }else{
+        row.record = $('#dg').datagrid("getRowIndex", row);
+    }
+    return row;
+}
+function deleteData(){ 
+    let row = getRow(true);
+    if(row==null) return
+    $.messager.prompt({
+        title: 'Reason Hapus Pickup',
+        msg: 'Input reason Hapusd Pickup :',
+        fn: function (r) {
+            if (r) { 
+                 submit_reason2(r,pickup.id,row.id);
+                $('#dg').edatagrid('destroyRow')
+            }
+        }
+    });
+} 
+function submit_reason2(reason,id,row) {
+   // console.log(reason);
+   //  console.log(base_url+flag);
+
+    $("#reason").textbox('setValue', reason);
+   $.ajax({
+        type:"POST", 
+        url:base_url+"Pickup/delete_data_detail",
+        dataType:"json",
+        data:{
+            reason:reason,
+            id:id,
+            row:row 
+        },
+        success:function(result){
+            //console.log(result.message)
+            if(result.status===0) {
+                window.location.href = base_url + "Pickup/form/edit?id=" + pickup.id
+            }
+            else {
+                $.messager.show({
+                    title: 'Error',
+                    msg: result.message,
+                    handler:function () {
+                        window.location.href = base_url + "Pickup/form/edit?id=" + pickup.id
+                    }
+                });
+            }
+
+        }
+    });
+}
 function submitdetail(dp,docno,doc_date) {
     //if(pickup==null) return 
 

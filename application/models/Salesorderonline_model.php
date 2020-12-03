@@ -14,7 +14,7 @@ class Salesorderonline_model extends CI_Model {
                   , a.regency_id, d.name as regency, a.jenis_so
                   , a.remark, a.customer_code, e.customer_name, e.phone1, a.salesman_id, f.salesman_name
                   , e.lokasi_stock, e.customer_type
-                  , a.tipe_komisi, a.komisi_persen, a.disc1_persen, a.disc2_persen 
+                  , a.tipe_komisi, a.komisi_persen,IFNULL(a.disc1_persen,0) ,IFNULL(a.disc2_persen ,0)
                   , a.qty_item, a.qty_order, a.gross_sales, a.total_ppn, a.total_discount
                   , a.sales_before_tax, a.sales_after_tax, a.service_level, a.qty_deliver
                   , a.posting_date, DATE_FORMAT(a.posting_date, '%d/%m/%Y') ak_posting_date

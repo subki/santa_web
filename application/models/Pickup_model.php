@@ -364,7 +364,7 @@ class Pickup_model extends CI_Model {
         return $this->db->get('so_online_detail');
     }
     function read_data_detailID($id){
-        $this->db->where('barcode',$id);
+        $this->db->where('id',$id);
         return $this->db->get('pickup_d');
     }
     function update_data_detail($docno,$code, $data){
@@ -423,7 +423,7 @@ class Pickup_model extends CI_Model {
         $this->updateheaderdata($docno);
     }
     function delete_data_detail($docno){
-        $this->db->where('barcode',$docno);
+        $this->db->where('id',$docno);
         $this->db->delete("pickup_d"); 
     }
     function updatestatuspick($docno){ 
@@ -447,8 +447,8 @@ class Pickup_model extends CI_Model {
                                 stock_location,unitprice,disc1_persen,disc1_amount,disc2_persen,disc2_amount,disc_total,net_unit_price,bruto_before_tax,total_tax,
                                 net_after_tax,status_detail,crtby,crtdt,updby,upddt) 
                                 SELECT d.docno,h.doc_date,h.so_no,ROW_NUMBER()OVER(ORDER BY d.nobar) seqno,d.product_tipe,d.nobar,d.product_code,d.tipe,d.komisi,
-                                SUM(d.qty_order),SUM(d.qty_sales),d.UOM,d.stock_location,d.unit_price,d.disc1_persen,d.disc1_amount,d.disc2_persen,d.disc2_amount,d.disc_total,
-                                d.net_unit_price,d.bruto_before_tax,d.total_tax,d.net_total_price,'Open',d.crtby,d.crtdt,d.updby,d.upddt FROM pickup_d p
+                                SUM(d.qty_order),SUM(d.qty_sales),d.UOM,d.stock_location,SUM(d.unit_price),d.disc1_persen,d.disc1_amount,d.disc2_persen,d.disc2_amount,d.disc_total,
+                                d.net_unit_price,d.bruto_before_tax,SUM(d.total_tax),d.net_total_price,'Open',d.crtby,d.crtdt,d.updby,d.upddt FROM pickup_d p
                                 INNER JOIN so_online_header h ON h.docno= p.barcode 
                                 INNER JOIN so_online_detail d ON d.docno= p.barcode 
                                 WHERE p.pickup_h_id='$docno'
