@@ -29,7 +29,8 @@
                             <b>10. UOM Convertion</b> (uom_convertion.csv) => UOM From, UOM To, Convertion<br/>
                             <b>11. Group</b> (group.csv) => Kode Group,Description<br/>
                             <b>12. Subgroup</b> (subgroup.csv) => Kode Group, Kode Sub Group, Description<br/>
-                            <b>12. Faktur Pajak</b> (faktur.csv) => Nomor sequence <br/>
+                            <b>13. Faktur Pajak</b> (faktur.csv) => Nomor sequence <br/>
+                            <b>14. Resi Market Place</b> (marketplace.csv) => No. Resi, Nama Customer, No Telepon, Alamat Kirim, Kota, Provinsi, Order Date (YYYY-MM-DD HH:MM:SS) <br/>
                         </label>
                     </div>
                 </div>
