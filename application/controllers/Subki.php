@@ -276,6 +276,35 @@ class Subki extends IO_Controller {
 		}
 	}
 
+	public function sync_menu_lokal_ke_hosting(){
+		$menu_lokal = $this->db->get("app")->result();
+		$dbon=$this->load->database('defaultx',true);
+		$dbon->trans_start();
+		foreach ($menu_lokal as $row){
+			$dbon->replace("app",$row);
+		}
+		if ($dbon->trans_status() === FALSE){
+			echo "Error";
+		}else{
+			$dbon->trans_complete();
+			echo  "Done";
+		}
+	}
+	public function sync_menu_hosting_ke_lokal(){
+		$dbon=$this->load->database('defaultx',true);
+		$menu = $dbon->get("app")->result();
+		$this->db->trans_start();
+		foreach ($menu as $row){
+			$this->db->replace("app",$row);
+		}
+		if ($this->db->trans_status() === FALSE){
+			echo "Error";
+		}else{
+			$this->db->trans_complete();
+			echo  "Done";
+		}
+	}
+
 	public function test($p){
 		echo date("Y-m-d",strtotime("+0 month",strtotime($p."25")));
 	}
