@@ -211,17 +211,7 @@
                 </table>
             </div>
         </form>
-    </div>
-    <div id="toolbar23" style="padding:2px;">
-        <form id="fromcopy" style="margin-bottom:-0px;">
-            <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-                <input class="easyui-combogrid" id="combo" name="combo"
-                       label="Customer:" label-position="top" style="width:50%">
-                <a href="#" onclick="submitCopy()" class="easyui-linkbutton" iconCls="icon-save" plain="true">Submit</a>
-                <a href="#" onclick="cancelUpload()" class="easyui-linkbutton" iconCls="icon-undo" plain="true">Cancel</a>
-            </div>
-        </form>
-    </div>
+    </div> 
 </div>
 <script type="text/javascript">
      

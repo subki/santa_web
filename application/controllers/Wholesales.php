@@ -172,7 +172,23 @@ class Wholesales extends IO_Controller {
                     //cek customer yg perlu bayar dimuka atau bukan? or jika iya sudah di confirm finance atau blm
                     $data['posting_date'] = date('Y-m-d');
                     if($dt->payment_first=="No" || $dt->id_confirm > 0 ) {
-                        $this->model->update_data($input['id'], $data);
+											$lokasi = $this->db->get_where('customer',['customer_code'=>$input['customer_code']])->row();
+											if(isset($lokasi)){
+												$this->model->update_data($input['id'], $data);
+												$detail = $this->db->get_where('sales_tran_detail',['sales_trans_header_id'=>$input['id']])->result();
+												$nobarqty = [];
+												foreach ($detail as $row){
+													$nobarqty[$row->nobar] = $row->qty_on_sales;
+												}
+												$msg = $this->updateStock($lokasi->lokasi_stock,
+													$this->formatDate("Ym", $input['faktur_date']),$nobarqty, "penjualan",
+													array("docno"=>$input['no_faktur'], $this->formatDate("Y-m-d", $input['faktur_date']),$input['remark']));
+
+												if($msg!="ok") $result = 1;
+											}else{
+												$result = 1;
+												$msg = "Customer tidak memiliki lokasi stok untuk potong stock.";
+											}
                     }else{
                         $result = 1;
                         $msg = "Customer harus melakukan pembayaran terlebih dahulu, dan perlu di konfirmasi oleh finance.";

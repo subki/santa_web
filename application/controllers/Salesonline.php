@@ -294,8 +294,7 @@ class Salesonline extends IO_Controller {
 
     function edit_data_detail(){
         try {
-            $input = $this->toUpper($this->input->post());
-  
+            $input = $this->toUpper($this->input->post()); 
             $read = $this->model->read_data_detailID($input['docno']); 
             if ($read->num_rows() > 0) { 
                 $bf = $read->row();
@@ -307,10 +306,10 @@ class Salesonline extends IO_Controller {
                     'upddt' => date('Y-m-d H:i:s')
                 );  
                 if($bf->disc1_persen != $data['disc1_persen']){
-                    $this->model->update_data_detail_disc($input['docno'], $data['disc1_persen'], 1, $data['updby'], $data['upddt']);
+                    $this->model->update_data_detail_disc($input['docno'],$input['id'], $data['disc1_persen'], 1, $data['updby'], $data['upddt']);
                 } 
                 if($bf->disc2_persen != $data['disc2_persen']){
-                    $this->model->update_data_detail_disc($input['docno'], $data['disc2_persen'],2, $data['updby'], $data['upddt']);
+                    $this->model->update_data_detail_disc($input['docno'],$input['id'], $data['disc2_persen'],2, $data['updby'], $data['upddt']);
                 }
                 $result = 0;
                 $msg="OK";

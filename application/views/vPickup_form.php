@@ -67,7 +67,7 @@
                          <div style="float:left; width: 50%; padding-right: 5px;">
                             <input name="doc_date" id="doc_date" class="easyui-datebox" required="true" labelPosition="top" tipPosition="bottom" label="Tanggal:" style="width:100%">
                         </div>
-                        <div style="float:left; width: 25%; padding-right: 5px;">
+                        <div id="divparentstatus" style="float:left; width: 25%; padding-right: 5px;">
                             <input name="status" id="status" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                                    required="true" readonly="true" label="Status:" style="width:100%">
                         </div>
@@ -75,14 +75,14 @@
                             <input name="line" id="line" class="easyui-textbox" label="#Line"  labelPosition="top" tipPosition="bottom"
                                    required="true" readonly="true" label=" " style="width:100%">
                         </div> -->
-                        <div style="float:right; width:15%;">
+                        <div id="divparentfase" style="float:right; width:15%;">
                             <input name="fase" id="fase" class="easyui-textbox" label="Fase#"  labelPosition="top" tipPosition="bottom"
                                    readonly="true" label=" " style="width:100%">
                         </div>
-                         <div style="float:left; width: 50%; padding-right: 5px;">
+                         <div id="divparentpickup_by" style="float:left; width: 50%; padding-right: 5px;">
                             <input name="pickup_by" id="pickup_by" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="PickUp By:" style="width:100%">
                         </div>
-                         <div style="float:left; width: 50%; padding-right: 5px;">
+                         <div id="divparenttgl_pickup" style="float:left; width: 50%; padding-right: 5px;">
                             <input name="tgl_pickup" id="tgl_pickup" class="easyui-datebox"   labelPosition="top" tipPosition="bottom" label="Tgl PickUp:" style="width:100%">
                         </div>
                     </div>
@@ -104,20 +104,12 @@
                     </div> 
                 </div>  
                 <span class="icon-transparent" style="display:inline-block;width:16px;height:16px;vertical-align:top"></span>
-            </div>
-            <div data-options="region:'west'" style="width:100%;">
-                <table id="dg" class="easyui-edatagrid" style="width:100%;height: 300px">
-                </table>
-            </div>
-        </form>
-    </div>
-    <div id="toolbar23" style="padding:2px;">
-        <form id="fromcopy" style="margin-bottom:-0px;">
-            <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-                <input class="easyui-combogrid" id="combo" name="combo"
-                       label="Customer:" label-position="top" style="width:50%">
-                <a href="#" onclick="submitCopy()" class="easyui-linkbutton" iconCls="icon-save" plain="true">Submit</a>
-                <a href="#" onclick="cancelUpload()" class="easyui-linkbutton" iconCls="icon-undo" plain="true">Cancel</a>
+            </div> 
+            <div class="easyui-layout" style="width:100%;height:100%">
+                <div id="p" data-options="region:'west'" style="width:100%;">
+                    <table id="dg"  class="easyui-edatagrid" style="width:100%;height: 100%">
+                    </table>
+                </div>
             </div>
         </form>
     </div>

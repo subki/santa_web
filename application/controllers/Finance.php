@@ -24,16 +24,20 @@ class Finance extends IO_Controller {
         $this->load->view('main',$data);
     }
     function ar($aksi=""){
-        if($aksi=="") {
-            $data['title'] = 'AR Receipt';
-            $data['content'] = $this->load->view('vFinanceAR', $data, TRUE);
-            $this->load->view('main', $data);
-        }else if($aksi=="add"){
-            $data['title'] = 'Add AR Receipt';
-            $data['aksi'] = $aksi;
-            $data['content'] = $this->load->view('vFinanceAR_form', $data, TRUE);
-            $this->load->view('main', $data);
-        }
+			if($aksi=="") {
+				$data['title'] = 'AR Receipt';
+				$data['content'] = $this->load->view('vFinanceAR', $data, TRUE);
+			}else if($aksi=="add"){
+				$data['title'] = 'Add AR Receipt';
+				$data['aksi'] = $aksi;
+				$data['content'] = $this->load->view('vFinanceAR_form', $data, TRUE);
+			}else if($aksi=="edit"){
+				$data['title'] = 'Edit AR Receipt';
+				$data['aksi'] = $aksi;
+				$data['id'] = $this->input->get('id');
+				$data['content'] = $this->load->view('vFinanceAR_form', $data, TRUE);
+			}
+				$this->load->view('main', $data);
     }
     function invoice(){
         $data['title'] = 'Sales Invoice';
@@ -168,7 +172,8 @@ class Finance extends IO_Controller {
     }
 
     public function print_proforma(){
-        $input = $this->input->get();
+        $input = $this->input->post();
+//        pre($input);
         $dt = $this->db->where('docno',$input['docno'])->get('sales_proforma')->row();
         $invoice = json_decode($dt->sales_invoice_data);
         $query = $this->db->select('a.*, c.customer_name, c.address1, c.address2, rg.name as regency_name')

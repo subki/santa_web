@@ -707,6 +707,8 @@ function initGrid() {
     $('#dg').edatagrid('hideColumn','net_unit_price');
     $('#dg').edatagrid('hideColumn','disc1_amount');
     $('#dg').edatagrid('hideColumn','disc2_amount'); 
+    $('#dg').edatagrid('hideColumn','disc1_persen');
+    $('#dg').edatagrid('hideColumn','disc2_persen'); 
 
 }
 

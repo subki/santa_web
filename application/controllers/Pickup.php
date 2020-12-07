@@ -502,16 +502,22 @@ class Pickup extends IO_Controller {
     }
     function delete_data_detail(){
         try {
-            $code = $this->input->post("id");
+            $id = $this->input->post("id");
+            $input = $this->input->post('reason');
+            $code = $this->input->post('row');
             $read = $this->model->read_data_detailID($code)->row();
-
+             
             if ($read->status =='Open') {
                     $this->model->delete_data_detail($code);
+
+                       if($input['reason'] != ""){
+                            $this->insert_log("Pickup reason delete", $code, 'Delete'.": ".$input['reason']);
+                        }
                     $result = 0;
                     $msg="OK";
             } else {
                 $result = 1;
-                $msg="Ada Kesalahan";
+                $msg="Ada Kesalahan.Data tidak bisa dihapus";
             }
         }catch (Exception $e){
             $result = 1;

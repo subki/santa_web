@@ -4,6 +4,7 @@
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/article.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/redirect.js"></script>
 <div id="cc" class="easyui-layout" style="width:100%;height:100%">
     <div id="p" data-options="region:'west'" style="width:100%; height: 60%">
         <table id="dg" title="<?php echo $title ?>" class="easyui-datagrid" style="width:100%;height:100%"></table>
@@ -66,6 +67,9 @@
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                 <div style="width: 100%; padding: 10px;">
                     <div style="margin-bottom:1px">
+                      <div style="float:left; width: 20%; padding-right: 5px;">
+                        <input name="effdate" id="effdate" class="easyui-datebox" labelPosition="top" tipPosition="bottom" label="Effective Date:" style="width:100%">
+                      </div>
                         <div style="float:left; width: 20%; padding-right: 5px;">
                             <input name="hpp1" id="hpp1" class="easyui-numberbox" labelPosition="top" tipPosition="bottom" data-options="precision:2,formatter:formatnumberbox"  label="HPP 1:" readonly style="width:100%">
                         </div>

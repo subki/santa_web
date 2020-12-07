@@ -17,7 +17,7 @@
                     <div style="margin-bottom:10px">
                         <label>Format file berbentuk <b>.csv</b>, dengan format : <br/>
                             <b>1. Produk</b> (product.csv) => SKU, Product Code, Article Code, Product Name, Brand Code, Class Code, SubClass Code, Supplier Code, Size Code, Colour Code, UOM Beli, UOM Stock, UOM Jual, Status, Jenis Barang <br/>
-                            <b>2. Article</b> (article.csv) => Article Code, Article Name, Style, BOM/Pcs, FOH/Pcs, Ongkos Jahit/Pcs, Operational Cost, Interest Cost <br/>
+                            <b>2. Article</b> (article.csv) => Article Code, Article Name, Style, BOM/Pcs, FOH/Pcs, Ongkos Jahit/Pcs, Operational Cost, Interest Cost, Tipe (IMPORT/LOCAL) <br/>
                             <b>3. Article Colour</b> (article_colour.csv) => Colour Code, Article Code<br/>
                             <b>4. Article Size</b> (article_size.csv) => Size Code, Article Code<br/>
                             <b>5. DO Produksi</b> (produksi.csv) => <b><i>(Pastikan tanggal DO sesuai dengan periode berjalan pada lokasi PRD dan PST)</i></b> Tanggal DO, SKU, Qty Send, Keterangan<br/>
@@ -29,7 +29,8 @@
                             <b>10. UOM Convertion</b> (uom_convertion.csv) => UOM From, UOM To, Convertion<br/>
                             <b>11. Group</b> (group.csv) => Kode Group,Description<br/>
                             <b>12. Subgroup</b> (subgroup.csv) => Kode Group, Kode Sub Group, Description<br/>
-                            <b>12. Faktur Pajak</b> (faktur.csv) => Nomor sequence <br/>
+                            <b>13. Faktur Pajak</b> (faktur.csv) => Nomor sequence <br/>
+                            <b>14. Resi Market Place</b> (marketplace.csv) => No. Resi, Nama Customer, No Telepon, Alamat Kirim, Kota, Provinsi, Order Date (YYYY-MM-DD HH:MM:SS) <br/>
                         </label>
                     </div>
                 </div>

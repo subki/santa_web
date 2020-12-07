@@ -224,7 +224,7 @@ $.extend($.fn.validatebox.defaults.rules,{
 
 var pgl = 0;
 function authbutton() {
-    console.log("panggil", pgl);
+    // console.log("panggil", pgl);
     pgl++;
     if(global_auth[global_auth.appId]===undefined){
         setTimeout(function () {

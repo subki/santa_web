@@ -107,6 +107,7 @@ class Stockadjustment extends IO_Controller {
     function edit_data(){
         try {
             $input = $this->toUpper($this->input->post());
+            $this->db->trans_start();
 
             $read = $this->model_delivery->read_data($input['docno']);
             if ($read->num_rows() > 0) {
@@ -136,7 +137,17 @@ class Stockadjustment extends IO_Controller {
                         if($this->checkPeriod($data['from_location_code'], $data['receive_date'])) {
                             $this->model_delivery->update_data($input['docno'], $data);
                             $this->model_delivery->update_status_data_detail($input['docno'], $data2);
-                            $result = 0;
+													//update stock
+													$det = $this->db->get_where("do_detail",["docno"=>$input['docno']])->result();
+													$nobarqty = [];
+													foreach ($det as $r) $nobarqty[$r->nobar] = $r->qty;
+													$this->updateStock($data['from_location_code']
+														,date('Ym', strtotime($data['receive_date']))
+														,$nobarqty,'penyesuaian'
+														,['docno'=>$input['docno'],"tanggal"=>$data['doc_date'],"remark"=>$data['keterangan']]);
+
+
+													$result = 0;
                             $msg="OK";
                         }else{
                             $result = 1;
@@ -152,6 +163,7 @@ class Stockadjustment extends IO_Controller {
                 $result = 1;
                 $msg="Kode tidak ditemukan";
             }
+            $this->db->trans_complete();
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();

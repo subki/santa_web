@@ -12,7 +12,7 @@ class Salesonline_model extends CI_Model {
                   , DATE_FORMAT(so.doc_date, '%d/%b/%Y') tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so
                   , a.so_number,so.so_no, so.status, c.address1, c.phone1, c.pkp, c.beda_fp
                   , so.customer customer_code, c.customer_name, so.qty_item, so.qty, so.sales
-                  , so.disc1_persen, so.disc2_persen  , so.doc_date  
+                  , so.disc1_persen, so.disc2_persen , so.doc_date  
                   , so.gross_sales, so.total_discount, so.sales_before_tax, so.total_ppn, so.sales_after_tax
                   , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby
                   , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
@@ -192,21 +192,21 @@ class Salesonline_model extends CI_Model {
         $this->db->query($sql);
     }
 
-    function update_data_detail_disc($docno, $disc, $nomor,$upd,$updt){ 
+    function update_data_detail_disc($docno,$id,$disc, $nomor,$upd,$updt){ 
         if($nomor==1){
-            $this->db->query("update sales_online_detail set disc1_persen=$disc where docno='$docno'");
+            $this->db->query("update sales_online_detail set disc1_persen=$disc where id='$id'");
         }else if($nomor==2){
-            $this->db->query("update sales_online_detail set disc2_persen=$disc where docno='$docno'");
+            $this->db->query("update sales_online_detail set disc2_persen=$disc where id='$id'");
         }  
-        $sql = "update sales_online_detail set disc1_amount=unitprice * (disc1_persen/100) where docno='$docno'";
+        $sql = "update sales_online_detail set disc1_amount=unitprice * (disc1_persen/100) where id='$id'";
         if($this->db->query($sql)) {
-            $sql = "update sales_online_detail set disc2_amount=(unitprice-disc1_amount) * (disc2_persen/100) where docno='$docno'";
+            $sql = "update sales_online_detail set disc2_amount=(unitprice-disc1_amount) * (disc2_persen/100) where id='$id'";
              if($this->db->query($sql)){
-                     $sql = "update sales_online_detail set disc_total=disc1_amount+disc2_amount where docno='$docno'";
+                     $sql = "update sales_online_detail set disc_total=disc1_amount+disc2_amount where id='$id'";
                      if($this->db->query($sql)){
-                        $sql = "update sales_online_detail set bruto_before_tax=unitprice-disc_total where docno='$docno'"; 
+                        $sql = "update sales_online_detail set bruto_before_tax=unitprice-disc_total where id='$id'"; 
                                 if($this->db->query($sql)){
-                                    $sql = "update sales_online_detail set net_after_tax=(unitprice+total_tax-disc_total)*qty_order where docno='$docno'";
+                                    $sql = "update sales_online_detail set net_after_tax=(unitprice+total_tax-disc_total)*qty_order where id='$id'";
                                     if($this->db->query($sql)){
                                         $this->updateheaderdata($docno);
                                     }

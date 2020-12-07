@@ -469,7 +469,7 @@ class Masterarticle extends IO_Controller {
         ));
     }
 
-    function edit_data(){
+    function edit_data($tipe){
         try {
             $input = $this->toUpper($this->input->post());
 
@@ -497,6 +497,15 @@ class Masterarticle extends IO_Controller {
 //                die();
 
                 $this->model->update_data($input['article_code'], $data);
+                unset($data['article_name']);
+                unset($data['style']);
+                unset($data['updby']);
+                unset($data['upddt']);
+                $data['article_code'] = $input['article_code'];
+                $data['effdate'] = $this->formatDate("Y-m-d",$input['effdate']);
+                $data['tipe'] = $tipe;
+
+                $this->db->insert("article_hpp",$data);
                 $result = 0;
                 $msg="OK";
             } else {

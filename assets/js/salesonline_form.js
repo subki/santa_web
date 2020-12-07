@@ -288,10 +288,7 @@ function submit(stt){
                 if(x){
                     myConfirm("Confirm", "Anda yakin ingin mengubah status Sales Online ini?", "Yes", "No", function (r) {
                         if (r === "Yes") {
-                            myConfirm3("Warning", "Apakah anda ingin back order atau closing transaksi?","Back Order","Closing","Batal", function (r) {
-                                if(r==="Closing"){
-                                    //close sales order
-                                    $.ajax({
+                             $.ajax({
                                         type:"POST",
                                         url:base_url+"Salesonline/edit_data_header",
                                         dataType:"json",
@@ -304,10 +301,6 @@ function submit(stt){
                                             submit_header("")
                                         }
                                     });
-                                }else if(r==="Back Order"){
-                                    submit_header("")
-                                }
-                            })
                         }
                     })
                 }else{
