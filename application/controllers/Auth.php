@@ -20,6 +20,7 @@ class Auth extends CI_Controller {
 //		$pwd 	= $this->input->post('txt_pwd');
 
 		$data 	= $this->model->check_user($uid);
+//		pre($data);
 //		var_dump($this->input->post('txt_pwd'));
 //		var_dump($pwd);
 //		var_dump($data->pass);
@@ -27,9 +28,9 @@ class Auth extends CI_Controller {
 //		die();
 
 	   	if($data!=null){
-
-	   	    if(strcmp($data->pass,$pwd) == 0) {
-
+//	   		pre("masuk");
+//				pre([$data->pass,$pwd]);
+	   	    if($data->pass==$pwd) {
                 $sess_array = array(
                     'user_id' => $data->user_id,
                     'nik' => $data->nik,

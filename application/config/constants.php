@@ -83,3 +83,12 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+defined('sess_user_id')      OR define('sess_user_id', 'user_id'); // highest automatically-assigned error code
+defined('sess_nik')      OR define('sess_nik', 'nik'); // highest automatically-assigned error code
+defined('sess_fullname')      OR define('sess_fullname', 'fullname'); // highest automatically-assigned error code
+defined('sess_store_code')      OR define('sess_store_code', 'store_code'); // highest automatically-assigned error code
+defined('sess_store_name')      OR define('sess_store_name', 'store_name'); // highest automatically-assigned error code
+defined('sess_location_code')      OR define('sess_location_code', 'location_code'); // highest automatically-assigned error code
+defined('sess_location_name')      OR define('sess_location_name', 'location_name'); // highest automatically-assigned error code
+defined('sess_lokasi_sales')      OR define('sess_lokasi_sales', 'lokasi_sales'); // highest automatically-assigned error code
+defined('sess_logged_in')      OR define('sess_logged_in', 'logged_in'); // highest automatically-assigned error code

@@ -169,6 +169,15 @@
         color: #fff;
         margin: 0 10px;
     }
+    .main-logout{
+        position: relative;
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        color: #fff;
+      margin-right:10px;
+    }
     .main-body{
         background: #ecf0f5;
         min-height: 400px;
@@ -339,6 +348,9 @@
             </div>
             <div class="main-bar f-full">
                 <span class="main-toggle fa fa-bars" onclick="toggle()"></span>
+            </div>
+            <div class="main-bar">
+              <a href="<?php echo base_url(); ?>auth/logout_act"><span title="Logout" class="main-logout fa fa-key"></span></a>
             </div>
         </div>
     </div>
