@@ -17,7 +17,7 @@
                     <div style="margin-bottom:10px">
                         <label>Format file berbentuk <b>.csv</b>, dengan format : <br/>
                             <b>1. Produk</b> (product.csv) => SKU, Product Code, Article Code, Product Name, Brand Code, Class Code, SubClass Code, Supplier Code, Size Code, Colour Code, UOM Beli, UOM Stock, UOM Jual, Status, Jenis Barang <br/>
-                            <b>2. Article</b> (article.csv) => Article Code, Article Name, Style, BOM/Pcs, FOH/Pcs, Ongkos Jahit/Pcs, Operational Cost, Interest Cost <br/>
+                            <b>2. Article</b> (article.csv) => Article Code, Article Name, Style, BOM/Pcs, FOH/Pcs, Ongkos Jahit/Pcs, Operational Cost, Interest Cost, Tipe (IMPORT/LOCAL) <br/>
                             <b>3. Article Colour</b> (article_colour.csv) => Colour Code, Article Code<br/>
                             <b>4. Article Size</b> (article_size.csv) => Size Code, Article Code<br/>
                             <b>5. DO Produksi</b> (produksi.csv) => <b><i>(Pastikan tanggal DO sesuai dengan periode berjalan pada lokasi PRD dan PST)</i></b> Tanggal DO, SKU, Qty Send, Keterangan<br/>

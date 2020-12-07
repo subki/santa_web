@@ -138,6 +138,7 @@ class Importdata extends IO_Controller {
 							'ongkos_jahit_pcs' 	=> isset($val[5])?$val[5]:'',
 							'operation_cost' 	=> isset($val[6])?$val[6]:'',
 							'interest_cost' 	=> isset($val[7])?$val[7]:'',
+							'tipe' 	=> isset($val[8])?$val[8]:'',
 							'crtby' 			=> $this->session->userdata('user_id'),
 							'crtdt' 			=> date('Y-m-d H:i:s')
 						);

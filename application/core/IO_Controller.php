@@ -234,15 +234,15 @@ class IO_Controller extends CI_Controller {
 
 		if($fltr!=""){
 			foreach ($fltr as $r){
-				if($r->op=="equal") $this->db->where($r->field,$r->value);
-				if($r->op=="notequal") $this->db->where("$r->field !=",$r->value);
+				if($r->op=="equal") $this->db->having($r->field,$r->value);
+				if($r->op=="notequal") $this->db->having("$r->field !=",$r->value);
 				if($r->op=="contains") $this->db->like($r->field,$r->value);
-				if($r->op=="beginwith") $this->db->where("$r->field like '$r->value%'");
-				if($r->op=="endwith") $this->db->where("$r->field like '%$r->value'");
-				if($r->op=="less") $this->db->where("$r->field < ",$r->value);
-				if($r->op=="lessorequal") $this->db->where("$r->field <= ",$r->value);
-				if($r->op=="greater") $this->db->where("$r->field > ",$r->value);
-				if($r->op=="greaterorequal") $this->db->where("$r->field >= ",$r->value);
+				if($r->op=="beginwith") $this->db->having("$r->field like '$r->value%'");
+				if($r->op=="endwith") $this->db->having("$r->field like '%$r->value'");
+				if($r->op=="less") $this->db->having("$r->field < ",$r->value);
+				if($r->op=="lessorequal") $this->db->having("$r->field <= ",$r->value);
+				if($r->op=="greater") $this->db->having("$r->field > ",$r->value);
+				if($r->op=="greaterorequal") $this->db->having("$r->field >= ",$r->value);
 			}
 			if($special!="") {
 				$this->db->where($special);
