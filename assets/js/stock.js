@@ -48,7 +48,7 @@ $(document).ready(function () {
         onSelect: function(date){
             var y = date.getFullYear();
             var m = date.getMonth()+1;
-            var prd =  y+(m<10?('0'+m):m);
+            var prd =  y+""+(m<10?('0'+m):m);
             var loc = $('#location_code').combogrid('getValue');
             if(loc!==""){
                 $('#dg').datagrid({url:base_url+"stock/load_grid/"+loc+"/"+prd});
