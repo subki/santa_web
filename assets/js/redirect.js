@@ -67,6 +67,24 @@ ShareAlike - If you remix, transform, or build upon the material, you must distr
 		form[0][submit]();
 	};
 
+	$.redirectFormValues = function (url, formInput, values, method, target) {
+		method = (method && ["GET", "POST", "PUT", "DELETE"].indexOf(method.toUpperCase())) ? method.toUpperCase() : 'POST';
+
+		var form = $(formInput)
+			.attr("method", method)
+			.attr("action", url);
+
+		if (target) {
+			form.attr("target", target);
+		}
+
+		var submit = {}; //Create a symbol
+		form[0][submit] = form[0].submit;
+		if(values!==null) iterateValues(values, [], form);
+		$('body').append(form);
+		form[0][submit]();
+	};
+
     //Utility Functions
     /**
      * Url and QueryString Parser.
