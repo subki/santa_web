@@ -335,3 +335,22 @@ function authorization(pesan, docno, tabel, callback){
         width:'80%'
     });
 }
+
+/**
+ * @param product_id
+ * @param doc_date
+ * @param location_code
+ * @param customer_code
+ * @param callback
+ */
+function util_get_unit_price(product_id,doc_date,location_code,customer_code, callback) {
+	$.ajax({
+		type:"POST",
+		url: `${base_url}salesorder/get_unit_price?product_id=${product_id}&tanggal=${doc_date}&lokasi=${location_code}&customer_code=${customer_code}`,
+		dataType:"json",
+		success:function(result){
+			console.log(result)
+			callback(result)
+		}
+	});
+}

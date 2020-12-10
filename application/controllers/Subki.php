@@ -309,6 +309,13 @@ class Subki extends IO_Controller {
 		echo date("Y-m-d",strtotime("+0 month",strtotime($p."25")));
 	}
 
+	public function calendar(){
+		$data['data'] = $this->db->where('end_date>=',date('Y-m-d'))
+			->where("parent >","0")
+			->order_by('end_date asc')
+			->get("timeline")->result();
+		$this->load->view("calendar", $data);
+	}
 
 
 }
