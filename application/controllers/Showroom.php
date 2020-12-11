@@ -284,7 +284,7 @@ class Showroom extends IO_Controller {
 		if(count($item)>0) {
 			$this->db->insert_batch("rekap_payment_harian",$item);
 			$this->db->where_in("docno", $docno)
-				->update($this->table,["rekap"=>1,"upddt"=>date('Y-m-d H:i:s'), "updby"=>$this->session->userdata(sess_user_id)]);
+				->update($this->table,["rekap"=>1,"status"=>"CLOSE","upddt"=>date('Y-m-d H:i:s'), "updby"=>$this->session->userdata(sess_user_id)]);
 		}
 		if ($this->db->trans_status() === FALSE){
 			$this->set_error($this->db->error());
@@ -375,8 +375,6 @@ class Showroom extends IO_Controller {
 		$this->load->library('escpos');
 		$connector = new Escpos\PrintConnectors\WindowsPrintConnector("EPSON TM-U220 Receipt");
 		$printer = new Escpos\Printer($connector);
-
-//		pre($detail);
 
 		$periode = date("d/m/Y", strtotime($param['tanggal']));
 		$printer->initialize();
