@@ -194,6 +194,16 @@ class Wholesales extends IO_Controller {
                         $msg = "Customer harus melakukan pembayaran terlebih dahulu, dan perlu di konfirmasi oleh finance.";
                     }
                 }else{
+                	if($dt->status=="CLOSED" && $input['status']=="OPEN"){
+                		$data['seri_pajak'] = '';
+										$data2 = array(
+											'inuse' => 0,
+											'refno' => '',
+											'updby' => $this->session->userdata('user_id'),
+											'upddt' => date('Y-m-d H:i:s')
+										);
+										$this->db->update("seri_pajak",$data2,["refno"=>$input['no_faktur']]);
+									}
                     $this->model->update_data($input['id'], $data);
                 }
             } else {
@@ -213,6 +223,8 @@ class Wholesales extends IO_Controller {
     function get_seripajak(){
         try {
             $input = $this->toUpper($this->input->post());
+            pre($input);
+            $this->db->trans_start();
             $read = $this->model_faktur->read_available_faktur(date('Y'));
             if ($read->num_rows() > 0) {
                 $dt =$read->row();
@@ -223,7 +235,7 @@ class Wholesales extends IO_Controller {
                 );
                 $data2 = array(
                     'inuse' => 1,
-                    'refno' => $input['docno'],
+                    'refno' => $input['no_faktur'],
                     'updby' => $this->session->userdata('user_id'),
                     'upddt' => date('Y-m-d H:i:s')
                 );
@@ -235,6 +247,7 @@ class Wholesales extends IO_Controller {
                 $result = 1;
                 $msg="Kode tidak ditemukan";
             }
+            $this->db->trans_complete();
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();

@@ -41,43 +41,26 @@ class Faktur extends IO_Controller {
             $input = $this->toUpper($this->input->post());
 
             $cnt = $input['total'];
-            $thn = date('Y');
-            $data = array();
-            for($i=1;$i<$cnt+1; $i++){
-                $aa = substr($input['awal'],-5);
-                $end = intval($aa)+$i;
+            $kiri = substr($input['awal'],0, count($input['awal'])-4);
+            $kanan = substr($input['awal'],-4);
+            $kanan = intval($kanan);
+            $datas = [];
+					for($i=0;$i<$cnt; $i++){
+						$c = str_pad(strval($kanan),4,"0",STR_PAD_LEFT);
+						$datas[] = array(
+							'periode'=>date('Y'),
+							'seqno'=>$kiri."".$c,
+							'inuse'=>0,
+							'crtby'=>$this->session->userdata(sess_user_id),
+							'crtdt'=>date('Y-m-d h:i:s')
+						);
+						$kanan++;
+					}
+//					pre($datas);
+					if(count($datas)>0) $this->db->insert_batch("seri_pajak",$datas);
 
-                $end1 = substr("000".$end,-5);
-                $comb = substr($input['awal'],0,count($input['awal'])-6).$end1;
-
-//                var_dump($aa);
-//                var_dump($end);
-//                var_dump($end1);
-//                var_dump($comb);
-//                die();
-                if($this->model->read_data($thn,$comb)->num_rows() == 0) {
-                    $this->model->insert_data(array(
-                        "periode" => $thn,
-                        "seqno" => $comb
-                    ));
-                    $conn = $this->db->conn_id;
-                    do {
-                        if ($result = mysqli_store_result($conn)) {
-                            mysqli_free_result($result);
-                        }
-                    } while (mysqli_more_results($conn) && mysqli_next_result($conn));
-                }
-            }
-//            var_dump($data);
-//            die();
-//            if(count($data)>0) {
-//                $this->model->insert_batch($data);
-                $result = 0;
-                $msg = "OK";
-//            }else{
-//                $result = 1;
-//                $msg = "Tidak ada data yang disimpan";
-//            }
+					$result = 0;
+					$msg = "OK";
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();
@@ -118,12 +101,16 @@ class Faktur extends IO_Controller {
 
 
     function export_data(){
-        $filename = 'SIZE_' . date('Ymd') . '.csv';
-        $header = array("Kode", "Ukuran","Status","Create By", "Update By","Create Date","Update Date");
+        $filename = 'FAKTUR_' . date('Ymd') . '.csv';
+        $header = array("Tahun","Seri Faktur","Trx. No","In Use","Create By", "Update By","Create Date","Update Date");
         $app = $this->getParamOption();
-        $data = $this->model->get_list_data2($app);
-        $unset = ['tanggal_crt','tanggal_upd'];
+        $data = $this->model->get_list_data2($app)->result_array();
+        foreach ($data as $key => $row){
+        	if($row->inuse=="0") $data[$key]['inuse'] = "NO";
+        	else $data[$key]['inuse'] = "YES";
+				}
+        $field = ["periode","seqno","refno","inuse","crtby", "updby","crtdt","upddt"];
         $top = array();
-        $this->export_csv($filename,$header, $data, $unset, $top);
+        $this->export_csv2($filename,$header, $data, $top,$field);
     }
 }

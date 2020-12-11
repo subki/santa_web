@@ -10,14 +10,13 @@ class Showroomsales_model extends CI_Model {
         $this->query = "select a.docno,a.so_no
                   , CONCAT(LEFT(a.docno,3),'.',RIGHT(LEFT(a.docno,7),4),'.',RIGHT(LEFT(a.docno,9),2),'.',RIGHT(a.docno,4)) AS ak_docno
                   , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date
-                  , a.store_code, b.store_name, a.location_code , a.kode_kirim, a.provinsi_id, c.name as provinsi
+                  , b.store_name, a.location_code , a.provinsi_id, c.name as provinsi
                   , a.regency_id, d.name as regency, a.jenis_so
                   , a.remark, a.customer_code, e.customer_name, e.phone1, a.salesman_id, f.salesman_name
                   , e.lokasi_stock, e.customer_type
                   , a.tipe_komisi, a.komisi_persen, a.disc1_persen, a.disc2_persen 
                   , a.qty_item, a.qty_order, a.gross_sales, a.total_ppn, a.total_discount
-                  , a.sales_before_tax, a.sales_after_tax, a.service_level, a.qty_deliver
-                  , a.posting_date, DATE_FORMAT(a.posting_date, '%d/%m/%Y') ak_posting_date
+                  , a.sales_before_tax, a.sales_after_tax
                   , a.status, a.sales_pada_toko, e.pkp
                   , ifnull(a.jumlah_print,0) jumlah_print, e.credit_limit, e.outstanding, (e.credit_limit-e.outstanding) credit_remain
                   , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
