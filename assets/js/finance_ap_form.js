@@ -5,7 +5,7 @@ var barisSelect = 0;
 var counterSelect = 0;
 var options={
 	method:"POST",
-	url:base_url+"fa/ar/getFaktur",
+	url:base_url+"fa/ap/getFaktur",
 	pagePosition:"top",
 	resizeHandle:"right",
 	resizeEdge:10,
@@ -40,7 +40,7 @@ $(document).ready(function () {
 	populatePaymentBy();
 
 	if(aksi==="add"){
-		flag = "fa/ar/save_header";
+		flag = "fa/ap/save_header";
 		var date = new Date();
 		var y = date.getFullYear();
 		var m = date.getMonth()+1;
@@ -57,7 +57,7 @@ $(document).ready(function () {
 		$("#unposting").hide();
 		$("#submit").show();
 	}else{
-		flag = "fa/ar/edit_header";
+		flag = "fa/ap/edit_header";
 		reload_header()
 	}
 	$("#dg").datagrid(options)
@@ -86,14 +86,14 @@ function initHeader() {
 	}
 	$("#submit").hide();
 }
-function printAR() {
-	window.open(base_url+'finance/print_ar/'+id, '_blank');
+function printAP() {
+	window.open(base_url+'fa/ap/printap/'+id, '_blank');
 }
 
 function reload_header() {
 	$.ajax({
 		type:"POST",
-		url:base_url+"fa/ar/read_data/"+id,
+		url:base_url+"fa/ap/read_data/"+id,
 		dataType:"json",
 		success:function(result){
 			console.log(result.data)
@@ -107,7 +107,7 @@ function reload_header() {
 					title: 'Error',
 					msg: e.message,
 					handler:function () {
-						window.location.href = base_url+"finance/ar";
+						window.location.href = base_url+"finance/ap";
 					}
 				});
 			}
@@ -119,13 +119,13 @@ function submitAR(){
 	$.redirectForm(base_url+flag,'#fm',"post","")
 }
 function updateAR(){
-	$.redirectForm(base_url+"fa/ar/edit_header",'#fm',"post","")
+	$.redirectForm(base_url+"fa/ap/edit_header",'#fm',"post","")
 }
 function postingAR(){
 	myConfirm("Alert","Anda yakin ingin Posting?","Ya","Tidak",function (r) {
 		if(r==="Ya"){
 			$("#status").textbox('setValue','ON PROGRESS')
-			$.redirectForm(base_url+"fa/ar/edit_header",'#fm',"post","")
+			$.redirectForm(base_url+"fa/ap/edit_header",'#fm',"post","")
 		}
 	})
 }
@@ -133,7 +133,7 @@ function unpostingAR(){
 	myConfirm("Alert","Anda yakin ingin Unposting?","Ya","Tidak",function (r) {
 		if(r==="Ya"){
 			$("#status").textbox('setValue','OPEN')
-			$.redirectForm(base_url+"fa/ar/edit_header",'#fm',"post","")
+			$.redirectForm(base_url+"fa/ap/edit_header",'#fm',"post","")
 		}
 	})
 }
@@ -161,7 +161,7 @@ function populateDBCR(id) {
 	});
 	if(id==="dbcr"){
 		$('#dbcr').combobox({readonly:true})
-		$('#dbcr').combobox('setValue','DEBET')
+		$('#dbcr').combobox('setValue','CREDIT')
 	}
 }
 function populateTrxType() {
@@ -271,9 +271,9 @@ function populateStore() {
 
 function populateCustomer() {
 	$('#customer_code').combogrid({
-		idField: 'customer_code',
-		textField:'customer_name',
-		url:base_url+"customer/load_grid",
+		idField: 'supplier_code',
+		textField:'supplier_name',
+		url:base_url+"mastersupplier/load_grid",
 		labelPosition:'top',
 		tipPosition:'bottom',
 		hasDownArrow: false,
@@ -292,14 +292,14 @@ function populateCustomer() {
 			return data;
 		},
 		columns: [[
-			{field:'customer_code', title:'Kode', width:200},
-			{field:'customer_name', title:'Customer', width:300},
+			{field:'supplier_code', title:'Kode', width:200},
+			{field:'supplier_name', title:'Customer', width:300},
 		]]
 	});
 	var gr =  $('#customer_code').combogrid('grid')
 	gr.datagrid('destroyFilter');
 	gr.datagrid('enableFilter');
-	gr.datagrid('addFilterRule', {field: 'gol_customer', op: 'equal', value: "Wholesales"});
+	// gr.datagrid('addFilterRule', {field: 'gol_customer', op: 'equal', value: "Wholesales"});
 	gr.datagrid('addFilterRule', {field: 'status', op: 'equal', value: "Aktif"});
 	gr.datagrid('doFilter');
 }
@@ -307,7 +307,7 @@ function removeItem(baris, idd) {
 	if(idd>0){
 		myConfirm("Alert","Anda yakin ingin hapus?","Ya","Tidak",function (r) {
 			if(r==="Ya"){
-				$.redirect(base_url+"fa/ar/delete_detail/"+idd,{id_det:idd,id_head:id},"POST","")
+				$.redirect(base_url+"fa/ap/delete_detail/"+idd,{id_det:idd,id_head:id},"POST","")
 			}
 		})
 	}else{
@@ -317,7 +317,7 @@ function removeItem(baris, idd) {
 function getFaktur(baris, idd) {
 	var cust = $("#customer_code").combogrid('getValue');
 	if(cust===""){
-		$.messager.alert("Error","Customer harus dipilih terlebih dahulu")
+		$.messager.alert("Error","Supplier harus dipilih terlebih dahulu")
 		return
 	}
 	counterSelect = baris;
@@ -325,9 +325,9 @@ function getFaktur(baris, idd) {
 	$('#dlg').dialog('open');
 	$("#dg").datagrid('destroyFilter');
 	$("#dg").datagrid('enableFilter');
-	$("#dg").datagrid('addFilterRule', {field: 'customer_code',op: 'equal',value: cust});
+	$("#dg").datagrid('addFilterRule', {field: 'supplier_code',op: 'equal',value: cust});
 	$("#dg").datagrid('addFilterRule', {field: 'status',op: 'equal',value: "CLOSED"});
-	$("#dg").datagrid('addFilterRule', {field: 'verifikasi_finance',op: 'equal',value: "VERIFIED"});
+	// $("#dg").datagrid('addFilterRule', {field: 'verifikasi_finance',op: 'equal',value: "VERIFIED"});
 	$("#dg").datagrid('doFilter');
 }
 function onDblClick (index, row) {
@@ -335,7 +335,7 @@ function onDblClick (index, row) {
 	console.log(row)
 	console.log(counterSelect)
 	$("#associatedid" + counterSelect).val(row.id)
-	$("#associatedwith" + counterSelect).val("sales_invoice")
+	$("#associatedwith" + counterSelect).val("poheader")
 	$("#remark" + counterSelect).textbox('setValue',row.remark)
 	$("#payment_amt" + counterSelect).numberbox('setValue',0)
 	$("#outstanding_amt" + counterSelect).numberbox('setValue',row.sisa_faktur)

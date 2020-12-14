@@ -7,7 +7,7 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class AR extends IO_Controller {
+class AP extends IO_Controller {
 
 	var $table;
 	var $table_field;
@@ -26,6 +26,37 @@ class AR extends IO_Controller {
 		$this->load->model('Finance_model','fa');
 		$this->load->library('form_validation');
 		$this->load->helper('file');
+	}
+
+	function index($aksi=""){
+		if($aksi=="") {
+			$data['title'] = 'Payment Voucher';
+			$data['content'] = $this->load->view('vFinanceAP', $data, TRUE);
+		}else if($aksi=="add"){
+			$data['title'] = 'Add Payment Voucher';
+			$data['aksi'] = $aksi;
+			$data['content'] = $this->load->view('vFinanceAP_form', $data, TRUE);
+		}else if($aksi=="edit"){
+			$data['title'] = 'Edit Payment Voucher';
+			$data['aksi'] = $aksi;
+			$data['id'] = $this->input->get('id');
+			$data['content'] = $this->load->view('vFinanceAP_form', $data, TRUE);
+		}
+		$this->load->view('main', $data);
+	}
+
+	public function grid(){
+		$total = $this->db->get($this->table)->num_rows();
+//		$this->db->select("a.*, b.description");
+		$this->getParamGrid_Builder("","id");
+//		$this->db->join("payment_type b", "b.id=a.paymenttypeid");
+		$data = $this->db->get($this->table." a")->result();
+		echo json_encode(array(
+				"status" => 1,
+				"msg" => "OK",
+				"total"=>$total,
+				"data" =>$data)
+		);
 	}
 
 	public function save_header(){
@@ -47,7 +78,7 @@ class AR extends IO_Controller {
 		$pref = $input['reff'];
 
 		$this->db->select('right(docno_temp,4) nomor')
-			->where('docno_temp like', "BBM$pref$yymm%")
+			->where('docno_temp like', "BBK$pref$yymm%")
 			->order_by('docno_temp', 'desc');
 		$gen = $this->db->get($this->table, 1)->row();
 
@@ -56,9 +87,9 @@ class AR extends IO_Controller {
 			$ctr = str_pad($ctr, 4, "0", STR_PAD_LEFT);
 		}
 		$this->db->trans_start();
-		$input["docno"] = "BBM$pref$yymm$ctr";
-		$input["docno_temp"] = "BBM$pref$yymm$ctr";
-		$input["payment_type"] = "AR RECEIPT";
+		$input["docno"] = "BBK$pref$yymm$ctr";
+		$input["docno_temp"] = "BBK$pref$yymm$ctr";
+		$input["payment_type"] = "AP PAYMENT";
 		$input["tipe_pos_biaya"] = "";
 		$input["seqno"] = "";
 		$input["info_status"] = "";
@@ -106,7 +137,7 @@ class AR extends IO_Controller {
 		}else{
 			$this->session->set_flashdata("Insert success");
 		}
-		redirect("Finance/ar/edit?id=".$input['id']);
+		redirect("fa/ap/index/edit?id=".$input['id']);
 	}
 	public function edit_header(){
 		$input = $this->toUpper($this->input->post());
@@ -168,12 +199,12 @@ class AR extends IO_Controller {
 		}else{
 			$this->session->set_flashdata("Update success");
 		}
-		redirect("Finance/ar/edit?id=".$input['id']);
+		redirect("fa/ap/index/edit?id=".$input['id']);
 	}
 
 	function read_data($docno){
 		try {
-			$read = $this->db->query($this->fa->query." where id=$docno");
+			$read = $this->db->get_where($this->table,['id'=>$docno]);
 			if ($read->num_rows() > 0) {
 				$result = 0;
 				$msg="OK";
@@ -207,22 +238,49 @@ class AR extends IO_Controller {
 
 
 	public function getFaktur(){
-		$total = $this->db->get("sales_invoice")->num_rows();
-		$this->db->select("a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd
-                  , DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
-                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
-                  , l.location_code, l.description as locname, c.gl_account");
-		$this->getParamGrid_Builder("","id");
-		$this->db->where("CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)");
-		$this->db->join("customer c","c.customer_code=a.customer_code");
-		$this->db->join("location l","l.location_code=c.lokasi_stock");
-		$data = $this->db->get("sales_invoice a")->result();
+//		$total = $this->db->get("sales_invoice")->num_rows();
+//		$this->db->select("a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd
+//                  , DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+//                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
+//                  , l.location_code, l.description as locname, c.gl_account");
+//		$this->getParamGrid_Builder("","id");
+//		$this->db->where("CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)");
+//		$this->db->join("customer c","c.customer_code=a.customer_code");
+//		$this->db->join("location l","l.location_code=c.lokasi_stock");
+//		$data = $this->db->get("sales_invoice a")->result();
+//		echo json_encode(array(
+//				"status" => 1,
+//				"msg" => "OK",
+//				"total"=>$total,
+//				"rows" =>$data)
+//		);
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",
-				"total"=>$total,
-				"rows" =>$data)
+				"total"=>0,
+				"rows" =>[])
 		);
+	}
+
+	public function printap(){
+		$input = $this->input->post();
+//        pre($input);
+		$dt = $this->db->where('docno',$input['docno'])->get('sales_proforma')->row();
+		$invoice = json_decode($dt->sales_invoice_data);
+		$query = $this->db->select('a.*, c.customer_name, c.address1, c.address2, rg.name as regency_name')
+			->where_in('a.id',$invoice)
+			->join('customer c', 'c.customer_code=a.customer_code')
+			->join('regencies rg', 'rg.id=c.regency_id');
+//        pre($sales_inv);
+
+		$data['header'] = $query->get('sales_invoice a')->row();
+		$data['detail'] = $query->get('sales_invoice a')->result();
+		$this->load->library('pdf');
+		$this->pdf->load_view('print/proforma_invoice', $data);
+		$this->pdf->render();
+
+		$this->pdf->stream($input['docno'].'.pdf',array("Attachment"=>0));
+//        $this->load->view('print/proforma_invoice',$data);
 	}
 
 }

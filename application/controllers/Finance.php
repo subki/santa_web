@@ -25,14 +25,14 @@ class Finance extends IO_Controller {
     }
     function ar($aksi=""){
 			if($aksi=="") {
-				$data['title'] = 'AR Receipt';
+				$data['title'] = 'Receipt Voucher';
 				$data['content'] = $this->load->view('vFinanceAR', $data, TRUE);
 			}else if($aksi=="add"){
-				$data['title'] = 'Add AR Receipt';
+				$data['title'] = 'Add Receipt Voucher';
 				$data['aksi'] = $aksi;
 				$data['content'] = $this->load->view('vFinanceAR_form', $data, TRUE);
 			}else if($aksi=="edit"){
-				$data['title'] = 'Edit AR Receipt';
+				$data['title'] = 'Edit Receipt Voucher';
 				$data['aksi'] = $aksi;
 				$data['id'] = $this->input->get('id');
 				$data['content'] = $this->load->view('vFinanceAR_form', $data, TRUE);

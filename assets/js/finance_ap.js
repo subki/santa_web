@@ -1,7 +1,7 @@
 var options={
     title:"List Data",
     method:"POST",
-    url : base_url+"finance/ar_grid",
+    url : base_url+"fa/ap/grid",
     pagePosition:"top",
     resizeHandle:"right",
     resizeEdge:10,
@@ -53,7 +53,7 @@ function initGrid(tahun, bulan) {
     $('#dg').datagrid(options);
     $('#dg').datagrid('destroyFilter');
     $('#dg').datagrid('enableFilter');
-    $('#dg').datagrid('addFilterRule', {field: 'payment_type', op: 'equal', value: 'AR RECEIPT' });
+    $('#dg').datagrid('addFilterRule', {field: 'payment_type', op: 'equal', value: 'AP PAYMENT' });
     $('#dg').datagrid('addFilterRule', {field: 'tahun',op: 'equal',value: tahun});
     $('#dg').datagrid('addFilterRule', {field: 'bulan',op: 'equal',value: bulan});
     $('#dg').datagrid('doFilter');
@@ -82,10 +82,10 @@ function getRow() {
     return row;
 }
 function addData() {
-    window.location.href = base_url+"Finance/ar/add"
+    window.location.href = base_url+"fa/ap/index/add"
 }
 function editData() {
     var r = getRow();
     if(r===null) return;
-    window.location.href = base_url+"Finance/ar/edit?id="+r.id;
+    window.location.href = base_url+"fa/ap/index/edit?id="+r.id;
 }
