@@ -9,7 +9,7 @@ class Masterarticle_model extends CI_Model {
 
     function get_list_data($page,$rows,$sort,$order,$role,$fltr,$opt=0){
         $sql = "create temporary table tmp2 as
-                  select a.article_code, a.article_name, a.style, a.tipe
+                  select a.article_code, a.article_name, a.style, a.tipe, a.opsi
                   , a.bom_pcs, a.foh_pcs, a.ongkos_jahit_pcs
                   , a.operation_cost, a.interest_cost
                   , a.buffer_cost, a.ekspedisi, a.hpp1, a.hpp2, a.hpp_ekspedisi, a.keterangan

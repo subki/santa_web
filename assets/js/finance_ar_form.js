@@ -126,6 +126,10 @@ function populateDBCR(id) {
 		prompt:'-Please Select-',
 		validType:'inList["#dbcr"]',
 	});
+	if(id==="dbcr"){
+		$('#dbcr').combobox({readonly:true})
+		$('#dbcr').combobox('setValue','DEBET')
+	}
 }
 function populateCBType() {
 	$('#cbtype').combobox({
