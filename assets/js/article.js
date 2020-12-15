@@ -25,14 +25,16 @@ var options={
 		handler: function(){
 			addnew()
 		}
-	},{
-		id:'edit',
-		iconCls: 'icon-edit',
-		text:'HPP',
-		handler: function(){
-			editData()
-		}
-	},{
+	},
+	// 	{
+	// 	id:'edit',
+	// 	iconCls: 'icon-edit',
+	// 	text:'HPP',
+	// 	handler: function(){
+	// 		editData()
+	// 	}
+	// },
+		{
 		id:'delete',
 		iconCls: 'icon-remove',
 		text:'Delete',
@@ -82,7 +84,7 @@ var options={
 	},{
 		id:'history',
 		iconCls: 'icon-eye',
-		text:'HPP History',
+		text:'HPP',
 		handler: function(){
 			hppHistory()
 		}
@@ -113,11 +115,11 @@ var options={
 		{field:"article_name", title:"Article Name",    width: '20%', sortable: true},
 		{field:"tipe",        title:"Tipe",     width: '10%', sortable: true},
 		{field:"style",        title:"Style",     width: '10%', sortable: true},
-		{field:"bom_pcs",       title:"BOM/PCS",     width: '8%', sortable: true},
-		{field:"foh_pcs",         title:"FOH/PCS",     width: '8%', sortable: true},
-		{field:"ongkos_jahit_pcs", title:"Ongkos Jahit/PCS",     width: '8%', sortable: true},
-		{field:"operation_cost",     title:"Operation(%)",     width: '8%', sortable: true},
-		{field:"interest_cost",      title:"Interest(%)",     width: '8%', sortable: true},
+		// {field:"bom_pcs",       title:"BOM/PCS",     width: '8%', sortable: true},
+		// {field:"foh_pcs",         title:"FOH/PCS",     width: '8%', sortable: true},
+		// {field:"ongkos_jahit_pcs", title:"Ongkos Jahit/PCS",     width: '8%', sortable: true},
+		// {field:"operation_cost",     title:"Operation(%)",     width: '8%', sortable: true},
+		// {field:"interest_cost",      title:"Interest(%)",     width: '8%', sortable: true},
 		{field:"crtby",   title:"Create By",      width: 100, sortable: true},
 		{field:"crtdt",   title:"Create Date",      width: 140, sortable: true},
 		{field:"updby",   title:"Update By",      width: 100, sortable: true},
@@ -583,26 +585,6 @@ function editData(){
 	flag = "masterarticle/edit_data/"+row.tipe;
 	$('#submit2').linkbutton({disabled:false});
 	$('#cancel2').linkbutton({disabled:false});
-
-	// $('#avg_cost').numberbox({disabled:true, readonly:true, width:'100%', label:''});
-	// $('#price_h1').numberbox({disabled:true, readonly:true, width:'100%', label:''});
-	// $('#avg_cost').numberbox('hide');
-	// $('#price_h1').numberbox('hide');
-	// $.ajax({
-	//     type:"POST",
-	//     url:base_url+"masterarticle/read_data/"+row.article_code,
-	//     dataType:"html",
-	//     success:function(result){
-	//         $('#dlg').dialog('open').dialog('center').dialog('setTitle',`Edit Article`);
-	//         var data = $.parseJSON(result);
-	//         disable_enable(false)
-	//         $('#article_code').textbox({disabled:false, readonly:true, width:'100%'});
-	//         $('#fm').form('load',data.data);
-	//         flag = "masterarticle/edit_data";
-	//         $('#submit2').linkbutton({disabled:false});
-	//         $('#cancel2').linkbutton({disabled:false});
-	//     }
-	// });
 }
 
 function hppHistory(){

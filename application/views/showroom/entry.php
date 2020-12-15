@@ -28,7 +28,9 @@
 <div id="tt">
   <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
     <a href="<?php echo base_url('showroom/index')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
+    <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-cancel" onclick="batalForm()" style="width:90px; height: 20px;">Batal</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submitForm()" style="width:90px; height: 20px;">Submit</a>
+    <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-print" onclick="printForm()" style="width:90px; height: 20px;">Print</a>
   </div>
 </div>
 <div class="easyui-layout" style="width:100%;height:100%">
@@ -476,10 +478,21 @@
 			header.total_discount = disc;
 			header.sales_after_tax = nett;
 			console.log(header)
-//		header.sales_after_tax = pay;
 			$('#fm').form('load', header);
 		}
 
+		function printForm(){
+			$.ajax({
+				type:"POST",
+				url:base_url+'showroom/print_so/'+header.docno,
+				dataType:"json",
+				success:function(result){
+					header.jumlah_print = parseInt(header.jumlah_print)+1;
+					$('#fm').form('load', header);
+					console.log(result.data)
+				}
+			});
+		}
 		function submitForm(){
 			var values = {};
 			values['header'] = header;
@@ -488,6 +501,24 @@
 				values['detailitem'][i] = detail_item[i]
 			}
 			$.redirectFormValues("<?php echo base_url('showroom/entryp')?>","#fm",values,"post","")
+		}
+		function batalForm() {
+      myConfirm("Batal Transaction","Are you sure?","Yes","No", function (res) {
+        if(res==="Yes"){
+					inputReason("Note","Input Keterangan batal : ", function (keterangan) {
+						var values = {};
+            header.remark = keterangan;
+            header.status = "BATAL";
+						values['header'] = header;
+						values['detailitem'] = {};
+						for(var i=0;i<detail_item.length; i++){
+							detail_item[i].status_detail = "BATAL";
+							values['detailitem'][i] = detail_item[i]
+						}
+						$.redirectFormValues("<?php echo base_url('showroom/entryp')?>","#fm",values,"post","")
+					})
+        }
+			})
 		}
 
 		function removeItem(baris, idd) {

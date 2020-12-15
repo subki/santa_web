@@ -277,12 +277,29 @@ class Subki extends IO_Controller {
 	}
 
 	public function sync_menu_lokal_ke_hosting(){
-		$menu_lokal = $this->db->get("app")->result();
 		$dbon=$this->load->database('defaultx',true);
 		$dbon->trans_start();
+
+		$menu_lokal = $this->db->get("app")->result();
 		foreach ($menu_lokal as $row){
 			$dbon->replace("app",$row);
 		}
+
+		$menu_lokal = $this->db->get("users_group")->result();
+		foreach ($menu_lokal as $row){
+			$dbon->replace("users_group",$row);
+		}
+
+		$menu_lokal = $this->db->get("users_group_detail")->result();
+		foreach ($menu_lokal as $row){
+			$dbon->replace("users_group_detail",$row);
+		}
+
+		$menu_lokal = $this->db->get("users_group_detail_user")->result();
+		foreach ($menu_lokal as $row){
+			$dbon->replace("users_group_detail_user",$row);
+		}
+
 		if ($dbon->trans_status() === FALSE){
 			echo "Error";
 		}else{
@@ -292,11 +309,28 @@ class Subki extends IO_Controller {
 	}
 	public function sync_menu_hosting_ke_lokal(){
 		$dbon=$this->load->database('defaultx',true);
-		$menu = $dbon->get("app")->result();
 		$this->db->trans_start();
+
+		$menu = $dbon->get("app")->result();
 		foreach ($menu as $row){
 			$this->db->replace("app",$row);
 		}
+
+		$menu = $dbon->get("users_group")->result();
+		foreach ($menu as $row){
+			$this->db->replace("users_group",$row);
+		}
+
+		$menu = $dbon->get("users_group_detail")->result();
+		foreach ($menu as $row){
+			$this->db->replace("users_group_detail",$row);
+		}
+
+		$menu = $dbon->get("users_group_detail_user")->result();
+		foreach ($menu as $row){
+			$this->db->replace("users_group_detail_user",$row);
+		}
+
 		if ($this->db->trans_status() === FALSE){
 			echo "Error";
 		}else{

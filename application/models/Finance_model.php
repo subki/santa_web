@@ -6,7 +6,7 @@ class Finance_model extends CI_Model {
 	public function __construct(){
 
         parent::__construct();
-        $this->query = " SELECT a.id, a.docno, a.store_code, a.payment_type, a.payment_date, a.tipe_pos_biaya
+        $this->query = " SELECT a.id, a.trx_type, a.docno, a.store_code, a.payment_type, a.payment_date, a.tipe_pos_biaya
                   , a.cbtype, a.no_cb, a.dbcr, a.reff, a.customer_code, a.bg_no, a.due_date
                   , a.cleared_date, a.remark, a.seqno, a.payment_amount, a.payment_by
                   , a.status, a.info_status, a.journal_no, a.tahun, a.bulan, a.printno

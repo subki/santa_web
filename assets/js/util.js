@@ -304,6 +304,17 @@ function myConfirm3(title, msg, negatif, netral, positif, callback) {
         }]
     });
 }
+function inputReason(title, msg, callback) {
+	$.messager.prompt({
+		title: title,
+		msg: msg,
+		fn: function (r) {
+			if (r) {
+				callback(r)
+			}
+		}
+	});
+}
 
 function authorization(pesan, docno, tabel, callback){
     var m = $.messager.prompt('Warning', pesan, function(r){

@@ -25,24 +25,26 @@ class Mastersupplier extends IO_Controller {
     }
 
     function load_grid(){
-        $page = ($this->input->post('page')) ? $this->input->post('page'):1;
-        $rows = ($this->input->post('rows')) ? $this->input->post('rows'):20;
-        $sort = ($this->input->post('sort')) ? $this->input->post('sort'):'supplier_code';
-        $order= ($this->input->post('order')) ? $this->input->post('order'):'asc';
-        $role = $this->session->userdata('role');
-        $fltr= ($this->input->post('filterRules')) ? json_decode($this->input->post('filterRules')):"";
-
-        $app="";
-        if($fltr!=""){
-            foreach ($fltr as $r){
-                if($app==""){
-                    $app .= " where ".$r->field." like '%".$r->value."%'";
-                }else{
-                    $app .= " AND ".$r->field." like '%".$r->value."%'";
-                }
-            }
-        }
-        $data = $this->model->get_list_data($page,$rows,$sort,$order,$role, $app);
+//        $page = ($this->input->post('page')) ? $this->input->post('page'):1;
+//        $rows = ($this->input->post('rows')) ? $this->input->post('rows'):20;
+//        $sort = ($this->input->post('sort')) ? $this->input->post('sort'):'supplier_code';
+//        $order= ($this->input->post('order')) ? $this->input->post('order'):'asc';
+//        $role = $this->session->userdata('role');
+//        $fltr= ($this->input->post('filterRules')) ? json_decode($this->input->post('filterRules')):"";
+//
+//        $app="";
+//        if($fltr!=""){
+//            foreach ($fltr as $r){
+//                if($app==""){
+//                    $app .= " where ".$r->field." like '%".$r->value."%'";
+//                }else{
+//                    $app .= " AND ".$r->field." like '%".$r->value."%'";
+//                }
+//            }
+//        }
+//        $data = $this->model->get_list_data($page,$rows,$sort,$order,$role, $app);
+			$f = $this->getParamGrid("","supplier_code");
+			$data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
 
         echo json_encode(array(
                 "status" => 1,

@@ -285,6 +285,46 @@ class IO_Controller extends CI_Controller {
 		}
 	}
 
+	function export_csv2($filename,$header,$dt, $top=array(), $urutan){
+		try {
+			foreach ($dt as $key => $row){
+				foreach ($row as $key2 => $rw){
+					if(!in_array($key2, $urutan)) unset($dt[$key][$key2]);
+				}
+			}
+
+			foreach ($dt as $key => $row){
+				$urut = [];
+				foreach ($urutan as $k){
+					$urut[$k] = $row[$k];
+				}
+				$dt[$key] = $urut;
+			}
+//			pre($dt);
+			header("Content-Description: File transfer");
+			header("Content-Disposition: attachment; filename=$filename");
+			header("Content-Type: application/csv;");
+
+			$delimiter = ';';
+			$enclosure = '"';
+
+			$file = fopen('php://output', 'w');
+			if(count($top)>0) fputcsv($file, $top);
+			fputcsv($file, $header, $delimiter, $enclosure);
+			foreach ($dt as $key => $value) {
+				unset($value['total']);
+				unset($value['tanggal_crt']);
+				unset($value['tanggal_upd']);
+				fputcsv($file, $value, $delimiter, $enclosure);
+			}
+			fclose($file);
+			exit;
+		}catch (Exception $e){
+			var_dump($e);
+			die();
+		}
+	}
+
 	function checkPeriod($loc,$tgl){
 		$periode = $this->formatDate("Y-m",$tgl);
 		$sql = "select * from closing_location WHERE location='$loc' and periode LIKE '$periode%' order by periode desc";

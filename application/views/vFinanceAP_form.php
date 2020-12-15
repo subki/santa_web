@@ -11,7 +11,7 @@
 </script>
 <script src="<?php echo base_url(); ?>assets/adminlte/number-divider.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/finance_ar_form.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/finance_ap_form.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/redirect.js"></script>
 <style>
   .panel-titleq .panel-tool{
@@ -31,7 +31,7 @@
     <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="updateAR()" style="width:90px; height: 20px;">Update</a>
     <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-posting" onclick="postingAR()" style="width:90px; height: 20px;">Posting</a>
     <a href="javascript:void(0)" id="unposting" class="easyui-linkbutton" iconCls="icon-posting" onclick="unpostingAR()" style="width:90px; height: 20px;">Unposting</a>
-    <a href="javascript:void(0)" id="print" class="easyui-linkbutton" iconCls="icon-print" onclick="printAR()" style="width:90px; height: 20px;">Print</a>
+    <a href="javascript:void(0)" id="print" class="easyui-linkbutton" iconCls="icon-print" onclick="printAP()" style="width:90px; height: 20px;">Print</a>
   </div>
 </div>
 <div class="easyui-layout" style="width:100%;height:100%">
@@ -87,7 +87,7 @@
               <input name="store_code" id="store_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Store:" style="width:100%">
             </div>
             <div style="float:right; width: 50%; padding-left: 5px;">
-              <input name="customer_code" id="customer_code" labelPosition="top" tipPosition="bottom" label="Customer:" style="width:100%">
+              <input name="customer_code" id="customer_code" labelPosition="top" tipPosition="bottom" label="Supplier:" style="width:100%">
             </div>
           </div>
         </div>
