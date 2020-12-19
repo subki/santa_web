@@ -206,8 +206,10 @@ var newDate = dateAr[2] + '-' + dateAr[1] + '-' +  dateAr[0].slice(-2);
             qty:qty
         },
         success: function(result){ 
-                      
-            console.log(result.totalopname)
+                if (result.status===1){
+                  alert(result.msg); 
+            }
+            console.log(result.status)
             $("#tot_item").textbox('setValue',result.totalopname.tot_item); 
             $("#tot_qty").textbox('setValue',result.totalopname.tot_qty); 
             // if (res.status===1){

@@ -83,7 +83,7 @@ class Stockopname_model extends CI_Model {
         return $this->db->query($q);
     }
     function read_data($code){
-        $q = $this->queryheader." where a.ref_no='$code'";
+        $q = $this->queryheader." where a.trx_no='$code'";
         return $this->db->query($q);
     }
     function read_dataadj($code){
@@ -150,7 +150,7 @@ class Stockopname_model extends CI_Model {
     function generate_auto_number(){ 
         $sql = "SELECT IFNULL(CONCAT(DATE_FORMAT(NOW(),'%y%m%d'),LPAD(MAX(RIGHT(trx_no,6))+1,6,'0')),
                 CONCAT(DATE_FORMAT(NOW(),'%y%m%d'),LPAD(1,6,'0'))) AS nomor 
-                FROM adjustment_hdr WHERE LEFT(trx_no,6)= CONCAT(DATE_FORMAT(NOW(),'%y%m%d')) ORDER BY trx_no DESC";
+                FROM hal_gondola WHERE LEFT(trx_no,6)= CONCAT(DATE_FORMAT(NOW(),'%y%m%d')) ORDER BY trx_no DESC";
         return $this->db->query($sql)->row()->nomor;
     }
     function generate_auto_numberadj(){ 

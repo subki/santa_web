@@ -573,41 +573,46 @@ class Stockopname extends IO_Controller {
         $cekOP = $this->model->cekOP($barcode,$tanggal,$location_code);
         $cekOPadjust = $this->model->cekOPadjust($barcode,$trx_no,$gondola);
         $readdetailopname = $this->model->read_datadetailopname($trx_no);
-        // var_dump($cekOP->row()->product_code);
-        // var_dump($input);
-        // die();
-        if($cekOPadjust->num_rows()==0){
-             $data = array(
-                    'store' => $store,
-                    'trx_no' => $trx_no,
-                    'item' => $barcode, 
-                    'gondola' => $gondola, 
-                    'product_code'=>$cekOP->row()->product_code, 
-                    'uom' =>$cekOP->row()->uom,
-                    'taking_qty' => 1,
-                    'crtby' => $this->session->userdata('user_id'),
-                    'crtdt' => date('Y-m-d H:i:s'), 
-                    'updby' => $this->session->userdata('user_id'),
-                    'upddt' => date('Y-m-d H:i:s'),
-                    'barcode' => $barcode
-                );
-            $this->model->insert_data_opname($data);
-                $stt =0;
-                $msg="Insert";
-                $res="OK";
-                $totalopname = $readdetailopname->result()[0];
-       }else{
-                $data = array( 
-                    'taking_qty' => $cekOPadjust->row()->taking_qty+$qty, 
-                    'updby' => $this->session->userdata('user_id'),
-                    'upddt' => date('Y-m-d H:i:s') 
-                );
-            $this->model->update_data_opname($barcode,$trx_no,$gondola, $data);
-                $stt =0;
-                $msg="UPdate";
-                $res="OK";
-                $totalopname = $readdetailopname->result()[0];
-       }   
+         
+        if($cekOP->num_rows()==0){
+                $stt = 1;
+                $msg="Kode tidak ditemukan";
+                $data = null;
+        }
+        else{
+            if($cekOPadjust->num_rows()==0){
+                     $data = array(
+                            'store' => $store,
+                            'trx_no' => $trx_no,
+                            'item' => $barcode, 
+                            'gondola' => $gondola, 
+                            'product_code'=>$cekOP->row()->product_code, 
+                            'uom' =>$cekOP->row()->uom,
+                            'taking_qty' => 1,
+                            'crtby' => $this->session->userdata('user_id'),
+                            'crtdt' => date('Y-m-d H:i:s'), 
+                            'updby' => $this->session->userdata('user_id'),
+                            'upddt' => date('Y-m-d H:i:s'),
+                            'barcode' => $barcode
+                        );
+                    $this->model->insert_data_opname($data);
+                        $stt =0;
+                        $msg="Insert";
+                        $res="OK";
+                        $totalopname = $readdetailopname->result()[0];
+               }else{
+                        $data = array( 
+                            'taking_qty' => $cekOPadjust->row()->taking_qty+$qty, 
+                            'updby' => $this->session->userdata('user_id'),
+                            'upddt' => date('Y-m-d H:i:s') 
+                        );
+                    $this->model->update_data_opname($barcode,$trx_no,$gondola, $data);
+                        $stt =0;
+                        $msg="UPdate";
+                        $res="OK";
+                        $totalopname = $readdetailopname->result()[0];
+               }
+        }    
         echo json_encode(array(
             "status" => $stt, "isError" => $res,
             "msg" => $msg, "message" => $res,

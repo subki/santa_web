@@ -29,7 +29,13 @@
     }
 </style>
 <div id="tt">
-   
+   <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+        <a href="javascript:void(0)" id="new" class="easyui-linkbutton" iconCls="icon-save" onclick="addform('')" style="width:90px; height: 20px;">NEW</a>
+        <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
+        <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Update</a><a href="javascript:void(0)" id="printOp" class="easyui-linkbutton" iconCls="icon-print" onclick="printOP()"  style="width:90px; height: 20px;">Print</a> 
+        <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-box1" onclick="posting('')"  style="width:90px; height: 20px;">Posting</a>   
+        <a href="javascript:void(0)" id="Unsubmit" class="easyui-linkbutton" iconCls="icon-box1" onclick="unposting('')"  style="width:90px; height: 20px;">UnPosting</a> 
+    </div>
 </div>
 <div class="easyui-layout" style="width:100%;height:100%">
     <div id="p" class="easyui-panel" title="<?php echo $title; ?>"
@@ -41,13 +47,7 @@
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
 
                 <div style="width: 80%; padding: 10px;" class="border-kotak">  
-                     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-                        <a href="javascript:void(0)" id="new" class="easyui-linkbutton" iconCls="icon-save" onclick="addform('')" style="width:90px; height: 20px;">NEW</a>
-                        <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
-                        <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Update</a><a href="javascript:void(0)" id="printOp" class="easyui-linkbutton" iconCls="icon-print" onclick="printOP()"  style="width:90px; height: 20px;">Print</a> 
-                        <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-box1" onclick="posting('')"  style="width:90px; height: 20px;">Posting</a>   
-                        <a href="javascript:void(0)" id="Unsubmit" class="easyui-linkbutton" iconCls="icon-box1" onclick="unposting('')"  style="width:90px; height: 20px;">UnPosting</a> 
-                    </div>
+                     
                     <div style="margin-bottom:1px"> 
                         <div style="margin-bottom:1px">
                             <div style="float:left; width: 50%;">
