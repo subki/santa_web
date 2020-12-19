@@ -13,11 +13,20 @@ var options={
 	sortName:"article_code",
 	sortOrder:"asc",
 	singleSelect:true,
-	toolbar:[{
+	toolbar:[
+	// 	{
+	// 	iconCls: 'icon-eye',
+	// 	text:'View',
+	// 	handler: function(){
+	// 		viewdata()
+	// 	}
+	// },
+		{
+		id:'history',
 		iconCls: 'icon-eye',
-		text:'View',
+		text:'HPP',
 		handler: function(){
-			viewdata()
+			hppHistory()
 		}
 	},{
 		iconCls: 'icon-add', id:'add',
@@ -81,13 +90,6 @@ var options={
 		handler: function(){
 			uploadImage()
 		}
-	},{
-		id:'history',
-		iconCls: 'icon-eye',
-		text:'HPP',
-		handler: function(){
-			hppHistory()
-		}
 	}],
 	loadFilter: function(data){
 		data.rows = [];
@@ -112,18 +114,18 @@ var options={
 			}
 
 		}, sortable: true},
-		{field:"article_name", title:"Article Name",    width: '20%', sortable: true},
-		{field:"tipe",        title:"Tipe",     width: '10%', sortable: true},
-		{field:"style",        title:"Style",     width: '10%', sortable: true},
+		{field:"article_name", title:"Article Name"  , sortable: true},
+		// {field:"tipe",        title:"Tipe",     width: '10%', sortable: true},
+		{field:"style",        title:"Style", sortable: true},
 		// {field:"bom_pcs",       title:"BOM/PCS",     width: '8%', sortable: true},
 		// {field:"foh_pcs",         title:"FOH/PCS",     width: '8%', sortable: true},
 		// {field:"ongkos_jahit_pcs", title:"Ongkos Jahit/PCS",     width: '8%', sortable: true},
 		// {field:"operation_cost",     title:"Operation(%)",     width: '8%', sortable: true},
 		// {field:"interest_cost",      title:"Interest(%)",     width: '8%', sortable: true},
-		{field:"crtby",   title:"Create By",      width: 100, sortable: true},
-		{field:"crtdt",   title:"Create Date",      width: 140, sortable: true},
-		{field:"updby",   title:"Update By",      width: 100, sortable: true},
-		{field:"upddt",   title:"Update Date",      width: 140, sortable: true},
+		{field:"crtby",   title:"Create By", sortable: true},
+		{field:"crtdt",   title:"Create Date", sortable: true},
+		{field:"updby",   title:"Update By", sortable: true},
+		{field:"upddt",   title:"Update Date", sortable: true},
 	]],
 	onLoadSuccess:function(){
 		// $('#edit').linkbutton({disabled:true});

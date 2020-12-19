@@ -167,10 +167,12 @@ class Showroom extends IO_Controller {
 
 	public function editfee(){
 		$param = $this->input->post();
+//		pre($param);
 		$item = $this->db->get_where("rekap_payment_harian",["id"=>$param['id']])->row();
+//		pre([$param,$item]);
 		$adminamt = $item->total_bayar*$param['adminfee']/100;
 		$param['adminamt'] = $adminamt;
-		$this->db->update("rekap_payment_harian",$param,["id",$param['id']]);
+		$this->db->update("rekap_payment_harian",$param,["id"=>$param['id']]);
 		echo json_encode(array(
 			"status"=>0,
 			"msg"=>"OK"

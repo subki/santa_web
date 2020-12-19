@@ -84,9 +84,9 @@
           </div>
           <div style="margin-bottom:1px">
             <div style="float:left; width: 50%; padding-right: 5px;">
-              <input name="store_code" id="store_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Store:" style="width:100%">
-            </div>
-            <div style="float:right; width: 50%; padding-left: 5px;">
+<!--              <input name="store_code" id="store_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Store:" style="width:100%">-->
+<!--            </div>-->
+<!--            <div style="float:right; width: 50%; padding-left: 5px;">-->
               <input name="customer_code" id="customer_code" labelPosition="top" tipPosition="bottom" label="Customer:" style="width:100%">
             </div>
           </div>
@@ -112,14 +112,14 @@
             <input name="bg_no" id="bg_no" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                    label="BG Number:" style="width:100%">
           </div>
-          <div style="margin-bottom:1px">
+          <div style="margin-bottom:1px; display: none">
             <input name="journal_no" id="journal_no" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                    label="Journal Number:" style="width:100%">
           </div>
         </div>
         <div style="width: 30%; padding: 10px;">
           <div style="margin-bottom:1px">
-            <input name="remark" id="remark" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
+            <input name="remark" id="remark" class="easyui-textbox" multiline="true" labelPosition="top" tipPosition="bottom"
                    required="true" label="Keterangan:" style="width:100%; height: 100px;">
           </div>
           <div style="margin-bottom:1px">

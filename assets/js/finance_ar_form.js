@@ -32,7 +32,7 @@ $(document).ready(function () {
 	so_item = undefined;
 
 	populateCustomer();
-	populateStore();
+	// populateStore();
 	populateTrxType();
 	populateCBType();
 	populateCBNumber();
@@ -187,11 +187,16 @@ function populateCBType() {
 		],
 		onSelect:function (row, index) {
 			if(row===null) return
-			var gr =  $('#no_cb').combogrid('grid')
-			gr.datagrid('destroyFilter');
-			gr.datagrid('enableFilter');
-			gr.datagrid('addFilterRule', {field: 'tipe_rekening', op: 'equal', value: row.value});
-			gr.datagrid('doFilter');
+			if(row.value==="CASH"||row.value==="PETTY CASH"){
+				$("#payment_by").combobox('setValue','CASH');
+			}else{
+				$("#payment_by").combobox('setValue','TRANSFER');
+			}
+			// var gr =  $('#no_cb').combogrid('grid')
+			// gr.datagrid('destroyFilter');
+			// gr.datagrid('enableFilter');
+			// gr.datagrid('addFilterRule', {field: 'tipe_rekening', op: 'equal', value: row.value});
+			// gr.datagrid('doFilter');
 		},
 		prompt:'-Please Select-',
 		validType:'inList["#cbtype"]',
@@ -200,8 +205,8 @@ function populateCBType() {
 }
 function populateCBNumber() {
 	$('#no_cb').combogrid({
-		idField: 'accno',
-		textField:'accno',
+		idField: 'cbaccno',
+		textField:'cbaccno',
 		url:base_url+"fa/rekening/grid",
 		required:true,
 		labelPosition:'top',
@@ -223,15 +228,20 @@ function populateCBNumber() {
 		},
 		onSelect:function (index, row) {
 			if(row===null) return
-			$("#reff").textbox('setValue',row.tr_code)
-			$("#bg_no").textbox('setValue',row.cbaccno)
+			$("#cbtype").combobox('setValue',row.tipe_rekening)
+			// $("#reff").textbox('setValue',row.tr_code)
+			// $("#bg_no").textbox('setValue',row.cbaccno)
 		},
 		columns: [[
-			{field:'accno', title:'Acc No', width:100},
-			{field:'cbaccno', title:'Description', width:300},
+			// {field:'accno', title:'Acc No', width:100},
+			{field:'cbaccno', title:'No Rekening', width:300},
+			{field:'accname', title:'Account Name', width:300},
 			{field:'tr_code', title:'Trx Code', width:100},
 		]]
 	});
+	var gr =  $('#no_cb').combogrid('grid')
+	gr.datagrid('destroyFilter');
+	gr.datagrid('enableFilter');
 }
 function populateStore() {
 	$('#store_code').combogrid({
@@ -334,11 +344,12 @@ function onDblClick (index, row) {
 	console.log(index)
 	console.log(row)
 	console.log(counterSelect)
+	$("#dbcr" + counterSelect).combobox('setValue',"CREDIT")
 	$("#associatedid" + counterSelect).val(row.id)
 	$("#associatedwith" + counterSelect).val("sales_invoice")
-	$("#remark" + counterSelect).textbox('setValue',row.remark)
+	$("#remark" + counterSelect).textbox('setValue',row.no_faktur)
 	$("#payment_amt" + counterSelect).numberbox('setValue',0)
-	$("#outstanding_amt" + counterSelect).numberbox('setValue',row.sisa_faktur)
+	$("#outstanding_amt" + counterSelect).numberbox('setValue',(row.sisa_faktur)?row.sisa_faktur:0)
 	$("#cost_center" + counterSelect).textbox('setValue',row.location_code)
 	$("#gl_account" + counterSelect).textbox('setValue',row.gl_account)
 	counterSelect="";
@@ -346,6 +357,17 @@ function onDblClick (index, row) {
 	$('#dlg').dialog('close');
 }
 
+function hitungPayment(newValue, oldValue, e, nomor){
+	console.log("masuk");
+	console.log(e);
+	console.log(nomor);
+	var l = $('.paymentamt').length; var result = [];
+	console.log(l)
+	for (var i = 0; i < l; i++) result.push(parseFloat($('.paymentamt').eq(i).val()));
+	var total = 0;
+	for (var i = 0; i < result.length; i++) total += isNaN(result[i])?0:result[i];
+	$("#payment_amount").numberbox('setValue', total);
+}
 function addDetail(e) {
 	var tipe = $("#trx_type").combobox('getValue')
 	if(tipe === ""){
@@ -395,10 +417,10 @@ function addDetail(e) {
 		'		</div>' +
 		'		<div style="float:left; width: 45%;">' +
 		'			<div style="float:left; width:50%; padding-right: 10px;"> ' +
-		'				<input data-options="onChange:function(n,o){hitungPayment(n, o, this, '+counter+')}" value="'+d.payment_amt+'" name="detail['+counter+'][payment_amt]" id="payment_amt'+counter+'" class="easyui-numberbox'+counter+' paymentamt" labelPosition="top" tipPosition="bottom" required="true" label="Payment:" style="width:100%"> ' +
+		'				<input required data-options="onChange:function(n,o){hitungPayment(n, o, this, '+counter+')}" value="'+d.payment_amt+'" name="detail['+counter+'][payment_amt]" id="payment_amt'+counter+'" class="easyui-numberbox'+counter+' paymentamt" labelPosition="top" tipPosition="bottom" required="true" label="Payment:" style="width:100%"> ' +
 		'			</div> ' +
 		'			<div style="float:left; width:50%;"> ' +
-		'				<input value="'+d.outstanding_amt+'" name="detail['+counter+'][outstanding_amt]" id="outstanding_amt'+counter+'" class="easyui-numberbox'+counter+'" labelPosition="top" tipPosition="bottom" required="true" label="Outstanding:" style="width:100%"> ' +
+		'				<input value="'+d.outstanding_amt+'" name="detail['+counter+'][outstanding_amt]" id="outstanding_amt'+counter+'" class="easyui-numberbox'+counter+'" labelPosition="top" tipPosition="bottom" label="Outstanding:" style="width:100%"> ' +
 		'			</div> ' +
 		'		</div>' +
 		' 	<div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: flex-end"> ' +

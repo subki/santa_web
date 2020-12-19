@@ -44,7 +44,7 @@ class AR extends IO_Controller {
 
 		$ctr = "00001";
 		$yymm = date('ym');
-		$pref = $input['reff'];
+		$pref = $this->db->where("cbaccno",$input['cb_no'])->get("master_rekening")->row()->bank_code;
 
 		$this->db->select('right(docno_temp,4) nomor')
 			->where('docno_temp like', "BBM$pref$yymm%")

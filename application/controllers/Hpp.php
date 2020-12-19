@@ -23,7 +23,28 @@ class Hpp extends IO_Controller {
 	}
 
 	public function index($article_code){
-		$item = $this->db->select('article_code,article_name,opsi,tipe')->get_where("article",["article_code"=>$article_code])->row();
+		$item = $this->db->select('article_code,article_name,opsi,tipe')
+			->get_where("article",["article_code"=>$article_code])->row();
+		$product = $this->db->get_where("product",["article_code"=>$article_code])->row();
+		$data['uom_conv'] = 1;
+		$data['uom_from'] = "";
+		$data['uom_to'] = "";
+		if(isset($product)){
+			$uom = $this->db->get_where("product_uom",["uom_code"=>$product->satuan_jual])->row();
+			if(isset($uom)){
+				$data['uom_from'] = $uom->uom_id;
+				$defunit = $this->db->get_where("product_uom",["default_unit"=>1])->row();
+				if(isset($defunit)){
+					$data['uom_to'] = $defunit->uom_id;
+					$conv = $this->db->where("uom_from", $uom->uom_code)
+						->where("uom_to", $defunit->uom_code)
+						->get("product_uom_convertion")->row();
+					if(isset($conv)){
+						$data['uom_conv'] = $conv->convertion;
+					}
+				}
+			}
+		}
 		$data['title'] = 'Article HPP History';
 		$data['article_code'] = $article_code;
 		$data['item'] = $item;
@@ -36,8 +57,8 @@ class Hpp extends IO_Controller {
 		$this->load->view('main', $data);
 	}
 
-	public function grid(){
-		$total = $this->db->get($this->table)->num_rows();
+	public function grid($article_code){
+		$total = $this->db->where("article_code",$article_code)->get($this->table)->num_rows();
 		$this->db->select("a.*, b.article_name");
 		$this->getParamGrid_Builder("","id");
 		$this->db->join("article b", "b.article_code=a.article_code");

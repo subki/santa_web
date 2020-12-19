@@ -344,7 +344,7 @@ class Subki extends IO_Controller {
 	}
 
 	public function calendar(){
-		$data['data'] = $this->db->where('end_date>=',date('Y-m-d'))
+		$data['data'] = $this->db->where('end_date>=',date('Y-m-d', strtotime('2020-12-07')))
 			->where("parent >","0")
 			->order_by('end_date asc')
 			->get("timeline")->result();
