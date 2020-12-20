@@ -24,6 +24,7 @@
                     </div> 
                     <div style="margin-bottom:20px"> 
                         <a href="javascript:void(0)" id="searchdate"  class="easyui-linkbutton printOP" iconCls="icon-print"  style="width:90px; height: 20px;">Print</a>
+                        <a href="javascript:void(0)" id="searchdate"  class="easyui-linkbutton printOPexcel" iconCls="icon-print"  style="width:150px; height: 20px;">Print Excel</a>
                     </div>   
                  </form> 
             </div> 
@@ -125,5 +126,9 @@
        $(".printOP").click(function(){
             var docno = $('#opn_no').textbox('getValue'); 
                   window.open(base_url+'Stockopname/print_opfull/'+docno, '_blank');
+          }); 
+       $(".printOPexcel").click(function(){
+            var docno = $('#opn_no').textbox('getValue'); 
+                  window.open(base_url+'Stockopname/print_opfullexcel/'+docno, '_blank');
           }); 
 </script>

@@ -22,13 +22,18 @@ header("Expires: 0");
                 <tr>
                     <td width="30%">No. Transaksi Opname</td>
                     <td width="1%">:</td>
-                    <td width="40%"><?php echo $so->trx_no." / ".$so->status; ?></td> 
+                    <td width="40%"><?php echo $so->trx_no;?></td> 
                 </tr>
                 <tr>
                     <td width="30%">Tgl Opname</td>
                     <td width="1%">:</td>
                     <td width="40%"><?php echo $date=date_create($so->trx_date);
                                         echo date_format($date,"d/m/Y ");?></td> 
+                </tr>
+                <tr>
+                    <td width="30%">Gondola</td>
+                    <td width="1%">:</td>
+                    <td width="40%"><?php echo $so->gondola;?></td> 
                 </tr>
                 <tr>
                     <td width="30%">User </td>
@@ -55,7 +60,7 @@ header("Expires: 0");
 <table>
     <tbody>
     <div class="content">
-        <table border="1" style="width: 100%;">
+         <table border="1" style="width: 100%;margin-top: -110px">
             <thead> 
             <tr>
                 <th class="title-header text-left content" width="10%" style="padding-top: 5px; padding-bottom: 5px">Item</th>
@@ -68,6 +73,8 @@ header("Expires: 0");
             </thead>
             <tbody>
             <?php
+            $i = 1;
+            $qty = 0;
             foreach ($det as $row) { ?>
                 <tr>
                     <td class="text-left content"><?php echo $row->item ?></td>
@@ -77,8 +84,9 @@ header("Expires: 0");
                     <td class="text-center content"><?php echo $row->QTYScan ?></td>
                     <td class="text-center content"><?php echo $row->Selisih ?></td> 
                 </tr>
-            <?php } ?>
-            </tbody>
+
+                <?php $i++; $qty+=$row->qty;} ?> 
+            </tbody> 
         </table>
     </div>
     </tbody>
@@ -89,10 +97,9 @@ header("Expires: 0");
 </footer>
 </html>
 
-
 <style rel="stylesheet/scss" lang="scss">
     .header, .header-space,
-    .footer-space {
+    .footer, .footer-space {
         height: 130px;
     }
 
@@ -100,18 +107,16 @@ header("Expires: 0");
         position: fixed;
         bottom: 0;
     }
-
-    table {
-        border-spacing: 2px;
-    }
+ 
     /*table thead {*/
     /*border-bottom:3px double black;*/
     /*border-top:3px double black;*/
     /*}*/
-    table tfoot {
-        border-top:3px double black;
-    }
+  
 
+    table {
+        border-spacing:0;
+    }
     .report-header{
         margin-bottom: 10px;
     }
@@ -181,7 +186,7 @@ header("Expires: 0");
     }
 
     body {
-        margin-top: 1.8cm;
+        margin-top: 1.4cm;
         margin-bottom: 0.3cm;
         margin-left: 0.5cm;
         margin-right: 0.5cm;
@@ -189,19 +194,18 @@ header("Expires: 0");
     }
 
     header {
-        position: absolute;
-        top: -3cm;
+        position: relative;
+        top: -2.5cm;
         left: 0.5cm;
         right: 0.5cm;
-        height: 160px;
-    }
-
+        height: 120px;
+    } 
     footer {
         position: fixed;
+        font-size: 7;
         bottom: -10px;
         left: 1cm;
         right: 1cm;
-        height: 30px;
+        height: 20px;
     }
-
-</style> 
+</style>

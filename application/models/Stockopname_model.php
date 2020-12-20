@@ -180,11 +180,41 @@ class Stockopname_model extends CI_Model {
  
     function get_list_data_detailall($page,$rows,$sort,$order,$role,$fltr,$opt=0){
         $sql = "create temporary table temp as
-                SELECT a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,Ifnull(b.taking_qty,0) 'QTYScan',b.taking_qty-a.qty Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan
+                SELECT a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,IFNULL(SUM(b.taking_qty),0) 'QTYScan',SUM(b.taking_qty)-a.qty Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan
                 FROM adjustment_dtl a 
-                LEFT JOIN dtl_gondola b ON b.item=a.item  
+                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no  
+                COLLATE utf8mb4_general_ci
+                LEFT JOIN dtl_gondola b ON b.item=a.item AND b.trx_no=g.trx_no 
+                GROUP BY a.item 
+                ORDER BY b.crtdt DESC,b.product_code ASC  ";
+        $this->db->query($sql);
+        $sql = "create temporary table tmp as select * from temp a ";
+        if($fltr!=''){
+            $sql .= $fltr;
+        }
+        $this->db->query($sql);
+
+
+        $sql = "select a.*,
+                (select count(a1.trx_no) from tmp a1 ) as total
+                 from tmp a ";
+        $sql .=" limit ".($page-1)*$rows.",".$rows;
+
+        $data = $opt==1?$this->db->query($sql) : $this->db->query($sql)->result();
+        $sql = "drop table tmp";
+        $this->db->query($sql);
+        $sql = "drop table temp";
+        $this->db->query($sql);
+        return $data;
+    }
+    function get_list_data_detailgondola($page,$rows,$sort,$order,$role,$fltr,$opt=0){
+        $sql = "create temporary table temp as
+                SELECT b.uom,a.trx_no,b.item,b.product_code,b.qty 'QTYStock' ,IFNULL(a.taking_qty,0) 'QTYScan',
+                a.taking_qty-b.qty Selisih,b.crtdt,a.product_code productscan,a.crtdt crtdtscan 
+                FROM dtl_gondola a 
+                INNER JOIN adjustment_dtl b ON b.item=a.item  
                 GROUP BY a.item
-                ORDER BY b.crtdt DESC,b.product_code ASC ";
+                ORDER BY a.crtdt DESC,a.product_code ASC ";
         $this->db->query($sql);
         $sql = "create temporary table tmp as select * from temp a ";
         if($fltr!=''){

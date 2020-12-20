@@ -275,6 +275,7 @@ class Stockopname extends IO_Controller {
         ));
     }
        function print_opfull($docno){
+
           $read = $this->model->read_dataadj($docno);
           if ($read->num_rows() > 0) {
               $r = $read->row();
@@ -283,27 +284,67 @@ class Stockopname extends IO_Controller {
               $f = $this->getParamGrid(" trx_no = '".$docno."' ","crtdt");
               $readopname   = $this->model->opnametotal($docno)->row(); 
               $data['totalopname']=$readopname; 
-              $data['totalload']=50000; 
-              $data['det']  = $this->model->get_list_data_detailall(1,50000,$f['sort'],$f['order'],$f['role'], $f['app']);
+              $data['totalload']=20000; 
+              $data['det']  = $this->model->get_list_data_detailall(1, $readopname->totaldata,$f['sort'],$f['order'],$f['role'], $f['app']);
               
-          $this->load->library('pdf');
-          $this->pdf->load_view('print/Stockopnamefull', $data);
-          $this->pdf->render();
-            $x          = 540;
-            $y          = 770;
-            $text       = "{PAGE_NUM} of {PAGE_COUNT}";
-            $font       = $this->pdf->getFontMetrics('Courier', 'normal');
-            $size       = 10;
-            $color      = array(0,0,0);
-            $word_space = 0.0;
-            $char_space = 0.0;
-            $angle      = 0.0;
-            $this->pdf->getCanvas()->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle); 
-            $this->pdf->stream($docno.'.pdf',array("Attachment"=>0));
+          // $this->load->library('pdf');
+          // $this->pdf->load_view('print/Stockopnamefull', $data);
+          // $this->pdf->render();
+          //   $x          = 540;
+          //   $y          = 770;
+          //   $text       = "{PAGE_NUM} of {PAGE_COUNT}";
+          //   $font       = $this->pdf->getFontMetrics('Courier', 'normal');
+          //   $size       = 10;
+          //   $color      = array(0,0,0);
+          //   $word_space = 0.0;
+          //   $char_space = 0.0;
+          //   $angle      = 0.0;
+          //   $this->pdf->getCanvas()->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle); 
+          //   $this->pdf->stream($docno.'.pdf',array("Attachment"=>0));
+     
+  
+             $this->load->view('print/Stockopnamefull',$data);
           } 
           else{
             $data['so']=0;
             $this->load->view('print/Stockopnamefull',$data);
+          } 
+
+      }  
+       function print_opfullexcel($docno){
+
+          $read = $this->model->read_dataadj($docno);
+          if ($read->num_rows() > 0) {
+              $r = $read->row();
+              $this->model->update_dataprint($docno, array("print"=>$r->print+1));
+              $data['so']=$r; 
+              $f = $this->getParamGrid(" trx_no = '".$docno."' ","crtdt");
+              $readopname   = $this->model->opnametotal($docno)->row(); 
+              $data['totalopname']=$readopname; 
+              $data['totalload']=20000; 
+              $data['det']  = $this->model->get_list_data_detailall(1,$readopname->totaldata,$f['sort'],$f['order'],$f['role'], $f['app']);
+              
+          // $this->load->library('pdf');
+          // $this->pdf->load_view('print/stockopnamefullexcel', $data);
+          // $this->pdf->render();
+          //   $x          = 540;
+          //   $y          = 770;
+          //   $text       = "{PAGE_NUM} of {PAGE_COUNT}";
+          //   $font       = $this->pdf->getFontMetrics('Courier', 'normal');
+          //   $size       = 10;
+          //   $color      = array(0,0,0);
+          //   $word_space = 0.0;
+          //   $char_space = 0.0;
+          //   $angle      = 0.0;
+          //   $this->pdf->getCanvas()->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle); 
+          //   $this->pdf->stream($docno.'.pdf',array("Attachment"=>0));
+     
+  
+             $this->load->view('print/stockopnamefullexcel',$data);
+          } 
+          else{
+            $data['so']=0;
+            $this->load->view('print/stockopnamefullexcel',$data);
           } 
 
       }   
@@ -316,16 +357,25 @@ class Stockopname extends IO_Controller {
               $r = $read->row();
               $this->model->update_data($docno, array("print"=>$r->print+1));
               $data['so']=$r;
-              $f = $this->getParamGrid(" trx_no='$docno' ","crtdt");
-              $data['det'] = $this->model->get_list_data_detailall($docno,$f['page'],2000,$f['sort'],$f['order'],$f['role'], $f['app']);
+              $f = $this->getParamGrid(" trx_no = '".$docno."' ","crtdt"); 
+              $data['det'] = $this->model->get_list_data_detailgondola(1,9999999,$f['sort'],$f['order'],$f['role'], $f['app']);
               
           }
-          // $this->load->library('pdf');
-          // $this->pdf->load_view('print/stockopname', $data);
-          // $this->pdf->render();
- 
-   //       $this->pdf->stream($docno.'.pdf',array("Attachment"=>0));
-                 $this->load->view('print/Stockopname',$data);
+         $this->load->library('pdf');
+          $this->pdf->load_view('print/Stockopname', $data);
+          $this->pdf->render();
+            $x          = 540;
+            $y          = 770;
+            $text       = "{PAGE_NUM} of {PAGE_COUNT}";
+            $font       = $this->pdf->getFontMetrics('Courier', 'normal');
+            $size       = 10;
+            $color      = array(0,0,0);
+            $word_space = 0.0;
+            $char_space = 0.0;
+            $angle      = 0.0;
+            $this->pdf->getCanvas()->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle); 
+            $this->pdf->stream($docno.'.pdf',array("Attachment"=>0)); 
+            //    $this->load->view('print/Stockopname',$data);
 
       }
  

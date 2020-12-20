@@ -207,11 +207,12 @@ var newDate = dateAr[2] + '-' + dateAr[1] + '-' +  dateAr[0].slice(-2);
         },
         success: function(result){ 
                 if (result.status===1){
-                  alert(result.msg); 
-            }
-            console.log(result.status)
+                      alert(result.msg); 
+                      return;
+                } 
+            console.log(result.status) 
             $("#tot_item").textbox('setValue',result.totalopname.tot_item); 
-            $("#tot_qty").textbox('setValue',result.totalopname.tot_qty); 
+            $("#tot_qty").textbox('setValue',parseInt(result.totalopname.tot_qty)+1); 
             // if (res.status===1){
             //     // alert(res.msg)
             //     $.ajax({
