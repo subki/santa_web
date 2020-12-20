@@ -106,7 +106,7 @@ class Salesonline_model extends CI_Model {
     function get_list_data_detail($page,$rows,$sort,$order,$role,$fltr){
         $sql = "create temporary table tmp as
                 SELECT a.id, a.docno, a.seqno, a.type, a.nobar, SUM(a.qty_order) qty_order, 
-                    SUM(a.unitprice)unit_price, SUM(a.unitprice)+SUM(a.total_tax)pricetax , 
+                    SUM(a.unitprice)unit_price, (SUM(a.unitprice)/1.1)+ SUM(a.total_tax)  pricetax , 
                     SUM(a.disc1_persen) disc1_persen,SUM( a.disc2_persen)disc2_persen, 
                     SUM(a.disc1_amount) disc1_amount,SUM(a.disc2_amount) disc2_amount , 
                     SUM(a.disc_total) disc_total,SUM(a.bruto_before_tax) bruto_before_tax,
@@ -167,9 +167,9 @@ class Salesonline_model extends CI_Model {
     function updateheaderdata($docno){
         $sql = "UPDATE sales_online_header AS dest , 
                 (SELECT COUNT(nobar) item, SUM(qty_order) qty , 
-                    SUM(CEILING(sales_online_detail.unitprice)) bruto , 
+                    SUM(CEILING(((sales_online_detail.unitprice/1.1)+sales_online_detail.total_tax))) bruto , 
                     SUM(CEILING(sales_online_detail.disc_total)) disc , 
-                    SUM(CEILING(sales_online_detail.bruto_before_tax)) before_tax , 
+                    SUM(CEILING(sales_online_detail.net_after_tax))/1.1 before_tax , 
                     SUM(CEILING(sales_online_detail.net_after_tax)) after_tax , 
                     SUM(CEILING(sales_online_detail.total_tax)) ppn 
                     FROM sales_online_detail 
@@ -179,7 +179,7 @@ class Salesonline_model extends CI_Model {
                         dest.total_discount = src.disc ,
                         dest.sales_before_tax = src.before_tax , 
                         dest.sales_after_tax = src.after_tax , 
-                        dest.total_ppn = src.ppn 
+                        dest.total_ppn = src.before_tax*0.1 
                 WHERE dest.docno='$docno'";
         $this->db->query($sql);
     }
@@ -198,15 +198,15 @@ class Salesonline_model extends CI_Model {
         }else if($nomor==2){
             $this->db->query("update sales_online_detail set disc2_persen=$disc where id='$id'");
         }  
-        $sql = "update sales_online_detail set disc1_amount=unitprice * (disc1_persen/100) where id='$id'";
+        $sql = "update sales_online_detail set disc1_amount=((unitprice/1.1)+total_tax) * (disc1_persen/100) where id='$id'";
         if($this->db->query($sql)) {
-            $sql = "update sales_online_detail set disc2_amount=(unitprice-disc1_amount) * (disc2_persen/100) where id='$id'";
+            $sql = "update sales_online_detail set disc2_amount=(((unitprice/1.1)+total_tax)-disc1_amount) * (disc2_persen/100) where id='$id'";
              if($this->db->query($sql)){
                      $sql = "update sales_online_detail set disc_total=disc1_amount+disc2_amount where id='$id'";
                      if($this->db->query($sql)){
                         $sql = "update sales_online_detail set bruto_before_tax=unitprice-disc_total where id='$id'"; 
                                 if($this->db->query($sql)){
-                                    $sql = "update sales_online_detail set net_after_tax=(unitprice+total_tax-disc_total)*qty_order where id='$id'";
+                                    $sql = "update sales_online_detail set net_after_tax=(((unitprice/1.1)+total_tax)-disc_total)*qty_order where id='$id'";
                                     if($this->db->query($sql)){
                                         $this->updateheaderdata($docno);
                                     }
