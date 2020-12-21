@@ -175,48 +175,42 @@ class Stockopname extends IO_Controller {
             "data" => $data
         ));
     }
-    function postdaily(){
-        $input = $this->toUpper($this->input->post());
-        $from=$this->formatDate("Y-m-d", $input['from']);
-        $to=$this->formatDate("Y-m-d", $input['to']); 
-        $store_code=$input['store_code']; 
-        $location_code=$input['location_code'];  
-        $docno = $this->model->generate_auto_numberadj();
-        $periode=$this->formatDate("Ym",$input['to']);
-        // var_dump($customer_code);
-        // die();
-        try {    
-            $read = $this->model->read_opnamepost($from,$to,$location_code,$store_code); 
-        
-            $data = array( 
-                    'trx_date' => $this->formatDate("Y-m-d",$input['to']),
-                    'trx_no' => $docno,
-                    'store_code' => $store_code,
-                    'status' => 'Open', 
-                    'jenis_adjust' => 'Stock Taking',
-                    'on_loc' => $location_code, 
-                    'tot_item' => $read->row()->tot_item, 
-                    'tot_qty' => $read->row()->tot_qty, 
-                    'remark' => $docno,
-                    'print' => 0,
-                    'crtby' => $this->session->userdata('user_id'),
-                    'crtdt' => date('Y-m-d H:i:s'),
-                );  
-            $id=$this->model->insert_data($data); 
-            $this->model->insert_datadetail($periode,$location_code,$store_code,$docno); 
-            $this->model->update_refno($docno,$from,$to,$location_code,$store_code); 
-                $result = 0;
-                $msg = "Berhasil Merge Opname";
-        }catch (Exception $e){
-            $result = 1;
-            $msg=$e->getMessage();
-        }
-        echo json_encode(array(
-            "status" => $result, "isError" => ($result==1),
-            "msg" => $msg, "message" => $msg,
-            "data" => ''
-        ));
-    }
+	function postdaily(){
+		$input = $this->toUpper($this->input->post());
+		$from=$this->formatDate("Y-m-d", $input['from']);
+		$to=$this->formatDate("Y-m-d", $input['to']);
+		$store_code=$input['store_code'];
+		$location_code=$input['location_code'];
+		$docno = $this->model->generate_auto_numberadj();
+		$periode=$this->formatDate("Ym",$input['to']);
+//		pre(implode("','",$input['selections']));
+		try {
+			$read = $this->model->read_opnamepost($from,$to,$location_code,$store_code);
+
+			$data = array(
+				'trx_date' => $this->formatDate("Y-m-d",$input['to']),
+				'trx_no' => $docno,
+				'store_code' => $store_code,
+				'status' => 'Open',
+				'jenis_adjust' => 'Stock Taking',
+				'on_loc' => $location_code,
+				'tot_item' => $read->row()->tot_item,
+				'tot_qty' => $read->row()->tot_qty,
+				'remark' => $docno,
+				'print' => 0,
+				'crtby' => $this->session->userdata('user_id'),
+				'crtdt' => date('Y-m-d H:i:s'),
+			);
+			$id=$this->model->insert_data($data);
+			$this->model->insert_datadetail($periode,$location_code,$store_code,$docno);
+			$this->model->update_refno($docno,$from,$to,$location_code,$store_code, $input['selections']);
+			$msg = "Berhasil Merge Opname";
+			$this->set_success($msg);
+		}catch (Exception $e){
+			$this->set_error($e->getMessage());
+		}
+		redirect('Stockopname');
+	}
     function read_data($code){
         try {
             $read = $this->model->read_data($code);

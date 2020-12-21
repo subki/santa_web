@@ -28,7 +28,7 @@ $(document).ready(function () {
         $("#cancel").hide(); 
         $("#new").hide(); 
  
-       $("#barcode") .css ("display", "none"); 
+       $("#barcode") .css ("display", "none");
         
 
     }else{
@@ -451,14 +451,14 @@ function initGrid() {
                     }
                 }
             }, 
-            {field: "product_code", title: "Product code", width:130, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "uom", title: "Uom",width:70, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "taking_qty", title: "Qty", width:70, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "store", title: "Store",width:130,sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "crtby1", title: "Create by",width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "crtdt1", title: "Create time",width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "updby1", title: "Update by",width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "upddt1", title: "Update time", width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "product_code", title: "Product code", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "uom", title: "Uom", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "taking_qty", title: "Qty", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "store", title: "Store",sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "crtby1", title: "Create by", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "crtdt1", title: "Create time", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "updby1", title: "Update by", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "upddt1", title: "Update time", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
         ]],
         onSuccess: function (index, row) {
             if (row.status === 1) {
