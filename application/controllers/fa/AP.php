@@ -46,11 +46,16 @@ class AP extends IO_Controller {
 	}
 
 	public function grid(){
-		$total = $this->db->get($this->table)->num_rows();
-//		$this->db->select("a.*, b.description");
-		$this->getParamGrid_Builder("","id");
-//		$this->db->join("payment_type b", "b.id=a.paymenttypeid");
-		$data = $this->db->get($this->table." a")->result();
+		$total = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
+			"table"=>$this->table." a",
+			"sortir"=>"id",
+		));
+		$data = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"query",
+			"table"=>$this->table." a",
+			"sortir"=>"id",
+		));
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",

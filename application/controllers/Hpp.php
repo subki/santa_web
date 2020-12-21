@@ -58,11 +58,22 @@ class Hpp extends IO_Controller {
 	}
 
 	public function grid($article_code){
-		$total = $this->db->where("article_code",$article_code)->get($this->table)->num_rows();
-		$this->db->select("a.*, b.article_name");
-		$this->getParamGrid_Builder("","id");
-		$this->db->join("article b", "b.article_code=a.article_code");
-		$data = $this->db->get($this->table." a")->result();
+		$total = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
+			"table"=>$this->table." a",
+			"sortir"=>"id",
+			"special"=>["a.article_code"=>$article_code],
+			"select"=>"a.*, b.article_name",
+			"join"=>["article b"=>"b.article_code=a.article_code"]
+		));
+		$data = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"query",
+			"table"=>$this->table." a",
+			"sortir"=>"id",
+			"special"=>["a.article_code"=>$article_code],
+			"select"=>"a.*, b.article_name",
+			"join"=>["article b"=>"b.article_code=a.article_code"]
+		));
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",

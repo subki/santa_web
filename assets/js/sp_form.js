@@ -39,7 +39,7 @@ $(document).ready(function () {
             dataType:"json",
             success:function(result){
              console.log(result);
-                var total=result.total.jumlah;
+                var total=(result.total)?(result.total.jumlah)?result.total.jumlah:0:0;
                 $("#totalpick").textbox('setValue',total);
                 if(result.status===0) {
                     $('#fm').form('load',result.data);
@@ -53,7 +53,7 @@ $(document).ready(function () {
                 else {
                     $.messager.show({
                         title: 'Error',
-                        msg: e.message,
+                        msg: result.message,
                         handler:function () {
                             window.location.href = base_url+"Stockopname";
                         }

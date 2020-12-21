@@ -41,9 +41,8 @@ class Rekening extends IO_Controller {
 	}
 
 	public function grid(){
-		$total = $this->db->get($this->table)->num_rows();
-		$this->getParamGrid_Builder("","id");
-		$data = $this->db->get($this->table)->result();
+		$total = $this->getParamGrid_BuilderComplete(array("tipe"=>"total","table"=>$this->table,"sortir"=>"id"));
+		$data = $this->getParamGrid_BuilderComplete(array("tipe"=>"query","table"=>$this->table,"sortir"=>"id"));
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",

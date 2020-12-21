@@ -53,16 +53,24 @@ class Showroom extends IO_Controller {
 		$location_code = $this->session->userdata(sess_location_code);
 		if(isset($param['tanggal'])) $tgl = $param['tanggal'];
 		if(isset($param['location_code'])) $location_code = $param['location_code'];
+		$pt = $this->db->get('payment_type')->result();
+		$paymenttype = "";
+		foreach ($pt as $r){
+			$paymenttype .= '<option value="'.$r->id.'">'.$r->descripiton.'</option>';
+		}
 		$data['title'] = 'Sales Order Showroom';
 		$data['tanggal'] = $tgl;
 		$data['lokasi'] = $this->db->get('location')->result();
 		$data['location_code'] = $location_code;
+		$data['paymenttype_json'] = $pt;
+		$data['paymenttype'] = $paymenttype;
 		$data['content'] = $this->load->view('showroom/indexrekap', $data, TRUE);
 		$this->load->view('main', $data);
 	}
 
 	public function form($docno = ""){
-		$param = $this->input->post();
+		$param = $this->input->get();
+//		pre($param);
 		$tgl = date("ymd");
 		$lokasi = $this->session->userdata(sess_location_code);
 		if(isset($param['location_code'])) $lokasi=$param['location_code'];
@@ -81,8 +89,8 @@ class Showroom extends IO_Controller {
 			$docno = $lokasi . "." . $tgl . "." . str_pad($nomor, 3, "0", STR_PAD_LEFT);
 			$insert = array(
 				"docno"=>$docno,
-				"doc_date" => $this->formatDate("Y-m-d",$tgl),
-				"trans_date" => $this->formatDate("Y-m-d",$tgl),
+				"doc_date" => $this->formatDate("Y-m-d",$param['tanggal']),
+				"trans_date" => $this->formatDate("Y-m-d",$param['tanggal']),
 				"location_code" => $lokasi,
 				"provinsi_id" => $customer->provinsi_id,
 				"regency_id" => $customer->regency_id,
@@ -135,12 +143,15 @@ class Showroom extends IO_Controller {
 		$tanggal=date("Y-m-d");
 		if(isset($param['location_code'])) $lokasi = $param['location_code'];
 		if(isset($param['tanggal'])) $tanggal = $param['tanggal'];
-		$total = $this->db->where("location_code",$lokasi)->where('doc_date',$tanggal)->get($this->table)->num_rows();
-		$this->db->select("a.*, b.store_name");
-		$this->getParamGrid_Builder("","docno");
-		$this->db->join("profile_p b", "b.default_stock_l=a.location_code");
-		$data = $this->db->get($this->table." a")->result();
-		if(count($data)==0) $data=[];
+		$data =["tipe"=>"total",
+			"table"=>$this->table." a",
+			"sortir"=>"docno",
+			"special"=>["location_code"=>$lokasi,'doc_date'=>$tanggal],
+			"select"=>"a.*, b.store_name",
+			"join"=>["profile_p b"=>"b.default_stock_l=a.location_code"]];
+		$total = $this->getParamGrid_BuilderComplete($data);
+		$data['tipe'] = "query";
+		$data = $this->getParamGrid_BuilderComplete($data);
 		echo json_encode(array(
 				"total"=>$total,
 				"rows" =>$data)
@@ -152,26 +163,39 @@ class Showroom extends IO_Controller {
 		$tanggal=date("Y-m-d");
 		if(isset($param['location_code'])) $lokasi = $param['location_code'];
 		if(isset($param['tanggal'])) $tanggal = $param['tanggal'];
-		$total = $this->db->where("location_code",$lokasi)->where('tanggal',$tanggal)->get("rekap_payment_harian")->num_rows();
-		$this->db->select("a.*, b.description locname, pt.description ptname");
-		$this->getParamGrid_Builder("","tanggal");
-		$this->db->join("location b", "b.location_code=a.location_code");
-		$this->db->join("payment_type pt", "pt.id=a.paymenttypeid");
-		$data = $this->db->get("rekap_payment_harian a")->result();
-		if(count($data)==0) $data=[];
+		$data =["tipe"=>"total",
+			"table"=>"rekap_payment_harian a",
+			"sortir"=>"tanggal",
+			"special"=>["a.location_code"=>$lokasi,'a.tanggal'=>$tanggal],
+			"select"=>"a.*, b.description locname, pt.description ptname",
+			"join"=>["location b"=>"b.location_code=a.location_code","payment_type pt"=>"pt.id=a.paymenttypeid"]];
+		$total = $this->getParamGrid_BuilderComplete($data);
+		$data['tipe'] = "query";
+		$data = $this->getParamGrid_BuilderComplete($data);
+
 		echo json_encode(array(
 				"total"=>$total,
 				"rows" =>$data)
 		);
 	}
 
-	public function editfee(){
+	public function add_rekap(){
 		$param = $this->input->post();
-//		pre($param);
+		$param['crtby'] = $this->session->userdata(sess_user_id);
+		$param['crtdt'] = date('Y-m-d H:i:s');
+		$this->db->insert("rekap_payment_harian",$param);
+		redirect('showroom/rekapindex');
+	}
+	public function edit_rekap($field=""){
+		$param = $this->input->post();
 		$item = $this->db->get_where("rekap_payment_harian",["id"=>$param['id']])->row();
-//		pre([$param,$item]);
-		$adminamt = $item->total_bayar*$param['adminfee']/100;
-		$param['adminamt'] = $adminamt;
+		if($field==="adminfee") {
+			$adminamt = $item->total_bayar * $param['adminfee'] / 100;
+			$param['adminamt'] = $adminamt;
+		}else if($field=="amount"){
+			$adminamt = $param['total_bayar']*$item->adminfee/100;
+			$param['adminamt'] = $adminamt;
+		}
 		$this->db->update("rekap_payment_harian",$param,["id"=>$param['id']]);
 		echo json_encode(array(
 			"status"=>0,
@@ -207,6 +231,7 @@ class Showroom extends IO_Controller {
 		if(isset($header['promoid']) && $header['promoid']!= null && $header['promoid']!="" && $header['promoid']!="0"){
 			$header['jenis_so']= "PROMO";
 		}else $header['jenis_so']= "NORMAL";
+		$header['status']= "PAID";
 //		pre($header);
 		$this->db->update($this->table,$header,["docno"=>$header['docno']]);
 		$arr_ins_det = [];
@@ -249,50 +274,164 @@ class Showroom extends IO_Controller {
 		}else{
 			$this->set_success("Transaction success...");
 		}
-		redirect("showroom/form/".$header['docno']);
+//		$this->print_so($header['docno']);
+		redirect("showroom/form/?tanggal=".$header['doc_date']."&location_code=".$header['location_code']);
+//		redirect("showroom/form/".$header['docno']);
 	}
 
-	function rekap($tgl,$lokasi=""){
-		$tgl = date('Y-m-d',strtotime($tgl));
-		if($lokasi=="") $lokasi = $this->session->userdata(sess_location_code);
-		$data = $this->db->select("kp.*, h.location_code, h.docno, h.doc_date, ifnull(pa.persen,0) as adminfee")
+	function rekap(){
+		$params = $this->input->post();
+		$sesi = $this->session->userdata();
+		$tgl=date("Y-m-d");
+		$lokasi = $this->session->userdata(sess_location_code);
+		if(isset($params['tanggal'])) $tgl = $this->formatDate('Y-m-d',$params['tanggal']);
+		if(isset($params['location_code'])) $lokasi = $params['location_code'];
+
+		$data = $this->db->select("kp.*, h.location_code, h.docno, h.doc_date,
+		h.customer_code, h.gross_sales, h.total_ppn, h.total_discount, h.sales_before_tax, h.sales_after_tax,
+		h.total_dp, h.sisa_faktur, h.total_hpp, ifnull(pa.persen,0) as adminfee")
 			->where("rekap",0)
 			->where("h.doc_date",$tgl)
 			->where("h.location_code",$lokasi)
 			->join($this->table_bayar." kp", "kp.trx_no=h.docno")
 			->join("payment_type_adm pa","pa.id=kp.paymenttypeid","left")
 			->get($this->table." h")->result();
-		$docno = array_column($data,"docno");
-		$kasir = [];
-		foreach ($data as $row){
-			$kasir[$row->paymenttypeid] = $row;
-		}
-		$item = [];
-		foreach ($kasir as $key => $r){
+		if(count($data)>0) {
+			$data_customer = [];
+			$docno = array_column($data, "docno");
+			$kasir = [];
+			foreach ($data as $row) {
+				$kasir[$row->paymenttypeid] = $row;
+				$data_customer[$row->customer_code][] = $row;
+			}
+			$detail = $this->db->select("d.*, h.location_code, p.article_code, pu.uom_id")
+				->where_in("d.docno", $docno)
+				->join("product p", "p.sku=d.nobar")
+				->join("product_uom pu", "pu.uom_code=p.satuan_jual")
+				->join($this->table . " h", "h.docno=d.docno")
+				->get($this->table_detail . " d")->result();
+			$det_so = [];
+			foreach ($detail as $row) $det_so[$row->docno][] = $row;
+			$item = [];
+			foreach ($kasir as $key => $row) {
 				$item[$key]['location_code'] = $row->location_code;
 				$item[$key]['tanggal'] = $row->doc_date;
 				$item[$key]['paymenttypeid'] = $key;
 				$item[$key]['total_bayar'][] = $row->nilai_bayar;
 				$item[$key]['adminfee'] = $row->adminfee;
-				$item[$key]['adminamt'][] = $row->nilai_bayar*$row->adminfee/100;
+				$item[$key]['adminamt'][] = $row->nilai_bayar * $row->adminfee / 100;
 				$item[$key]['crtby'] = $this->session->userdata(sess_user_id);
 				$item[$key]['crtdt'] = date("Y-m-d H:i:s");
-		}
-		foreach ($item as $key => $rw){
-			$item[$key]['total_bayar'] = array_sum($item[$key]['total_bayar']);
-			$item[$key]['adminamt'] = array_sum($item[$key]['adminamt']);
-		}
-		$this->db->trans_start();
-		if(count($item)>0) {
-			$this->db->insert_batch("rekap_payment_harian",$item);
-			$this->db->where_in("docno", $docno)
-				->update($this->table,["rekap"=>1,"status"=>"CLOSE","upddt"=>date('Y-m-d H:i:s'), "updby"=>$this->session->userdata(sess_user_id)]);
-		}
-		if ($this->db->trans_status() === FALSE){
-			$this->set_error($this->db->error());
-		}else{
-			$this->db->trans_complete();
-			$this->set_success("Rekap Transaksi Harian berhasil");
+			}
+			foreach ($item as $key => $rw) {
+				$item[$key]['total_bayar'] = array_sum($item[$key]['total_bayar']);
+				$item[$key]['adminamt'] = array_sum($item[$key]['adminamt']);
+			}
+			$this->db->trans_start();
+			if (count($item) > 0) {
+//				pre($item);
+				$this->db->insert_batch("rekap_payment_harian", $item);
+				$this->db->where_in("docno", $docno)
+					->update($this->table, ["rekap" => 1, "status" => "CLOSED", "upddt" => date('Y-m-d H:i:s'), "updby" => $this->session->userdata(sess_user_id)]);
+
+				$arr_insert_header = [];
+				$arr_insert_detail = [];
+				$lastid = $this->db->order_by("id desc")->get("sales_trans_header")->row()->id;
+				$lastid++;
+				foreach ($data_customer as $key => $row) {
+					$nomor = $this->model_ws->generate_auto_number("001");
+					$seri = $this->model_faktur->read_available_faktur($this->formatDate('Y', $tgl))->row();
+					$seri_pajak = "";
+					if (isset($seri)) {
+						$seri_pajak = $sesi['kode store pusat'] . $seri->seqno;
+						$data2 = array(
+							'inuse' => 1,
+							'refno' => $nomor,
+							'updby' => $this->session->userdata('user_id'),
+							'upddt' => date('Y-m-d H:i:s')
+						);
+						$this->model_faktur->update_data($seri->id, $data2);
+					}
+					$dt = array();
+					$dt['id'] = $lastid;
+					$dt['doc_date'] = $tgl;
+					$dt['faktur_date'] = $tgl;
+					$dt['no_faktur'] = $nomor;
+					$dt['no_faktur2'] = $nomor;
+					$dt['seri_pajak'] = $seri_pajak;
+					$dt['jenis_faktur'] = 'SHOWROOM';
+					$dt['remark'] = 'REKAP SALES SHOWROOM ' . $tgl;
+					$dt['customer_code'] = $key;
+					$dt['posting_date'] = $tgl;
+					$dt['status'] = 'CLOSED';
+					$dt['verifikasi_finance'] = '';
+					$dt['base_so'] = implode(",",array_column($row,"trx_no"));
+					$dt['qty_print'] = 0;
+					$dt['crtby'] = $this->session->userdata(sess_user_id);
+					$dt['crtdt'] = date('Y-m-d H:i:s');
+					$dt['gross_sales'] = array_sum(array_column($row,"gross_sales"));
+					$dt['total_ppn'] = array_sum(array_column($row,"total_ppn"));
+					$dt['total_disc'] = array_sum(array_column($row,"total_discount"));
+					$dt['sales_before_tax'] = array_sum(array_column($row,"sales_before_tax"));
+					$dt['sales_after_tax'] = array_sum(array_column($row,"sales_after_tax"));
+					$dt['total_dp'] = array_sum(array_column($row,"total_dp"));
+					$dt['sisa_faktur'] = array_sum(array_column($row,"sisa_faktur"));
+					$dt['total_hpp'] = array_sum(array_column($row,"total_hpp"));
+					$arr_insert_header[] = $dt;
+					foreach ($row as $d){
+						foreach ($det_so[$d->trx_no] as $res) {
+							$det = array();
+							$det['sales_trans_header_id'] = $lastid;
+							$det['base_so'] = $d->trx_no;
+							$det['product_type'] = $res->product_tipe;
+							$det['item'] = $res->article_code;
+							$det['nobar'] = $res->nobar;
+							$det['tipe'] = $res->tipe;
+							$det['komisi_persen'] = $res->komisi;
+							$det['qty_order'] = $res->qty_order;
+							$det['qty_on_sales'] = $res->qty_sales;
+							$det['qty_refund'] = $res->qty_refund;
+							$det['uom_code'] = $res->uom_code;
+							$det['location_code'] = $res->location_code;
+							$det['unit_price'] = $res->unit_price;
+							$det['disc1_persen'] = $res->disc1_persen;
+							$det['disc1_amount'] = $res->disc1_amount;
+							$det['disc2_persen'] = $res->disc2_persen;
+							$det['disc2_amount'] = $res->disc2_amount;
+							$det['disc3_persen'] = 0;
+							$det['disc3_amount'] = 0;
+							$det['disc_total'] = $res->disc_total;
+							$det['disc_open'] = 0;
+							$det['net_unit_price'] = $res->net_unit_price;
+							$det['bruto_before_tax'] = $res->sales_before_ppn;
+							$det['total_tax'] = $res->sales_after_ppn - $res->sales_before_ppn;
+							$det['netto_after_tax'] = $res->sales_after_ppn;
+							$det['total_komisi_amount'] = 0;
+							$det['jumlah_hpp'] = $res->jumlah_hpp;
+							$det['proses_to_ho'] = '';
+							$det['status_detail'] = 'OPEN';
+							$det['add_cost1'] = $res->add_cost1;
+							$det['add_cost2'] = $res->add_cost2;
+							$det['add_cost3'] = $res->add_cost3;
+							$det['crtby'] = $this->session->userdata(sess_user_id);
+							$det['crtdt'] = date('Y-m-d H:i:s');
+							$arr_insert_detail[] = $det;
+						}
+					}
+					$lastid++;
+				}
+				if (count($arr_insert_header) > 0) $this->db->insert_batch("sales_trans_header", $arr_insert_header);
+				if (count($arr_insert_detail) > 0) $this->db->insert_batch("sales_trans_detail", $arr_insert_detail);
+			}
+			if ($this->db->trans_status() === FALSE) {
+				$this->set_error($this->db->error());
+			} else {
+				$this->db->trans_complete();
+				$this->set_success("Rekap Transaksi Harian berhasil");
+				$this->print_rekap();
+			}
+		} else{
+			$this->set_error("Sales pada ".$tgl." sudah di rekap, tidak bisa di rekap ulang");
 		}
 		redirect('showroom/index');
 	}
@@ -356,12 +495,11 @@ class Showroom extends IO_Controller {
 		$printer->close();
 
 		$this->db->query("update $this->table set jumlah_print=jumlah_print+1 where docno='$docno'");
-		echo json_encode(array(
-			"status"=>0
-		));
+		return "OK";
 	}
 	public function print_rekap(){
 		$param = $this->input->post();
+//		pre($param);
 		$payment = $this->db->select("a.*, pt.description, pt.tipe")
 			->where("a.location_code",$param['location_code'])
 			->where("a.tanggal",$param['tanggal'])

@@ -207,16 +207,24 @@ class AR extends IO_Controller {
 
 
 	public function getFaktur(){
-		$total = $this->db->get("sales_invoice")->num_rows();
-		$this->db->select("a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd
-                  , DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
-                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
-                  , l.location_code, l.description as locname, c.gl_account");
-		$this->getParamGrid_Builder("","id");
-		$this->db->where("CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)");
-		$this->db->join("customer c","c.customer_code=a.customer_code");
-		$this->db->join("location l","l.location_code=c.lokasi_stock");
-		$data = $this->db->get("sales_invoice a")->result();
+		$total = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
+			"table"=>"sales_invoice a",
+			"sortir"=>"id",
+			"special"=>"CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)",
+			"select"=>"a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt, l.location_code, l.description as locname, c.gl_account",
+			"join"=>["customer c"=>"c.customer_code=a.customer_code","location l"=>"l.location_code=c.lokasi_stock"]
+		));
+		$data = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"query",
+			"table"=>"sales_invoice a",
+			"sortir"=>"id",
+			"special"=>"CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)",
+			"select"=>"a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt, l.location_code, l.description as locname, c.gl_account",
+			"join"=>["customer c"=>"c.customer_code=a.customer_code","location l"=>"l.location_code=c.lokasi_stock"]
+		));
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",

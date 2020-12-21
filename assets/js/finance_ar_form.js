@@ -208,6 +208,7 @@ function populateCBNumber() {
 		idField: 'cbaccno',
 		textField:'cbaccno',
 		url:base_url+"fa/rekening/grid",
+		method:'post',
 		required:true,
 		labelPosition:'top',
 		tipPosition:'bottom',
@@ -222,6 +223,7 @@ function populateCBNumber() {
 		pagination: true,
 		fitColumns: true,
 		mode:'remote',
+		clientPaging: false,
 		loadFilter: function (data) {
 			if (data.data) data.rows = data.data;
 			return data;
@@ -239,6 +241,8 @@ function populateCBNumber() {
 			{field:'tr_code', title:'Trx Code', width:100},
 		]]
 	});
+	var opt =  $('#no_cb').combogrid('options')
+	console.log(opt);
 	var gr =  $('#no_cb').combogrid('grid')
 	gr.datagrid('destroyFilter');
 	gr.datagrid('enableFilter');
@@ -297,6 +301,7 @@ function populateCustomer() {
 		pagination: true,
 		fitColumns: true,
 		mode:'remote',
+		clientPaging: false,
 		loadFilter: function (data) {
 			if (data.data) data.rows = data.data;
 			return data;

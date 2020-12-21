@@ -79,25 +79,25 @@
 
                 <div style="margin-bottom:1px">
                   <div style="float:left; width: 50%; padding-right: 5px;">
-                    <input name="gross_sales" id="gross_sales" readonly class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Bruto:" style="width:100%">
+                    <input name="gross_sales" id="gross_sales" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Bruto:" style="width:100%">
                   </div>
                   <div style="float:right; width:50%;">
-                    <input name="total_discount" id="total_discount" readonly class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Discount:" style="width:100%">
+                    <input name="total_discount" id="total_discount" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Discount:" style="width:100%">
                   </div>
                 </div>
 
                 <div style="margin-bottom:1px">
                   <div style="float:left; width: 50%; padding-right: 5px;">
-                    <input name="sales_after_tax" id="sales_after_tax" readonly class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Net Sales:" style="width:100%">
+                    <input name="sales_after_tax" id="sales_after_tax" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Net Sales:" style="width:100%">
                   </div>
                   <div style="float:right; width:50%;">
-                    <input name="payment_sum" id="payment_sum" readonly class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Payment:" style="width:100%">
+                    <input name="payment_sum" id="payment_sum" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Payment:" style="width:100%">
                   </div>
                 </div>
               </div>
             </div>
           </td>
-          <td rowspan="3" style="width:40%; vertical-align: top">
+          <td style="width:40%; vertical-align: top">
             <div id="detail" style="margin-bottom:1px;display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: space-between;">
               <div>
                 <div style="margin: 10px">
@@ -114,12 +114,12 @@
           </td>
         </tr>
         <tr>
-          <td>
+          <td colspan="2">
             <div style="display:inline-block; width:100%; height:2px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"></div>
           </td>
         </tr>
         <tr>
-          <td>
+          <td colspan="2">
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
               <div style="width: 40%; ">
                 <div style="margin-bottom:1px">
@@ -133,7 +133,7 @@
               </div>
             </div>
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-              <table id="dg" class="easyui-datagrid" style="width:100%;height: 300px">
+              <table id="dg" class="easyui-datagrid" style="width:98%;height: 300px">
               </table>
             </div>
           </td>
@@ -285,6 +285,7 @@
 			$('#fm').form('load', header);
 			$('#dg').datagrid(options);
 			$('#dg').datagrid('hideColumn','id');
+			$('#dg').datagrid('hideColumn','docno');
 			$('#dg').datagrid('hideColumn','komisi');
 			$('#dg').datagrid('hideColumn','qty_sales');
 			$('#dg').datagrid('hideColumn','qty_refund');
@@ -401,11 +402,23 @@
 				data:promo_header,
 				prompt:'-Please Select-',
 				validType:'inList["#promoid"]',
-				onSelect:function(rec){
-					console.log("disini",rec)
+				onChange:function(newValue, oldValue){
+					if(newValue==="") return
 					for(var p=0;p<promo_header.length;p++){
 						console.log("looping ",p)
-						if(parseInt(promo_header[p].id)===parseInt(rec.id)){
+						if(parseInt(promo_header[p].id)===parseInt(newValue)){
+							var l = $('.paymenttipe').length; var jgn_lanjut = false;
+							for (var i = 0; i < l; i++){
+								var id_bayar_tipe = $('.paymenttipe').eq(i).val();
+								if(id_bayar_tipe==="1"){
+									$.messager.alert("Error","Promo tidak bisa di pakai dengan pembayaran cash");
+									$(this).combobox('setValue','')
+									jgn_lanjut = true;
+									break;
+                }
+							}
+							if(jgn_lanjut) break;
+
 							header.promoid = promo_header[p].id;
 							var ph = promo_header[p];
 							console.log("from",new Date(ph.active_from))
@@ -439,15 +452,36 @@
 			});
 		}
 
-		function populatePayment(id,id2) {
+		function populatePayment(id,id2, ctr) {
+			var promo = $('#promoid').combobox('getValue');
+			console.log(promo)
+      var paymentsaring = [];
+			for(var i=0; i<paymenttipe.length; i++){
+				if(promo!==""){
+					console.log("masuk sini")
+					if(paymenttipe[i].description==="CASH") continue;
+				}
+				paymentsaring.push(paymenttipe[i])
+			}
 			$('#'+id).combobox({
 				valueField:'id',
 				textField:'description',
-				data:paymenttipe,
+				data:paymentsaring,
 				prompt:'-Please Select-',
 				validType:'inList["#'+id+'"]',
-				onSelect:function(rec){
-					$('#'+id2).textbox({required:rec.id!=="1"});
+				onChange:function (newValue, oldValue) {
+					var promo1 = $('#promoid').combobox('getValue');
+					if(newValue==="") return
+					console.log("promo1",promo1,newValue);
+					if(promo1!=="" && newValue==="1"){
+						$.messager.alert("Error", "Type Pembayaran tidak bisa di pakai untuk promo ini")
+						$(this).combobox('setValue','')
+					}
+					$('#'+id2).textbox({required:newValue!=="1"});
+					if(newValue!=="1"){
+						var sls = $("#sales_after_tax").numberbox('getValue');
+						$("#nilai_bayar"+ctr).numberbox('setValue',sls)
+          }
 				}
 			});
 		}
@@ -468,7 +502,6 @@
 				nett += parseFloat(detail_item[i].sales_after_ppn)
 			}
 			var l = $('.nilai_bayar').length; var result = [];
-			console.log(l)
 			for (var i = 0; i < l; i++) result.push(parseFloat($('.nilai_bayar').eq(i).val()));
 			var total = 0;
 			for (var i = 0; i < result.length; i++) total += isNaN(result[i])?0:result[i];
@@ -552,7 +585,7 @@
 				'		<div style="float:left; width: 35%; padding-right: 2px;">' +
 				'		 	<input name="detail['+counter+'][id]" id="detail['+counter+'][id]" type="hidden" value="'+d.id+'" > ' +
 				'		 	<input name="detail['+counter+'][trx_no]" id="detail['+counter+'][trx_no]" type="hidden" value="'+d.trx_no+'" > ' +
-				'     <input name="detail['+counter+'][paymenttypeid]" id="paymenttypeid'+counter+'" value="'+d.paymenttypeid+'" class="easyui-combobox easyui-combobox'+counter+'" labelPosition="top" tipPosition="bottom" placeholder="Type:" style="width:100%">' +
+				'     <input name="detail['+counter+'][paymenttypeid]" id="paymenttypeid'+counter+'" value="'+d.paymenttypeid+'" class="paymenttipe easyui-combobox easyui-combobox'+counter+'" labelPosition="top" tipPosition="bottom" placeholder="Type:" style="width:100%">' +
 				'		</div> ' +
 				'		<div style="float:left; width: 25%; padding-right: 2px;">' +
 				'		 	<input name="detail['+counter+'][keterangan]" id="keterangan'+counter+'" value="'+d.keterangan+'" class="easyui-textbox'+counter+'" labelPosition="top" tipPosition="bottom" placeholder="Document" style="width:100%;"> ' +
@@ -567,11 +600,11 @@
 				'</div>';
 			$("#detail").append(html);
 			$(".easyui-textbox"+counter).textbox();
-			$(".easyui-numberbox"+counter).numberbox();
+			$(".easyui-numberbox"+counter).numberbox({groupSeparator:',', decimalSeparator:'.'});
 			$(".easyui-combobox"+counter).combobox();
 			$(".easyui-checkbox"+counter).checkbox();
 			$(".easyui-linkbutton"+counter).linkbutton();
-			populatePayment('paymenttypeid'+counter,'keterangan'+counter)
+			populatePayment('paymenttypeid'+counter,'keterangan'+counter, counter)
 			$("#nilai_bayar"+counter).textbox('textbox').bind('keydown', function(e){
 				if(e.key==='Enter' || e.keyCode===13){ 	// when press ENTER key, accept the inputed value.
 					var bayar = $(this).val();

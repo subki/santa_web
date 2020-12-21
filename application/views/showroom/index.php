@@ -30,7 +30,7 @@
 <div id="toolbar" style="display: none">
     <a href="javascript:void(0)" class="easyui-linkbutton" id="add" onclick="addData()" iconCls="icon-add" plain="true">Add</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="editData()" iconCls="icon-edit" plain="true">Edit</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="rekap()" iconCls="icon-posting" plain="true">Rekap</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="rekap()" iconCls="icon-posting" plain="true">End of Day</a>
 </div>
 
 <script type="text/javascript">
@@ -114,7 +114,7 @@
 		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
 		$("#periode").datebox('setValue',prd);
 		var location_code = $("#location_code").val()
-		$('#dg').datagrid({url:base_url+"showroom/gridrekap?location_code="+location_code+"&tanggal="+prd});
+		$('#dg').datagrid({url:base_url+"showroom/grid?location_code="+location_code+"&tanggal="+prd});
 		$('#dg').datagrid(options);
 		$('#dg').datagrid('destroyFilter');
 		$('#dg').datagrid('enableFilter');
@@ -137,10 +137,9 @@
 		return row;
 	}
 	function addData() {
-		var vl = {};
-		vl['tanggal'] = $("#periode").datebox('getValue');
-		vl['location_code'] = $("#location_code").combobox('getValue');
-		$.redirect(base_url+"showroom/form",vl,"post","");
+		var tgl = $("#periode").datebox('getValue');
+		var loc = $("#location_code").combobox('getValue');
+		$.redirect(base_url+"showroom/form?tanggal="+tgl+"&location_code="+loc,{},"GET","");
 	}
 	function editData() {
 		var r = getRow();
@@ -154,9 +153,12 @@
 		var y = date.getFullYear();
 		var m = date.getMonth()+1;
 		var d = date.getDate();
-		var prd =  y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
+		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
 		var location_code = $("#location_code").combobox('getValue');
+		var v = {};
+		v['location_code'] = location_code;
+		v['tanggal'] = prd;
 		console.log(prd);
-		$.redirect(base_url+"showroom/rekap/"+prd+"/"+location_code,null,"post","");
+		$.redirect(base_url+"showroom/rekap",v,"post","");
 	}
 </script>

@@ -28,7 +28,7 @@
   </div>
 </div>
 <div id="toolbar" style="display: none">
-<!--  <a href="javascript:void(0)" class="easyui-linkbutton" id="add" onclick="addData()" iconCls="icon-add" plain="true">Add</a>-->
+  <a href="javascript:void(0)" class="easyui-linkbutton" id="add" onclick="addData()" iconCls="icon-add" plain="true">Add</a>
 <!--  <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="editData()" iconCls="icon-edit" plain="true">Edit</a>-->
   <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="printRekap()" iconCls="icon-print" plain="true">Print</a>
 </div>
@@ -53,11 +53,9 @@
 			{field:"tanggal",   title:"Trx Date",  sortable: true},
 			{field:"location_code",   title:"Lokasi",  sortable: true},
 			{field:"locname",   title:"Store Name",  sortable: true},
-			{field:"ptname",   title:"Payment Method",  sortable: true},
-			{field:"total_bayar",   title:"Total Bayar",  sortable: true},
-			{field:"adminfee",   title:"Admin %",  sortable: true, styler:function(value,row){
-				return 'background-color:#ffee00;color:red;';
-			}},
+			{field:"ptname",   title:"Payment Method",  sortable: true, styler:function(value,row){return 'background-color:#ffee00;color:red;';}},
+			{field:"total_bayar",   title:"Total Bayar",  sortable: true, styler:function(value,row){return 'background-color:#ffee00;color:red;';}},
+			{field:"adminfee",   title:"Admin %",  sortable: true, styler:function(value,row){return 'background-color:#ffee00;color:red;';}},
 			{field:"adminamt",   title:"Admin Amount",  sortable: true},
 		]],
 		onLoadSuccess:function(){
@@ -70,7 +68,7 @@
           if(!isNaN(res)){
 						$.ajax({
 							type:"POST",
-							url:base_url+"showroom/editfee",
+							url:base_url+"showroom/edit_rekap/adminfee",
 							dataType:"json",
 							data:{
 								id:row.id,
@@ -83,9 +81,66 @@
 						});
           }
 				})
-			}
+			}else if(field === "total_bayar"){
+				var row = $('#dg').datagrid('getRows')[index];
+				inputReason("Edit Total Bayar","Input Total Bayar : ", function (res) {
+					if(!isNaN(res)){
+						$.ajax({
+							type:"POST",
+							url:base_url+"showroom/edit_rekap/amount",
+							dataType:"json",
+							data:{
+								id:row.id,
+								total_bayar:res
+							},
+							success:function(result){
+								console.log(result.data)
+								$('#dg').datagrid('reload');
+							}
+						});
+					}
+				})
+      }else if(field === "ptname"){
+				var tipe2 = <?php echo json_encode($paymenttype_json)?>;
+				print_selected = undefined;
+				$.messager.confirm({
+					title:'Option Payment',
+					msg:'<p>Select Payment Type</p> ' +
+					' <input class="easyui-combobox2" ' +
+					'/>',
+					fn: function(r){
+						if (r){
+							var row = $('#dg').datagrid('getRows')[index];
+							if(row==null) return
+							$.ajax({
+								type:"POST",
+								url:base_url+"showroom/edit_rekap/amount",
+								dataType:"json",
+								data:{
+									id:row.id,
+									paymenttypeid:print_selected.id
+								},
+								success:function(result){
+									console.log(result.data)
+									$('#dg').datagrid('reload');
+								}
+							});
+						}
+					}
+				});
+				$(".easyui-combobox2").combobox({
+					valueField:'id',
+					textField:'description',
+					data:tipe2,
+					onSelect:function(rec){
+						console.log(rec)
+						print_selected = rec;
+					}
+				})
+      }
 		}
 	};
+	var print_selected = undefined;
 	var lokasi = <?php echo json_encode($lokasi);?>;
 	$(document).ready(function() {
 		console.log('lokasi',lokasi)
@@ -99,8 +154,10 @@
 				$('#dg').datagrid({url:base_url+"showroom/gridrekap?location_code="+location_code+"&tanggal="+prd});
 				$('#dg').datagrid('destroyFilter');
 				$('#dg').datagrid('enableFilter');
-				$('#dg').datagrid('addFilterRule', {field: 'tanggal', op: 'equal', value: prd });
-				$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
+				$('#dg').datagrid('addFilterRule', [
+					{field: 'tanggal', op: 'equal', value: prd },
+					{field: 'location_code', op: 'equal', value: location_code }
+        ]);
 				$('#dg').datagrid('doFilter');
 			}
 		});
@@ -123,8 +180,10 @@
 				$('#dg').datagrid({url:base_url+"showroom/gridrekap?location_code="+location_code+"&tanggal="+prd});
 				$('#dg').datagrid('destroyFilter');
 				$('#dg').datagrid('enableFilter');
-				$('#dg').datagrid('addFilterRule', {field: 'tanggal', op: 'equal', value: prd });
-				$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: rec.location_code });
+				$('#dg').datagrid('addFilterRule', [
+					{field: 'tanggal', op: 'equal', value: prd },
+					{field: 'location_code', op: 'equal', value: location_code }
+				]);
 				$('#dg').datagrid('doFilter');
 			}
 		});
@@ -141,10 +200,25 @@
 		$('#dg').datagrid(options);
 		$('#dg').datagrid('destroyFilter');
 		$('#dg').datagrid('enableFilter');
-		$('#dg').datagrid('addFilterRule', {field: 'tanggal', op: 'equal', value: prd });
-		$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
+		$('#dg').datagrid('addFilterRule', [
+			{field: 'tanggal', op: 'equal', value: prd },
+			{field: 'location_code', op: 'equal', value: location_code }
+		]);
 		$('#dg').datagrid('doFilter');
 	});
+
+	function addData() {
+		var date  = $("#periode").datebox('getDate');
+		var y = date.getFullYear();
+		var m = date.getMonth()+1;
+		var d = date.getDate();
+		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
+		var location_code = $("#location_code").combobox('getValue')
+    var vl = {};
+		vl['tanggal'] = prd;
+		vl['location_code'] = location_code;
+    $.redirect(base_url+'showroom/add_rekap/',vl,"POST","")
+	}
 
 	function printRekap() {
 		var date  = $("#periode").datebox('getDate');
