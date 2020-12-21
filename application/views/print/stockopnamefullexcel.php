@@ -1,48 +1,58 @@
+<?php 
+$datenow=date("d-m-Y-His");
+header("Content-type: application/octet-stream");
+
+header("Content-Disposition: attachment; filename=$so->trx_no-$datenow.xls");
+
+header("Pragma: no-cache");
+
+header("Expires: 0");
+
+?>
 <html>
 <head>
 </head>
-<body> 
+<body>
 <header>
-
-    <div class="report-header"> 
+    <div class="report-header">
         <div class="content text-left">
             <table width="100%">
                 <tbody>  
                 <tr>
                     <td width="30%">No. Transaksi Opname</td>
                     <td width="1%">:</td>
-                    <td width="40%"><?php echo $so->trx_no; ?></td>  
+                    <td width="40%"><?php echo $so->trx_no; ?></td> 
                 </tr>
                 <tr>
                     <td width="30%">Tgl Opname</td>
                     <td width="1%">:</td>
                     <td width="40%"><?php echo $date=date_create($so->trx_date);
-                                        echo date_format($date,"d/m/Y ");?></td>  
+                                        echo date_format($date,"d/m/Y ");?></td> 
                 </tr>
                 <tr>
                     <td width="30%">User </td>
                     <td width="1%">:</td>
-                    <td width="40%"><?php echo $so->useropname;?></td>  
+                    <td width="40%"><?php echo $so->useropname;?></td> 
                 </tr>
                 <tr>
                     <td width="30%">KETERANGAN</td>
                     <td width="1%">:</td>
-                    <td width="40%"><?php echo $so->remark;?></td>  
+                    <td width="40%"><?php echo $so->remark;?></td> 
                 </tr>
                 <tr>
                     <td width="30%">Print Ke-</td>
                     <td width="1%">:</td>
-                    <td width="40%"><?php echo $so->print;?></td>  
+                    <td width="40%"><?php echo $so->print;?></td> 
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </header>
-<table style="margin-top:-30px">
+<table style="margin-top:-111px">
     <tbody>
-    <div class="content"> 
-        <table border="1" style="width: 100%;margin-top:-30px">
+    <div class="content">
+        <table border="1" style="width: 100%;margin-top:-120px">
             <thead> 
             <tr>
                 <th class="title-header text-left content" width="5%" style="padding-top: 5px; padding-bottom: 5px">No</th>
@@ -56,12 +66,8 @@
             </thead>
             <tbody>
             <?php  
-            $no=1; 
-            $datasum=$totalopname->totaldata;  
-            for ($i=0; $i<count($det); $i++) { 
-                if ($i == $datasum) {
-                    break;
-                  }?>
+            $no=1;
+            for ($i=0; $i<count($det); $i++) { ?>
                 <tr>
                     <td class="text-left content"><?php echo  $no++; ?></td>
                     <td class="text-left content"><?php echo $det[$i]->item ?></td>
@@ -77,6 +83,9 @@
     </tbody>
 </table> 
 </body>
+<footer>
+    <?php echo $so->crtby."      ".$so->crtdt?>
+</footer>
 </html>
 
 <style rel="stylesheet/scss" lang="scss">
@@ -177,19 +186,17 @@
 
     header {
         position: relative;
-        top: -1cm;
+        top: -2.5cm;
         left: 0.5cm;
         right: 0.5cm;
         height: 120px;
     } 
-    #footer {
+    footer {
         position: fixed;
         font-size: 7;
-        top: -1cm;
-        left: 0.5cm;
-        right: 0.5cm;
+        bottom: -10px;
+        left: 1cm;
+        right: 1cm;
+        height: 20px;
     }
-</style>  
-<script>
-    window.print();
-</script>
+</style>
