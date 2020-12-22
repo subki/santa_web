@@ -59,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		gantt.config.start_date = new Date(2020, 10, 31);
 		gantt.config.end_date = new Date(2021, 12, 31);
 		gantt.config.show_tasks_outside_timescale = true;
-		gantt.config.readonly = true;
+		gantt.config.readonly = false;
 		gantt.config.min_column_width = 20;
 		gantt.config.scale_height = 90;
 		gantt.config.scales = [
@@ -75,7 +75,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			{name:"text", label:textFilter, width:"300", tree:true },
       {name:"startdate", label:"Start", width:"120", align: "center" },
       {name:"enddate", label:"End", width:"120", align: "center" },
-      {name:"pic", label:"PIC", width:"120", align: "center" }
+      {name:"pic", label:"PIC", width:"120", align: "center" },
+      {name:"progress", label:"Prgs", width:"80", align: "center" }
       ];
 		gantt.attachEvent("onTaskClick", function(id,e){
 			//any custom logic here
@@ -114,13 +115,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		gantt.init("gantt_here");
 		for(var i=0; i<json.length; i++){
 			json[i].color = color[Math.floor(Math.random() * 5)]
-      json[i].start_date = new Date();
-			if(json[i].start_date > new Date(json[i].end_date)){
-				var e = json[i].start_date;
-				var s = json[i].end_date;
-				json[i].start_date = s;
-				json[i].end_date = e;
-      }
+      json[i].start_date = new Date(2020,11,6);
+      var s = json[i].start_date;
+      var e = new Date(json[i].end_date);
+			var one_day = 1000 * 60 * 60 * 24
+      var hari = (e.getTime()-s.getTime())/one_day;
+			json[i].progress = parseFloat(hari/100).toFixed(2);
+//			if(json[i].start_date > new Date(json[i].end_date)){
+//				var e = json[i].start_date;
+//				var s = json[i].end_date;
+//				json[i].start_date = s;
+//				json[i].end_date = e;
+//      }
 			json[i].startdate = json[i].start_date;
 			json[i].enddate = json[i].end_date;
 			gantt.addTask(json[i]);

@@ -44,6 +44,24 @@ function disable_enable(bool) {
         tipPosition:'bottom'
     });
 }
+
+function disabledonly(bool) {
+    $('.easyui-textbox').textbox({
+        disabled:bool,
+    });
+    $('.easyui-combobox').combobox({
+        disabled:bool,
+    });
+    $('.easyui-datebox').datebox({
+        disabled:bool,
+    });
+    $('.easyui-numberbox').numberbox({
+        disabled:bool,
+    });
+    $('.easyui-combogrid').combogrid({
+        disabled:bool,
+    });
+}
 function formattanggal(value, row){
     if(value===null) return "";
     let d = new Date(value);

@@ -7,42 +7,54 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Rekening extends IO_Controller {
+class Coa extends IO_Controller {
 
 	var $table;
 	var $table_field;
 	function __construct(){
 		parent::__construct();
-		$this->table = "master_rekening";
-		$this->table_field = array("id","company_code","tipe_rekening","cost_center","accno","cbaccno","accname","bank_code","manual_receipt_no","tr_code");
+		$this->table = "coa";
+		$this->table_field = array("account_no","acc_description","parent","level","header_detail","normal_balance","account_type","pro_beg_bal");
 		$this->load->library('form_validation');
 		$this->load->helper('file');
 	}
 
 	public function index($aksi=""){
 		if($aksi=="") {
-			$data['title'] = 'Master Rekening';
-			$data['content'] = $this->load->view('Rekening/index', $data, TRUE);
+			$data['title'] = 'Chart Of Account';
+			$data['content'] = $this->load->view('coa/index', $data, TRUE);
 		}else if($aksi=="add"){
-			$data['title'] = 'Add Master Rekening';
+			$data['title'] = 'Add Chart Of Account';
 			$data['aksi'] = $aksi;
-			$data['id'] = 0;
-			$data['coa'] = $this->db->get('coa')->result();
-			$data['content'] = $this->load->view('Rekening/entry', $data, TRUE);
+			$data['id'] = '';
+			$data['content'] = $this->load->view('coa/entry', $data, TRUE);
 		}else if($aksi=="edit"){
-			$data['title'] = 'Edit Master Rekening';
+			$data['title'] = 'Edit Chart Of Account';
 			$data['aksi'] = $aksi;
 			$data['id'] = $this->input->get('id');
-			$data['item'] = $this->db->get_where($this->table,['id'=>$data['id']])->row();
-			$data['coa'] = $this->db->get('coa')->result();
-			$data['content'] = $this->load->view('Rekening/entry', $data, TRUE);
+			$data['item'] = $this->db->get_where($this->table,['account_no'=>$data['id']])->row();
+			$data['content'] = $this->load->view('coa/entry', $data, TRUE);
 		}
 		$this->load->view('main', $data);
 	}
 
 	public function grid(){
-		$total = $this->getParamGrid_BuilderComplete(array("tipe"=>"total","table"=>$this->table,"sortir"=>"id"));
-		$data = $this->getParamGrid_BuilderComplete(array("tipe"=>"query","table"=>$this->table,"sortir"=>"id"));
+		$total = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
+			"table"=>$this->table." a",
+			"sortir"=>"a.account_no",
+			"special"=>[],
+			"select"=>"a.*, b.acc_description as parentname",
+			"join"=>[$this->table." b"=>"b.account_no=a.parent"]
+		));
+		$data = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"query",
+			"table"=>$this->table." a",
+			"sortir"=>"a.account_no",
+			"special"=>[],
+			"select"=>"a.*, b.acc_description as parentname",
+			"join"=>[$this->table." b"=>"b.account_no=a.parent"]
+		));
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",
@@ -59,15 +71,13 @@ class Rekening extends IO_Controller {
 
 		$this->db->trans_start();
 		if($aksi=="add"){
-			unset($input['id']);
 			$input['crtdt'] = date('Y-m-d H:i:s');
 			$input['crtby'] = $this->session->userdata('user_id');
 			$this->db->insert($this->table, $input);
-			$input['id'] = $this->db->insert_id();
 		}else{
 			$input['upddt'] = date('Y-m-d H:i:s');
 			$input['updby'] = $this->session->userdata('user_id');
-			$this->db->update($this->table,$input,["id"=>$input['id']]);
+			$this->db->update($this->table,$input,["account_no"=>$input['account_no']]);
 		}
 
 		$this->db->trans_complete();
@@ -77,6 +87,6 @@ class Rekening extends IO_Controller {
 			if($aksi=="add")$this->set_success("Insert success...");
 			else $this->set_success("Update success...");
 		}
-		redirect("fa/Rekening/index/edit?id=".$input['id']);
+		redirect("fa/coa/index/edit?id=".$input['account_no']);
 	}
 }

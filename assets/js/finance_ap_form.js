@@ -32,7 +32,7 @@ $(document).ready(function () {
 	so_item = undefined;
 
 	populateCustomer();
-	populateStore();
+	// populateStore();
 	populateTrxType();
 	populateCBType();
 	populateCBNumber();
@@ -69,8 +69,8 @@ function initHeader() {
 	$("#due_date").datebox('setValue', formattanggal(so_item.due_date,{}));
 	$("#cleared_date").datebox('setValue', formattanggal(so_item.cleared_date,{}));
 
-	for(var i=0; i<so_item.detail_ar.length; i++){
-		addDetail(so_item.detail_ar[i])
+	for(var i=0; i<so_item.detail_ap.length; i++){
+		addDetail(so_item.detail_ap[i])
 	}
 	$("#docno").textbox({readonly:so_item.status!=="OPEN"})
 
@@ -162,6 +162,8 @@ function populateDBCR(id) {
 	if(id==="dbcr"){
 		$('#dbcr').combobox({readonly:true})
 		$('#dbcr').combobox('setValue','CREDIT')
+	}else{
+		$("#"+id).combobox('setValue','DEBET')
 	}
 }
 function populateTrxType() {
@@ -187,16 +189,68 @@ function populateCBType() {
 		],
 		onSelect:function (row, index) {
 			if(row===null) return
-			var gr =  $('#no_cb').combogrid('grid')
-			gr.datagrid('destroyFilter');
-			gr.datagrid('enableFilter');
-			gr.datagrid('addFilterRule', {field: 'tipe_rekening', op: 'equal', value: row.value});
-			gr.datagrid('doFilter');
+			if(row.value==="CASH"||row.value==="PETTY CASH"){
+				$("#payment_by").combobox('setValue','CASH');
+			}else{
+				$("#payment_by").combobox('setValue','TRANSFER');
+			}
+			// var gr =  $('#no_cb').combogrid('grid')
+			// gr.datagrid('destroyFilter');
+			// gr.datagrid('enableFilter');
+			// gr.datagrid('addFilterRule', {field: 'tipe_rekening', op: 'equal', value: row.value});
+			// gr.datagrid('doFilter');
 		},
 		prompt:'-Please Select-',
 		validType:'inList["#cbtype"]',
 	});
 
+}
+function populateGL(id,no) {
+	$('#'+id).combogrid({
+		idField: 'account_no',
+		textField:'acc_description',
+		url:base_url+"fa/coa/grid",
+		method:'post',
+		required:true,
+		labelPosition:'top',
+		tipPosition:'bottom',
+		hasDownArrow: false,
+		remoteFilter:true,
+		panelWidth: 500,
+		multiple:false,
+		panelEvents: $.extend({}, $.fn.combogrid.defaults.panelEvents, {
+			mousedown: function(){}
+		}),
+		editable: false,
+		pagination: true,
+		fitColumns: true,
+		mode:'remote',
+		clientPaging: false,
+		loadFilter: function (data) {
+			if (data.data) data.rows = data.data;
+			return data;
+		},
+		onSelect:function (index, row) {
+			// if(row===null) return
+			// console.log(row);
+			// $("#cbtype").combobox('setValue',row.tipe_rekening)
+		},
+		columns: [[
+			{field:'account_no', title:'No Akun', width:200},
+			{field:'acc_description', title:'Account Name', width:300},
+		]]
+	});
+	var gr =  $('#'+id).combogrid('grid')
+	gr.datagrid('destroyFilter');
+	gr.datagrid('enableFilter');
+	gr.datagrid('addFilterRule', [
+		{field: 'header_detail', op: 'equal', value: "DETAIL"},
+		{field: 'normal_balance', op: 'equal', value: "DEBET"},
+	]);
+	if(no!="") {
+		gr.datagrid('addFilterRule', {field: 'account_no', op: 'contains', value: no});
+	}
+	gr.datagrid('doFilter');
 }
 function populateCBNumber() {
 	$('#no_cb').combogrid({
@@ -217,14 +271,26 @@ function populateCBNumber() {
 		pagination: true,
 		fitColumns: true,
 		mode:'remote',
+		clientPaging: false,
 		loadFilter: function (data) {
 			if (data.data) data.rows = data.data;
 			return data;
 		},
 		onSelect:function (index, row) {
 			if(row===null) return
-			$("#reff").textbox('setValue',row.tr_code)
-			$("#bg_no").textbox('setValue',row.cbaccno)
+			// console.log(row);
+			$("#cbtype").combobox('setValue',row.tipe_rekening)
+			$.ajax({
+				type:"POST",
+				url:base_url+"fa/ap/getLastNumber/"+row.tr_code,
+				dataType:"json",
+				success:function(result){
+					console.log(result);
+					$("#last_number").text("Nomor input terakhir : "+result.last);
+				}
+			});
+			// $("#reff").textbox('setValue',row.tr_code)
+			// $("#bg_no").textbox('setValue',row.cbaccno)
 		},
 		columns: [[
 			{field:'accno', title:'Acc No', width:100},
@@ -232,6 +298,9 @@ function populateCBNumber() {
 			{field:'tr_code', title:'Trx Code', width:100},
 		]]
 	});
+	var gr =  $('#no_cb').combogrid('grid')
+	gr.datagrid('destroyFilter');
+	gr.datagrid('enableFilter');
 }
 function populateStore() {
 	$('#store_code').combogrid({
@@ -287,6 +356,7 @@ function populateCustomer() {
 		pagination: true,
 		fitColumns: true,
 		mode:'remote',
+		clientPaging: false,
 		loadFilter: function (data) {
 			if (data.data) data.rows = data.data;
 			return data;
@@ -334,11 +404,12 @@ function onDblClick (index, row) {
 	console.log(index)
 	console.log(row)
 	console.log(counterSelect)
+	$("#dbcr" + counterSelect).combobox('setValue',"DEBET")
 	$("#associatedid" + counterSelect).val(row.id)
 	$("#associatedwith" + counterSelect).val("poheader")
 	$("#remark" + counterSelect).textbox('setValue',row.remark)
 	$("#payment_amt" + counterSelect).numberbox('setValue',0)
-	$("#outstanding_amt" + counterSelect).numberbox('setValue',row.sisa_faktur)
+	$("#outstanding_amt" + counterSelect).numberbox('setValue',(row.sisa_faktur)?row.sisa_faktur:0)
 	$("#cost_center" + counterSelect).textbox('setValue',row.location_code)
 	$("#gl_account" + counterSelect).textbox('setValue',row.gl_account)
 	counterSelect="";
@@ -346,6 +417,17 @@ function onDblClick (index, row) {
 	$('#dlg').dialog('close');
 }
 
+function hitungPayment(newValue, oldValue, e, nomor){
+	console.log("masuk");
+	console.log(e);
+	console.log(nomor);
+	var l = $('.paymentamt').length; var result = [];
+	console.log(l)
+	for (var i = 0; i < l; i++) result.push(parseFloat($('.paymentamt').eq(i).val()));
+	var total = 0;
+	for (var i = 0; i < result.length; i++) total += isNaN(result[i])?0:result[i];
+	$("#payment_amount").numberbox('setValue', total);
+}
 function addDetail(e) {
 	var tipe = $("#trx_type").combobox('getValue')
 	if(tipe === ""){
@@ -362,7 +444,7 @@ function addDetail(e) {
 			seqno: e === null ? '' : e.seqno === null ? '' : e.seqno,
 			tipe: e === null ? '' : e.tipe === null ? '' : e.tipe,
 			dbcr: e === null ? '' : e.dbcr === null ? '' : e.dbcr,
-			cost_center: e === null ? '' : e.cost_center === null ? '' : e.cost_center,
+		cost_center: e === null ? location_code : e.cost_center === null ? location_code : e.cost_center,
 			gl_account: e === null ? '' : e.gl_account === null ? '' : e.gl_account,
 			remark: e === null ? '' : e.remark === null ? '' : e.remark,
 			outstanding_amt: e === null ? '' : e.outstanding_amt === null ? '' : e.outstanding_amt,
@@ -377,7 +459,7 @@ function addDetail(e) {
 		'		 	<input name="detail['+counter+'][id]" id="detail['+counter+'][id]" type="hidden" value="'+d.id+'"  > ' +
 		'		 	<input name="detail['+counter+'][associatedid]" id="associatedid'+counter+'" type="hidden" value="'+d.associatedid+'"  > ' +
 		'		 	<input name="detail['+counter+'][associatedwith]" id="associatedwith'+counter+'" type="hidden" value="'+d.associatedwith+'" > ' +
-		'		 	<input name="detail['+counter+'][remark]" id="remark'+counter+'" value="'+d.remark+'" class="easyui-textbox'+counter+'" labelPosition="top" tipPosition="bottom" required="true" label="Keterangan:" style="width:100%; height: 90px;"> ' +
+		'		 	<input name="detail['+counter+'][remark]" id="remark'+counter+'" value="'+d.remark+'" class="easyui-textbox'+counter+'" labelPosition="top" tipPosition="bottom" multiline="true" required="true" label="Keterangan:" style="width:100%; height: 90px;"> ' +
 		'		</div> ' +
 		'		<div style="float:left; width: 45%;">' +
 		'			<div style="float:left; width: 10%; padding-right: 10px;"> ' +
@@ -390,7 +472,7 @@ function addDetail(e) {
 		'				<input value="'+d.cost_center+'" name="detail['+counter+'][cost_center]" id="cost_center'+counter+'" class="easyui-textbox'+counter+'" labelPosition="top" tipPosition="bottom" required="true" label="Cost Center:" style="width:100%"> ' +
 		'			</div> ' +
 		'			<div style="float:left; width:30%;"> ' +
-		'				<input value="'+d.gl_account+'" name="detail['+counter+'][gl_account]" id="gl_account'+counter+'" class="easyui-textbox'+counter+'" labelPosition="top" tipPosition="bottom" required="true" label="GL Account:" style="width:100%"> ' +
+		'				<input value="'+d.gl_account+'" name="detail['+counter+'][gl_account]" id="gl_account'+counter+'" class="easyui-combobox'+counter+'" labelPosition="top" tipPosition="bottom" required="true" label="GL Account:" style="width:100%"> ' +
 		'			</div> ' +
 		'		</div>' +
 		'		<div style="float:left; width: 45%;">' +
@@ -425,6 +507,7 @@ function addDetail(e) {
 	// 	}
 	// });
 	populateDBCR('dbcr'+counter)
+	populateGL('gl_account'+counter,d.gl_account)
 	if(e!==null){
 		$('#dbcr'+counter).combobox('setValue',e.dbcr)
 		$('#tipe'+counter).checkbox({checked: e.tipe==="ROUNDED"});

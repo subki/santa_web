@@ -28,6 +28,7 @@ class IO_Controller extends CI_Controller {
 		$this->load->model('Salesorder_model','model_sales');
 		$this->load->model('Packinglist_model','model_packing');
 		$this->load->model('Faktur_model','model_faktur');
+		$this->load->model('Wholesales_model','model_ws');
 
 		$ci =& get_instance();
 		$name = $ci->router->class;
@@ -197,7 +198,7 @@ class IO_Controller extends CI_Controller {
 //                }
 
 				if($app==""){
-					$app .= " where ";
+					$app .= " having ";
 				}else $app .= " AND ";
 				if($r->op=="equal") $app .= " ".$r->field." = '".$r->value."' ";
 				if($r->op=="notequal") $app .= " ".$r->field." != '".$r->value."' ";
@@ -211,32 +212,43 @@ class IO_Controller extends CI_Controller {
 			}
 			if($special!="") {
 				if (count($fltr) > 0) $app .= " AND ".$special;
-				else $app .= " where ".$special;
+				else $app .= " having ".$special;
 			}
 		}else{
 			if($special!=""){
-				$app .= " where ".$special;
+				$app .= " having ".$special;
 			}
 		}
 		$data['app']=$app;
 		return $data;
 	}
-	function getParamGrid_Builder($special="", $sortir=""){
 
+	function getParamGrid_BuilderComplete($data){
+//		pre($data->table);
 		$page = ($this->input->post('page')) ? $this->input->post('page'):1;
 		$rows = ($this->input->post('rows')) ? $this->input->post('rows'):20;
-		$sort = ($this->input->post('sort')) ? $this->input->post('sort'):$sortir;
+		$sort = ($this->input->post('sort')) ? $this->input->post('sort'):$data['sortir'];
 		$order = ($this->input->post('order')) ? $this->input->post('order'):'desc';
 		$fltr= ($this->input->post('filterRules')) ? json_decode($this->input->post('filterRules')):"";
 
 		if($sort=="crtdt") $sort = 'tanggal_crt';
 		if($sort=="upddt") $sort = 'tanggal_upd';
 
+		if(isset($data['select'])){
+			$this->db->select($data['select']);
+		}
+		if(isset($data['special'])) {
+			if(is_array($data['special'])) foreach ($data['special'] as $key => $row) $this->db->where($key,$row);
+			else $this->db->where($data['special']);
+		}
+		if(isset($data['join'])){
+			foreach ($data['join'] as $key => $row) $this->db->join($key, $row, "left");
+		}
 		if($fltr!=""){
 			foreach ($fltr as $r){
 				if($r->op=="equal") $this->db->having($r->field,$r->value);
 				if($r->op=="notequal") $this->db->having("$r->field !=",$r->value);
-				if($r->op=="contains") $this->db->like($r->field,$r->value);
+				if($r->op=="contains") $this->db->having("$r->field like '%$r->value%'");
 				if($r->op=="beginwith") $this->db->having("$r->field like '$r->value%'");
 				if($r->op=="endwith") $this->db->having("$r->field like '%$r->value'");
 				if($r->op=="less") $this->db->having("$r->field < ",$r->value);
@@ -244,16 +256,12 @@ class IO_Controller extends CI_Controller {
 				if($r->op=="greater") $this->db->having("$r->field > ",$r->value);
 				if($r->op=="greaterorequal") $this->db->having("$r->field >= ",$r->value);
 			}
-			if($special!="") {
-				$this->db->where($special);
-			}
-		}else{
-			if($special!=""){
-				$this->db->where($special);
-			}
 		}
 		$this->db->order_by("$sort $order");
-		$this->db->limit($rows,($page-1)*$rows);
+		if($data['tipe']=="total") {
+			return $this->db->get($data['table'])->num_rows();
+		}
+		return $this->db->limit($rows,($page-1)*$rows)->get($data['table'])->result();
 	}
 
 	function export_csv($filename,$header,$data,$unset=[], $top=array()){

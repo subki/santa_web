@@ -27,7 +27,7 @@
 </style>
 <div id="tt">
   <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-    <a href="<?php echo base_url('showroom/index')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
+    <a href="<?php echo base_url('counter/index')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-cancel" onclick="batalForm()" style="width:90px; height: 20px;">Batal</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submitForm()" style="width:90px; height: 20px;">Submit</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-print" onclick="printForm()" style="width:90px; height: 20px;">Print</a>

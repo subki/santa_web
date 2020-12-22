@@ -27,6 +27,7 @@
 </style>
 <div id="tt">
   <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+    <a href="<?php echo base_url('Finance/ar')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submitAR()" style="width:90px; height: 20px;">Save</a>
     <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="updateAR()" style="width:90px; height: 20px;">Update</a>
     <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-posting" onclick="postingAR()" style="width:90px; height: 20px;">Posting</a>
@@ -44,6 +45,11 @@
       <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
         <div style="width: 30%; padding: 10px;">
           <div style="margin-bottom:1px">
+            <div style="float:left; width: 100%; padding-right: 5px;">
+              <label id="last_number"></label>
+            </div>
+          </div>
+          <div style="margin-bottom:1px">
             <div style="float:left; width: 55%; padding-right: 5px;">
               <input name="trx_type" id="trx_type" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                      label="Tipe:" style="width:100%">
@@ -56,7 +62,7 @@
           <div style="margin-bottom:1px">
             <div style="float:left; width: 55%; padding-right: 5px;">
               <input name="id" id="id" type="hidden" value="0">
-              <input name="docno" id="docno" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
+              <input name="docno" id="docno" readonly class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                      label="Trx. No:" style="width:100%">
             </div>
             <div style="float:left; width: 35%; padding-right: 5px;">
@@ -84,9 +90,9 @@
           </div>
           <div style="margin-bottom:1px">
             <div style="float:left; width: 50%; padding-right: 5px;">
-              <input name="store_code" id="store_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Store:" style="width:100%">
-            </div>
-            <div style="float:right; width: 50%; padding-left: 5px;">
+<!--              <input name="store_code" id="store_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Store:" style="width:100%">-->
+<!--            </div>-->
+<!--            <div style="float:right; width: 50%; padding-left: 5px;">-->
               <input name="customer_code" id="customer_code" labelPosition="top" tipPosition="bottom" label="Customer:" style="width:100%">
             </div>
           </div>
@@ -112,14 +118,14 @@
             <input name="bg_no" id="bg_no" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                    label="BG Number:" style="width:100%">
           </div>
-          <div style="margin-bottom:1px">
+          <div style="margin-bottom:1px; display: none">
             <input name="journal_no" id="journal_no" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                    label="Journal Number:" style="width:100%">
           </div>
         </div>
         <div style="width: 30%; padding: 10px;">
           <div style="margin-bottom:1px">
-            <input name="remark" id="remark" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
+            <input name="remark" id="remark" class="easyui-textbox" multiline="true" labelPosition="top" tipPosition="bottom"
                    required="true" label="Keterangan:" style="width:100%; height: 100px;">
           </div>
           <div style="margin-bottom:1px">

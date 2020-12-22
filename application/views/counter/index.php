@@ -73,7 +73,7 @@
 				var d = date.getDate();
 				var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
 				var location_code = $("#location_code").combobox('getValue')
-				$('#dg').datagrid({url:base_url+"showroom/grid?location_code="+location_code+"&tanggal="+prd});
+				$('#dg').datagrid({url:base_url+"counter/grid?location_code="+location_code+"&tanggal="+prd});
 				$('#dg').datagrid('destroyFilter');
 				$('#dg').datagrid('enableFilter');
 				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
@@ -97,7 +97,7 @@
 				var m = date.getMonth()+1;
 				var d = date.getDate();
 				var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
-				$('#dg').datagrid({url:base_url+"showroom/grid?location_code="+rec.location_code+"&tanggal="+prd});
+				$('#dg').datagrid({url:base_url+"counter/grid?location_code="+rec.location_code+"&tanggal="+prd});
 				$('#dg').datagrid('destroyFilter');
 				$('#dg').datagrid('enableFilter');
 				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
@@ -114,7 +114,7 @@
 		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
 		$("#periode").datebox('setValue',prd);
 		var location_code = $("#location_code").val()
-		$('#dg').datagrid({url:base_url+"showroom/grid?location_code="+location_code+"&tanggal="+prd});
+		$('#dg').datagrid({url:base_url+"counter/grid?location_code="+location_code+"&tanggal="+prd});
 		$('#dg').datagrid(options);
 		$('#dg').datagrid('destroyFilter');
 		$('#dg').datagrid('enableFilter');
@@ -139,14 +139,14 @@
 	function addData() {
 		var tgl = $("#periode").datebox('getValue');
 		var loc = $("#location_code").combobox('getValue');
-		$.redirect(base_url+"showroom/form?tanggal="+tgl+"&location_code="+loc,{},"GET","");
+		$.redirect(base_url+"counter/form?tanggal="+tgl+"&location_code="+loc,{},"GET","");
 	}
 	function editData() {
 		var r = getRow();
 		if(r===null) return;
 		var vl = {};
 		vl['location_code'] = $("#location_code").combobox('getValue');
-		$.redirect(base_url+"showroom/form/"+r.docno,vl,"post","");
+		$.redirect(base_url+"counter/form/"+r.docno,vl,"post","");
 	}
 	function rekap() {
 		var date = $("#periode").datebox('getDate');
@@ -159,6 +159,6 @@
 		v['location_code'] = location_code;
 		v['tanggal'] = prd;
 		console.log(prd);
-		$.redirect(base_url+"showroom/rekap",v,"post","");
+		$.redirect(base_url+"counter/rekap",v,"post","");
 	}
 </script>
