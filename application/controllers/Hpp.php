@@ -50,10 +50,11 @@ class Hpp extends IO_Controller {
 		);
 	}
 
-	public function entryp(){
+	public function entryp($article_code=""){
 		$param = $this->toUpper($this->input->post());
 		$param['effdate'] = $this->formatDate("Y-m-d",$param['effdate']);
-		$param['article_code'] = $param['header']['article_code'];
+//		$param['article_code'] = $param['header']['article_code'];
+		$param['article_code'] = $article_code;
 //		pre($param);
 		foreach ($param as $key=> $r){
 			if(!in_array($key,$this->table_field)) unset($param[$key]);
