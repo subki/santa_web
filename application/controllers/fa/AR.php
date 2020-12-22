@@ -28,6 +28,22 @@ class AR extends IO_Controller {
 		$this->load->helper('file');
 	}
 
+	public function getLastNumber($bankcode){
+		$yymm = date('ym');
+		$this->db->select('right(docno_temp,4) nomor')
+			->where('docno_temp like', "BBM$bankcode$yymm%")
+			->order_by('docno_temp', 'desc');
+		$gen = $this->db->get($this->table, 1)->row();
+		$ctr = "00000";
+		if (isset($gen)) {
+			$ctr = $gen->nomor;
+			$ctr = str_pad($ctr, 4, "0", STR_PAD_LEFT);
+		}
+		echo json_encode(array(
+			"last"=> "BBM".$bankcode.$ctr
+		));
+	}
+
 	public function save_header(){
 		$input = $this->toUpper($this->input->post());
 		$detail = [];
@@ -44,7 +60,7 @@ class AR extends IO_Controller {
 
 		$ctr = "00001";
 		$yymm = date('ym');
-		$pref = $this->db->where("cbaccno",$input['cb_no'])->get("master_rekening")->row()->bank_code;
+		$pref = $this->db->where("cbaccno",$input['no_cb'])->get("master_rekening")->row()->tr_code;
 
 		$this->db->select('right(docno_temp,4) nomor')
 			->where('docno_temp like', "BBM$pref$yymm%")
@@ -59,6 +75,7 @@ class AR extends IO_Controller {
 		$input["docno"] = "BBM$pref$yymm$ctr";
 		$input["docno_temp"] = "BBM$pref$yymm$ctr";
 		$input["payment_type"] = "AR RECEIPT";
+		$input["store_code"] = $this->session->userdata(sess_store_code);
 		$input["tipe_pos_biaya"] = "";
 		$input["seqno"] = "";
 		$input["info_status"] = "";

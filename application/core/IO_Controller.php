@@ -248,7 +248,7 @@ class IO_Controller extends CI_Controller {
 			foreach ($fltr as $r){
 				if($r->op=="equal") $this->db->having($r->field,$r->value);
 				if($r->op=="notequal") $this->db->having("$r->field !=",$r->value);
-				if($r->op=="contains") $this->db->like($r->field,$r->value);
+				if($r->op=="contains") $this->db->having("$r->field like '%$r->value%'");
 				if($r->op=="beginwith") $this->db->having("$r->field like '$r->value%'");
 				if($r->op=="endwith") $this->db->having("$r->field like '%$r->value'");
 				if($r->op=="less") $this->db->having("$r->field < ",$r->value);
