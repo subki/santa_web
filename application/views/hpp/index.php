@@ -408,7 +408,7 @@
 	function submitForm() {
 		var val = {};
 		val['header'] = header;
-		$.redirectFormValues(base_url+"hpp/entryp","#fm",val,"post","");
+		$.redirectFormValues(base_url+"hpp/entryp/"+'<?php echo $article_code; ?>',"#fm",val,"post","");
 	}
 	function cancelForm() {
 		$(".headbutton").hide();
