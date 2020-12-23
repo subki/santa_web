@@ -135,7 +135,7 @@ function initGrid() {
 function addnew(){
     clearFormInput();
     flag = "Stockadjustment/save_data_header";
-        $('#modal_edit').dialog('open').dialog('center').dialog('setTitle','Add Adj'); 
+        $('#modal_edit').dialog('open').dialog('center').dialog('setTitle','Add Adjustment');
     } 
  
 function clearFormInput() {
@@ -162,6 +162,7 @@ function submit(){
                 } else {
                     $('#dg').datagrid('reload');    //
                     clearFormInput();
+									$('#modal_edit').dialog('close');
                 }
           }
         });

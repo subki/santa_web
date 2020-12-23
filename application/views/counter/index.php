@@ -66,8 +66,59 @@
 	var lokasi = <?php echo json_encode($lokasi);?>;
 	$(document).ready(function() {
 		console.log('lokasi',lokasi)
-		$('#periode').datebox({
+//		$('#periode').datebox({
+//			onSelect: function(date){
+//				var y = date.getFullYear();
+//				var m = date.getMonth()+1;
+//				var d = date.getDate();
+//				var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
+//				var location_code = $("#location_code").combobox('getValue')
+//				$('#dg').datagrid({url:base_url+"counter/grid?location_code="+location_code+"&tanggal="+prd});
+//				$('#dg').datagrid('destroyFilter');
+//				$('#dg').datagrid('enableFilter');
+//				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
+//				$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
+//				$('#dg').datagrid('doFilter');
+//			}
+//		});
+		$("#periode").datebox({
+			onShowPanel: function() {
+				console.log("onShowPanel")
+				span.trigger('click');
+				console.log(span)
+				if (!tds)
+				setTimeout(function() {
+						tds = p.find('div.calendar-menu-month-inner td');
+						tds.click(function(e) {
+							e.stopPropagation();
+							var year = /\d{4}/.exec(span.html())[0]
+								, month = parseInt($(this).attr('abbr'))-1;
+							$("#periode").datebox('hidePanel')
+								.datebox('setValue', year +'-' + month);
+						});
+					}, 0);
+			},
+			parser: function(s) {
+				console.log("parser",s)
+				if (!s)
+					return new Date();
+				var arr = s.split('-');
+				return new Date(parseInt(arr[0]), parseInt(arr[1]), 1);
+			},
+			formatter : function(d) {
+				console.log("formatter",d)
+				if (d.getMonth() == 0) {
+					return d.getFullYear()-1 + '-' + 12;
+				} else {
+					var month = d.getMonth();
+					if(month < 10){
+						month = "0" + month;
+					}
+					return d.getFullYear() + '-' + month;
+				}
+			},
 			onSelect: function(date){
+				console.log("onSelect",date);
 				var y = date.getFullYear();
 				var m = date.getMonth()+1;
 				var d = date.getDate();
@@ -81,6 +132,9 @@
 				$('#dg').datagrid('doFilter');
 			}
 		});
+		var p = $("#periode").datebox('panel'), // Date selection object
+			tds = false, // month in date selection object
+			span = p.find('span.calendar-text');
 		$('#location_code').combobox({
 			valueField:'location_code',
 			textField:'description',

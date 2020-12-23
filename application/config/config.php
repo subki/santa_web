@@ -26,7 +26,7 @@ date_default_timezone_set('Asia/Jakarta');
 */
 //$config['base_url'] = 'http://santaprojects.hol.es/santa/';
 //$config['base_url'] = 'http://localhost/santa/';
-//$config['base_url'] = 'http://192.168.1.254/santa/';
+$config['base_url'] = 'http://192.168.1.254/santa/';
 //$config['base_url'] = 'http://localhost:71/santa_web/';
 //$config['base_url'] = 'http://localhost:71/santa_web/';
 
