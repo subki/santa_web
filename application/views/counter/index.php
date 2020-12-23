@@ -30,7 +30,7 @@
 <div id="toolbar" style="display: none">
     <a href="javascript:void(0)" class="easyui-linkbutton" id="add" onclick="addData()" iconCls="icon-add" plain="true">Add</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="editData()" iconCls="icon-edit" plain="true">Edit</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="rekap()" iconCls="icon-posting" plain="true">End of Day</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="rekap()" iconCls="icon-posting" plain="true">End of Month</a>
 </div>
 
 <script type="text/javascript">
@@ -55,7 +55,7 @@
 			{field:"doc_date",   title:"Trx Date",  sortable: true},
 			{field:"location_code",   title:"Lokasi",  sortable: true},
 			{field:"store_name",   title:"Store Name",  sortable: true},
-			{field:"remark",   title:"Remark",  sortable: true},
+//			{field:"remark",   title:"Remark",  sortable: true},
 			{field:"status",   title:"Status",  sortable: true},
 			{field:"sales_after_tax",   title:"Sls Aft Tax",  sortable: true},
 		]],
@@ -66,59 +66,8 @@
 	var lokasi = <?php echo json_encode($lokasi);?>;
 	$(document).ready(function() {
 		console.log('lokasi',lokasi)
-//		$('#periode').datebox({
-//			onSelect: function(date){
-//				var y = date.getFullYear();
-//				var m = date.getMonth()+1;
-//				var d = date.getDate();
-//				var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
-//				var location_code = $("#location_code").combobox('getValue')
-//				$('#dg').datagrid({url:base_url+"counter/grid?location_code="+location_code+"&tanggal="+prd});
-//				$('#dg').datagrid('destroyFilter');
-//				$('#dg').datagrid('enableFilter');
-//				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
-//				$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
-//				$('#dg').datagrid('doFilter');
-//			}
-//		});
-		$("#periode").datebox({
-			onShowPanel: function() {
-				console.log("onShowPanel")
-				span.trigger('click');
-				console.log(span)
-				if (!tds)
-				setTimeout(function() {
-						tds = p.find('div.calendar-menu-month-inner td');
-						tds.click(function(e) {
-							e.stopPropagation();
-							var year = /\d{4}/.exec(span.html())[0]
-								, month = parseInt($(this).attr('abbr'))-1;
-							$("#periode").datebox('hidePanel')
-								.datebox('setValue', year +'-' + month);
-						});
-					}, 0);
-			},
-			parser: function(s) {
-				console.log("parser",s)
-				if (!s)
-					return new Date();
-				var arr = s.split('-');
-				return new Date(parseInt(arr[0]), parseInt(arr[1]), 1);
-			},
-			formatter : function(d) {
-				console.log("formatter",d)
-				if (d.getMonth() == 0) {
-					return d.getFullYear()-1 + '-' + 12;
-				} else {
-					var month = d.getMonth();
-					if(month < 10){
-						month = "0" + month;
-					}
-					return d.getFullYear() + '-' + month;
-				}
-			},
-			onSelect: function(date){
-				console.log("onSelect",date);
+		$('#periode').datebox({
+      onSelect: function(date){
 				var y = date.getFullYear();
 				var m = date.getMonth()+1;
 				var d = date.getDate();
@@ -127,14 +76,12 @@
 				$('#dg').datagrid({url:base_url+"counter/grid?location_code="+location_code+"&tanggal="+prd});
 				$('#dg').datagrid('destroyFilter');
 				$('#dg').datagrid('enableFilter');
-				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
+				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'beginwith', value: prd });
 				$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
 				$('#dg').datagrid('doFilter');
 			}
 		});
-		var p = $("#periode").datebox('panel'), // Date selection object
-			tds = false, // month in date selection object
-			span = p.find('span.calendar-text');
+
 		$('#location_code').combobox({
 			valueField:'location_code',
 			textField:'description',
@@ -154,7 +101,7 @@
 				$('#dg').datagrid({url:base_url+"counter/grid?location_code="+rec.location_code+"&tanggal="+prd});
 				$('#dg').datagrid('destroyFilter');
 				$('#dg').datagrid('enableFilter');
-				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
+				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'beginwith', value: prd });
 				$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: rec.location_code });
 				$('#dg').datagrid('doFilter');
 			}
@@ -172,7 +119,7 @@
 		$('#dg').datagrid(options);
 		$('#dg').datagrid('destroyFilter');
 		$('#dg').datagrid('enableFilter');
-		$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
+		$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'beginwith', value: prd });
 		$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
 		$('#dg').datagrid('doFilter');
 	});
@@ -208,11 +155,16 @@
 		var m = date.getMonth()+1;
 		var d = date.getDate();
 		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
+		var prd2 =  y+"-"+(m<10?('0'+m):m);
 		var location_code = $("#location_code").combobox('getValue');
 		var v = {};
 		v['location_code'] = location_code;
 		v['tanggal'] = prd;
 		console.log(prd);
-		$.redirect(base_url+"counter/rekap",v,"post","");
+		myConfirm("End Of Month","Anda yakin ingin closing periode "+prd2+"?","Yes","No",function (button) {
+      if(button==="Yes"){
+				$.redirect(base_url+"counter/rekap",v,"post","");
+      }
+		})
 	}
 </script>

@@ -55,7 +55,7 @@
 			{field:"doc_date",   title:"Trx Date",  sortable: true},
 			{field:"location_code",   title:"Lokasi",  sortable: true},
 			{field:"store_name",   title:"Store Name",  sortable: true},
-			{field:"remark",   title:"Remark",  sortable: true},
+//			{field:"remark",   title:"Remark",  sortable: true},
 			{field:"status",   title:"Status",  sortable: true},
 			{field:"sales_after_tax",   title:"Sls Aft Tax",  sortable: true},
 		]],

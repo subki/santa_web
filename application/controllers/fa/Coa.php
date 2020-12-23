@@ -73,6 +73,20 @@ class Coa extends IO_Controller {
 		if($aksi=="add"){
 			$input['crtdt'] = date('Y-m-d H:i:s');
 			$input['crtby'] = $this->session->userdata('user_id');
+			if($input['header_detail']=="DETAIL"){
+				$depan = "XXXXX";
+				$last = $this->db->select("LEFT(account_no,LENGTH(account_no)-5) kiri ,RIGHT(account_no,5) kanan")
+					->where('parent',$input['parent'])
+					->where('header_detail','HEADER')
+					->order_by('account_no desc')
+					->limit(1)->get($this->table)->row();
+//				pre($last);
+				if (isset($last)){
+					$nomor = $last->kanan + 1;
+					$depan = $last->kiri;
+				} else $nomor = 1;
+				$input['account_no'] = $depan . str_pad($nomor, 5, "0", STR_PAD_LEFT);
+			}
 			$this->db->insert($this->table, $input);
 		}else{
 			$input['upddt'] = date('Y-m-d H:i:s');
