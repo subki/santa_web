@@ -239,10 +239,12 @@ class IO_Controller extends CI_Controller {
 		}
 		if(isset($data['special'])) {
 			if(is_array($data['special'])) foreach ($data['special'] as $key => $row) $this->db->where($key,$row);
-			else $this->db->where($data['special']);
+			else {
+				if($data['special']!=="") $this->db->where($data['special']);
+			}
 		}
 		if(isset($data['join'])){
-			foreach ($data['join'] as $key => $row) $this->db->join($key, $row, "left");
+			foreach ($data['join'] as $key => $row) $this->db->join($key, $row, isset($data['posisi'][$key])?$data['posisi'][$key]:"left");
 		}
 		if($fltr!=""){
 			foreach ($fltr as $r){

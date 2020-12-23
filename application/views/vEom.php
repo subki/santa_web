@@ -4,7 +4,9 @@
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/eom.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/redirect.js"></script>
 <div class="easyui-layout" style="width:100%;height:100%">
+	<?php echo $this->message->display();?>
     <form id="fm" method="post" novalidate style="margin:0;padding:10px 50px">
         <table style="width: 100%; margin:10px;">
             <tr style="width: 100%">

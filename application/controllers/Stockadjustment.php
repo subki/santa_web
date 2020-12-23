@@ -107,6 +107,7 @@ class Stockadjustment extends IO_Controller {
     function edit_data(){
         try {
             $input = $this->toUpper($this->input->post());
+//            pre($input)
             $this->db->trans_start();
 
             $read = $this->model_delivery->read_data($input['docno']);
@@ -130,11 +131,13 @@ class Stockadjustment extends IO_Controller {
                         'status' => 'transfered'
                     );
                     $cc = $this->model_delivery->checkQtyReceive($input['docno']);
+//                    pre($cc);
                     if($cc > 0){
                         $result = 1;
                         $msg=$cc==2?"Qty Receive di detail item belum di input semua.":"Detail belum di input";
                     }else {
                         if($this->checkPeriod($data['from_location_code'], $data['receive_date'])) {
+//                        	pre("Masuk");
                             $this->model_delivery->update_data($input['docno'], $data);
                             $this->model_delivery->update_status_data_detail($input['docno'], $data2);
 													//update stock
@@ -210,6 +213,7 @@ class Stockadjustment extends IO_Controller {
 
 
     function load_grid_nobar($code){
+    	$code = urldecode($code);
         $f = $this->getParamGrid(" docno = '".$code."' ","docno");
         $data = $this->model_delivery->load_grid_nobar($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
 
@@ -250,7 +254,7 @@ class Stockadjustment extends IO_Controller {
             $input = $this->toUpper($this->input->post());
 
             $data = array(
-                'docno' => $code,
+                'docno' => urldecode($code),
                 'nobar' => $input['nobar'],
                 'qty' => $input['qty'],
                 'qty_rcv' => ($input['qty_rcv'])?$input['qty_rcv']:0,

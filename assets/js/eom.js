@@ -221,29 +221,5 @@ function clearInput() {
     $('#fm').form('clear');
 }
 function submit(){
-    $('#fm').form('submit',{
-        url: base_url+'eom/execute_eom',
-        type: 'post',
-        success: function(result){
-            console.log(result)
-            try {
-                var res = $.parseJSON(result);
-                console.log(result);
-                if (res.status === 0) {
-                    clearInput();
-                } else {
-                    $.messager.show({
-                        title: 'Error',
-                        msg: res.msg
-                    });
-                }
-            }catch (e) {
-                console.log(e)
-                $.messager.show({
-                    title: 'Error',
-                    msg: e.message
-                });
-            }
-        }
-    });
+    $.redirectForm(base_url+'eom/execute_eom',"#fm","post","");
 }

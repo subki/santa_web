@@ -133,12 +133,39 @@ class Subki extends IO_Controller {
 	}
 
 	public function bulk_change_collation(){
-		$res  = $this->db->query('show tables')->result();
-		foreach ($res as $v){
-			$sql = "ALTER TABLE $v->Tables_in_u845881379_santa CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
-			echo $sql."<br />";
-			$this->db->query($sql);
+		$this->db->query('USE information_schema');
+		$database = $this->db->query('SELECT CONCAT("ALTER DATABASE ",table_schema," CHARACTER SET = utf8 COLLATE = utf8_swedish_ci;") AS _sql 
+FROM TABLES WHERE table_schema LIKE "u845881379_santa" GROUP BY table_schema;')->row()->_sql;
+		$tabel = $this->db->query('SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name," CONVERT TO CHARACTER SET utf8 COLLATE utf8_swedish_ci, ENGINE=INNODB;") AS _sql  
+FROM TABLES WHERE table_schema LIKE "u845881379_santa" GROUP BY table_schema, table_name;')->result();
+		$field1 = $this->db->query('SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name, " CHANGE `",column_name,"` `",column_name,"` ",data_type,"(",character_maximum_length,") CHARACTER SET utf8 COLLATE utf8_swedish_ci",IF(is_nullable="YES"," NULL"," NOT NULL"),";") AS _sql 
+FROM COLUMNS WHERE table_schema LIKE "u845881379_santa" AND data_type IN (\'varchar\',\'char\');')->result();
+		$field2 = $this->db->query('SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name, " CHANGE ",column_name," ",column_name," ",data_type," CHARACTER SET utf8 COLLATE utf8_swedish_ci",IF(is_nullable="YES"," NULL"," NOT NULL"),";") AS _sql 
+FROM COLUMNS WHERE table_schema LIKE "u845881379_santa" AND data_type IN (\'text\',\'tinytext\',\'mediumtext\',\'longtext\');')->result();
+		$field3 = $this->db->query('SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name, " CHANGE `",column_name,"` `",column_name,"` ",column_type," CHARACTER SET utf8 COLLATE utf8_swedish_ci",IF(is_nullable="YES"," NULL"," NOT NULL"),";") AS _sql 
+FROM COLUMNS WHERE table_schema LIKE "u845881379_santa" AND data_type IN (\'enum\');')->result();
+		$this->db->reset_query();
+		$this->db->query($database);
+		$merge = array_merge($tabel,$field1,$field2, $field3);
+//		pre($merge);
+		foreach ($tabel as $row){
+//			$this->db->query($row->_sql);
+			echo $row->_sql."<br />";
 		}
+		foreach ($merge as $row){
+//			$this->db->query($row->_sql);
+			echo $row->_sql."<br />";
+		}
+//		var_dump($database);
+//		var_dump($tabel);
+//		var_dump($field1);
+//		pre(array_column($tabel,"_sql"));
+//		$res  = $this->db->query('show tables')->result();
+//		foreach ($res as $v){
+//			$sql = "ALTER TABLE $v->Tables_in_u845881379_santa CONVERT TO CHARACTER SET utf8 COLLATE utf8_swedish_ci;";
+//			echo $sql."<br />";
+//			$this->db->query($sql);
+//		}
 		echo "done";
 	}
 

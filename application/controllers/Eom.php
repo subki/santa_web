@@ -32,17 +32,31 @@ class Eom extends IO_Controller {
 		$store = $this->session->userdata('store_code');
 		$store1 = $this->session->userdata('kode store pusat');
 
-		$special = " location_code in(select location_code from cabang where store_code='$store')";
+		$special = " a.location_code in(select location_code from cabang where store_code='$store')";
 		if($store==$store1){
 			$special = "";
 		}
-		$f = $this->getParamGrid($special,"location_code");
-		$data = $this->model->get_location($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+		$total = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
+			"table"=>"location a",
+			"sortir"=>"location_code",
+			"special"=>$special,
+			"select"=>"a.location_code, a.description location_name, b.store_name, b.store_code",
+			"join"=>["cabang c"=>"c.location_code=a.location_code","profile_p b"=>"b.store_code=c.store_code"]
+		));
+		$data = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"query",
+			"table"=>"location a",
+			"sortir"=>"location_code",
+			"special"=>$special,
+			"select"=>"a.location_code, a.description location_name, b.store_name, b.store_code",
+			"join"=>["cabang c"=>"c.location_code=a.location_code","profile_p b"=>"b.store_code=c.store_code"]
+		));
 
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",
-				"total"=>(count($data)>0)?$data[0]->total:0,
+				"total"=>$total,
 				"data" =>$data
 			)
 		);
@@ -61,13 +75,29 @@ class Eom extends IO_Controller {
 				$special = " a.location_code ='$loc1' and a.periode='$prd' group by a.nobar";
 			}else $special = " a.location_code >='$loc1' and a.location_code<='$loc2' and a.periode='$prd' group by a.nobar";
 		}
-		$f = $this->getParamGrid($special,"nobar");
-		$data = $this->model->get_nobar($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+		$total = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
+			"table"=>"stock a",
+			"sortir"=>"nobar",
+			"special"=>$special,
+			"select"=>"a.nobar, a.location_code, a.periode, a.saldo_awal, b.description as location_name, c.nmbar
+                  , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir",
+			"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"]
+		));
+		$data = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"query",
+			"table"=>"stock a",
+			"sortir"=>"nobar",
+			"special"=>$special,
+			"select"=>"a.nobar, a.location_code, a.periode, a.saldo_awal, b.description as location_name, c.nmbar
+                  , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir",
+			"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"]
+		));
 
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",
-				"total"=>(count($data)>0)?$data[0]->total:0,
+				"total"=>$total,
 				"data" =>$data
 			)
 		);
@@ -76,6 +106,7 @@ class Eom extends IO_Controller {
 	function execute_eom(){
 		try {
 			$input = $this->toUpper($this->input->post());
+//			pre($input);
 			if($input['from_location_code']=='~') $input['from_location_code'] = 'a';
 			if($input['to_location_code']=='~') $input['to_location_code'] = 'ZZZ';
 			if($input['from_nobar']=='~') $input['from_nobar'] = '0';
@@ -157,21 +188,22 @@ class Eom extends IO_Controller {
 					->delete('stock');
 				//create new stock di bulan depan. ending bln sblm nya jadi begin bulan depan
 				$this->model->insert_stock_next_month(join("','",$arr_loc), $p, $input['from_nobar'], $input['to_nobar']);
-
-				$result = 0;
-				$msg = "OK";
+				$this->set_success("End Of Month Success");
 			}else{
-				$result = 1;
-				$msg = "Lokasi tidak ditemukan";
+//				$result = 1;
+//				$msg = "Lokasi tidak ditemukan";
+				$this->set_error("Lokasi tidak ditemukan");
 			}
 		}catch (Exception $e){
-			$result = 1;
-			$msg=$e->getMessage();
+//			$result = 1;
+//			$msg=$e->getMessage();
+			$this->set_error($e->getMessage());
 		}
-		echo json_encode(array(
-			"status" => $result, "isError" => ($result==1),
-			"msg" => $msg, "message" => $msg
-		));
+		redirect('Eom');
+//		echo json_encode(array(
+//			"status" => $result, "isError" => ($result==1),
+//			"msg" => $msg, "message" => $msg
+//		));
 	}
 
 }

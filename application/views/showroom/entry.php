@@ -314,8 +314,10 @@
 			tb_scan.textbox('clear').textbox('textbox').focus();
 			tb_scan.textbox('textbox').bind('keydown', function(e){
 				if(e.key==='Enter' || e.keyCode===13){ 	// when press ENTER key, accept the inputed value.
+          console.log("masuk sini")
 					var item = $(this).val().toLowerCase();
 					var qty = $('#qty').numberbox('getValue');
+					console.log("masuk sini",item,qty,product)
 					var gakada = true;
 					for(var i=0; i<product.length; i++){
 						let a = product[i];
@@ -527,6 +529,14 @@
 			});
 		}
 		function submitForm(){
+			if(detail_item.length===0){
+				$.messager.alert("Error","Detail harus di input telebih dahulu")
+				return
+			}
+			if(counter===0){
+				$.messager.alert("Error","Payment harus di isi")
+				return
+      }
 			var values = {};
 			values['header'] = header;
 			values['detailitem'] = {};
@@ -571,6 +581,10 @@
 
 		var counter = 0;
 		function addDetail(e) {
+			if(detail_item.length===0){
+				$.messager.alert("Error","Detail harus di input telebih dahulu")
+        return
+      }
 			counter++;
 			var d = {
 				id: e === null ? 0 : e.id === null ? 0 : e.id,

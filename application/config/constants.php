@@ -92,3 +92,4 @@ defined('sess_location_code')      OR define('sess_location_code', 'location_cod
 defined('sess_location_name')      OR define('sess_location_name', 'location_name'); // highest automatically-assigned error code
 defined('sess_lokasi_sales')      OR define('sess_lokasi_sales', 'lokasi_sales'); // highest automatically-assigned error code
 defined('sess_logged_in')      OR define('sess_logged_in', 'logged_in'); // highest automatically-assigned error code
+defined('JANGAN_PRINT')      OR define('JANGAN_PRINT', true); // highest automatically-assigned error code
