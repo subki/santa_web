@@ -28,7 +28,7 @@ $(document).ready(function () {
         $("#cancel").hide(); 
         $("#new").hide(); 
  
-       $("#barcode") .css ("display", "none"); 
+       $("#barcode") .css ("display", "none");
         
 
     }else{
@@ -39,7 +39,7 @@ $(document).ready(function () {
             dataType:"json",
             success:function(result){
              console.log(result);
-                var total=result.total.jumlah;
+                var total=(result.total)?(result.total.jumlah)?result.total.jumlah:0:0;
                 $("#totalpick").textbox('setValue',total);
                 if(result.status===0) {
                     $('#fm').form('load',result.data);
@@ -53,7 +53,7 @@ $(document).ready(function () {
                 else {
                     $.messager.show({
                         title: 'Error',
-                        msg: e.message,
+                        msg: result.message,
                         handler:function () {
                             window.location.href = base_url+"Stockopname";
                         }
@@ -451,14 +451,14 @@ function initGrid() {
                     }
                 }
             }, 
-            {field: "product_code", title: "Product code", width:130, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "uom", title: "Uom",width:70, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "taking_qty", title: "Qty", width:70, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "store", title: "Store",width:130,sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "crtby1", title: "Create by",width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "crtdt1", title: "Create time",width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "updby1", title: "Update by",width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "upddt1", title: "Update time", width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "product_code", title: "Product code", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "uom", title: "Uom", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "taking_qty", title: "Qty", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "store", title: "Store",sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "crtby1", title: "Create by", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "crtdt1", title: "Create time", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "updby1", title: "Update by", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "upddt1", title: "Update time", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
         ]],
         onSuccess: function (index, row) {
             if (row.status === 1) {

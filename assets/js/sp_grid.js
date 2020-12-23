@@ -82,6 +82,41 @@ var options={
     },
 };
 
+
+var print_selected = undefined;
+function printOPN() {
+	var row = getRow();
+	if(row==null) return;
+	print_selected = undefined;
+	$.messager.confirm({
+		title:'Option print',
+		msg:`<p>Select Print Option</p>
+            <input class="easyui-combobox" data-options="
+                valueField: 'label',
+                textField: 'value',
+                data: [{
+                    label: '1',
+                    value: 'Print',
+                    selected:true
+                },{
+                    label: '2',
+                    value: 'Print Excel'
+                }],
+                onSelect:function(rec){
+                    print_selected = rec;
+                }"
+                 />`,
+		fn: function(r){
+			if (r){
+				if(print_selected.label=="1"){
+					$.redirect(base_url+'Stockopname/print_opfull/'+row.ref_no,null,"GET","_blank")
+				}else if(print_selected.label=="2"){
+					$.redirect(base_url+'Stockopname/print_opfullexcel/'+row.ref_no,null,"GET","_blank")
+				}
+			}
+		}
+	});
+}
 setTimeout(function () {
     initGrid();
 },500);

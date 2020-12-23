@@ -78,8 +78,9 @@ class Stockopname_model extends CI_Model {
         $q = $this->queryheader." where a.trx_date between '$from' and '$to' and a.store_code='$store_code' and a.on_loc='$location_code' and a.status='Open' and (a.ref_no IS NULL OR a.ref_no ='')";
         return $this->db->query($q);
     }
-    function update_refno($docno,$from,$to,$location_code,$store_code){
+    function update_refno($docno,$from,$to,$location_code,$store_code,$no_trx){
         $q = "UPDATE hal_gondola a set a.ref_no='$docno' where a.trx_date between '$from' and '$to' and a.store_code='$store_code' and a.on_loc='$location_code' and a.status='Open' and (a.ref_no IS NULL OR a.ref_no ='') ";
+        $q .=" and a.trx_no IN ('".implode("','",$no_trx)."')";
         return $this->db->query($q);
     }
     function read_data($code){

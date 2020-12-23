@@ -28,6 +28,22 @@ class AR extends IO_Controller {
 		$this->load->helper('file');
 	}
 
+	public function getLastNumber($bankcode){
+		$yymm = date('ym');
+		$this->db->select('right(docno_temp,4) nomor')
+			->where('docno_temp like', "BBM$bankcode$yymm%")
+			->order_by('docno_temp', 'desc');
+		$gen = $this->db->get($this->table, 1)->row();
+		$ctr = "00000";
+		if (isset($gen)) {
+			$ctr = $gen->nomor;
+			$ctr = str_pad($ctr, 4, "0", STR_PAD_LEFT);
+		}
+		echo json_encode(array(
+			"last"=> "BBM".$bankcode.$ctr
+		));
+	}
+
 	public function save_header(){
 		$input = $this->toUpper($this->input->post());
 		$detail = [];
@@ -44,7 +60,7 @@ class AR extends IO_Controller {
 
 		$ctr = "00001";
 		$yymm = date('ym');
-		$pref = $input['reff'];
+		$pref = $this->db->where("cbaccno",$input['no_cb'])->get("master_rekening")->row()->tr_code;
 
 		$this->db->select('right(docno_temp,4) nomor')
 			->where('docno_temp like', "BBM$pref$yymm%")
@@ -59,6 +75,7 @@ class AR extends IO_Controller {
 		$input["docno"] = "BBM$pref$yymm$ctr";
 		$input["docno_temp"] = "BBM$pref$yymm$ctr";
 		$input["payment_type"] = "AR RECEIPT";
+		$input["store_code"] = $this->session->userdata(sess_store_code);
 		$input["tipe_pos_biaya"] = "";
 		$input["seqno"] = "";
 		$input["info_status"] = "";
@@ -207,16 +224,24 @@ class AR extends IO_Controller {
 
 
 	public function getFaktur(){
-		$total = $this->db->get("sales_invoice")->num_rows();
-		$this->db->select("a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd
-                  , DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
-                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
-                  , l.location_code, l.description as locname, c.gl_account");
-		$this->getParamGrid_Builder("","id");
-		$this->db->where("CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)");
-		$this->db->join("customer c","c.customer_code=a.customer_code");
-		$this->db->join("location l","l.location_code=c.lokasi_stock");
-		$data = $this->db->get("sales_invoice a")->result();
+		$total = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
+			"table"=>"sales_invoice a",
+			"sortir"=>"id",
+			"special"=>"CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)",
+			"select"=>"a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt, l.location_code, l.description as locname, c.gl_account",
+			"join"=>["customer c"=>"c.customer_code=a.customer_code","location l"=>"l.location_code=c.lokasi_stock"]
+		));
+		$data = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"query",
+			"table"=>"sales_invoice a",
+			"sortir"=>"id",
+			"special"=>"CONCAT('SALES_INVOICE',a.id) NOT IN (select CONCAT(associatedwith,associatedid) from $this->table_detail d where d.customer_code=a.customer_code)",
+			"select"=>"a.*, a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt, l.location_code, l.description as locname, c.gl_account",
+			"join"=>["customer c"=>"c.customer_code=a.customer_code","location l"=>"l.location_code=c.lokasi_stock"]
+		));
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",

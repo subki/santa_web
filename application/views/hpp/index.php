@@ -20,7 +20,7 @@
   <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
     <a href="javascript:void(0)" id="cancel" class="easyui-linkbutton headbutton" iconCls="icon-undo" onclick="cancelForm()" style="width:90px; height: 20px;">Cancel</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton headbutton" iconCls="icon-save" onclick="submitForm()" style="width:90px; height: 20px;">Submit</a>
-    <a href="javascript:void(0)" id="hitung" class="easyui-linkbutton headbutton" iconCls="icon-reload" onclick="hitungHPP()" style="width:120px; height: 20px;">Hitung HPP</a>
+<!--    <a href="javascript:void(0)" id="hitung" class="easyui-linkbutton headbutton" iconCls="icon-reload" onclick="hitungHPP()" style="width:120px; height: 20px;">Hitung HPP</a>-->
   </div>
 </div>
 <div class="easyui-layout" style="width:100%;height:100%">
@@ -37,9 +37,10 @@
       <form id="fm" method="post" novalidate style="margin:0;padding:5px 5px">
         <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
           <div style="width: 100%; padding: 10px;">
+						<?php echo $uom_from?>
             <div style="margin-bottom:1px">
               <div style="float:left; width: 60%; padding-right: 5px;">
-                <input name="effdate" id="effdate" class="easyui-datebox" labelPosition="top" tipPosition="bottom" label="Effective Date:" style="width:100%">
+                <input name="effdate" required id="effdate" class="easyui-datebox" labelPosition="top" tipPosition="bottom" label="Effective Date:" style="width:100%">
               </div>
               <div style="float:right; width:40%;">
               </div>
@@ -47,14 +48,14 @@
             <div style="margin-bottom:1px">
               <div style="float:left; width: 50%; padding-right: 5px;">
                 <input name="id" id="id" type="hidden" value="<?php echo isset($id)?$id:'0'; ?>">
-                <input name="opsi" id="opsi" labelPosition="top" tipPosition="bottom" label="Opsi:" style="width:100%">
+                <input name="opsi" required id="opsi" class="easyui-combobox" labelPosition="top" tipPosition="bottom" label="Opsi:" style="width:100%">
               </div>
               <div style="float:right; width:50%;">
-                <input name="tipe" id="tipe" labelPosition="top" tipPosition="bottom" label="Tipe:" style="width:100%">
+                <input name="tipe" required id="tipe" class="easyui-combobox" labelPosition="top" tipPosition="bottom" label="Tipe:" style="width:100%">
               </div>
             </div>
             <div style="margin-bottom:1px">
-              <input name="keterangan" id="keterangan" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="Keterangan:" style="width:100%; height: 100px;">
+              <input name="keterangan" id="keterangan" multiline="true"  class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="Keterangan:" style="width:100%; height: 100px;">
             </div>
             <div style="display:inline-block; width:100%; height:2px; margin-bottom: 15px; margin-top: 5px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"><b>HPP 1</b></div>
             <div style="margin-bottom:1px" class="opsi2">
@@ -65,42 +66,43 @@
                 <input name="product_price" id="product_price" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Harga Barang Jadi:" style="width:100%">
               </div>
               <div style="float:left; width: 20%; padding-right: 5px;">
-                <input name="disc1_persen" id="disc1_persen" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 1 %:" style="width:100%">
-                <input name="disc1_amt" id="disc1_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
+                <input name="disc1_persen" id="disc1_persen" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 1 %:" style="width:100%">
+                <input name="disc1_amt" readonly id="disc1_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
               </div>
               <div style="float:right; width:20%;">
-                <input name="disc2_persen" id="disc2_persen" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 2 %:" style="width:100%">
-                <input name="disc2_amt" id="disc2_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
+                <input name="disc2_persen" id="disc2_persen" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 2 %:" style="width:100%">
+                <input name="disc2_amt" id="disc2_amt" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
               </div>
             </div>
             <div style="margin-bottom:1px" class="opsi2">
               <div style="float:left; width: 50%; padding-right: 5px;">
-                <input name="product_amount" id="product_amount" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Total Harga Barang Jadi:" style="width:100%">
-              </div>
+                <input name="product_amount" id="product_amount" readonly class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Total Harga Barang Jadi:" style="width:100%">              </div>
               <div style="float:right; width:50%;">
-                <input name="product_pcs" id="product_pcs" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Barang Jadi / Pcs:" style="width:100%">
+                <input name="product_pcs" id="product_pcs" readonly class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Barang Jadi / Pcs:" style="width:100%">
               </div>
             </div>
             <div style="margin-bottom:1px">
               <div style="float:left; width: 33%; padding-right: 5px;">
-                <input name="bom_pcs" id="bom_pcs" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="BOM:" style="width:100%">
+                <input name="bom_pcs" id="bom_pcs" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="BOM:" style="width:100%">
               </div>
               <div style="float:left; width: 33%; padding-right: 5px;">
-                <input name="foh_pcs" id="foh_pcs" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="FOH:" style="width:100%">
+                <input name="foh_pcs" id="foh_pcs" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="FOH:" style="width:100%">
               </div>
               <div style="float:right; width:33%;">
-                <input name="ongkos_jahit_pcs" id="ongkos_jahit_pcs" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Sewing:" style="width:100%">
+                <input name="ongkos_jahit_pcs" id="ongkos_jahit_pcs" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Sewing:" style="width:100%">
               </div>
             </div>
             <div style="display:inline-block; width:100%; height:2px; margin-bottom: 15px; margin-top: 5px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"><b>HPP 2</b></div>
             <div style="margin-bottom:1px">
               <div style="float:left; width: 33%; padding-right: 5px;">
-                <input name="buffer_cost" id="buffer_cost" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Buffer Cost %:" style="width:100%">
-                <input name="buffer_cost_amt" id="buffer_cost_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
+<!--                <input name="buffer_cost" id="buffer_cost" class="easyui-numberbox hpp2" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Buffer Cost %:" style="width:100%">-->
+                <input name="buffer_cost_amt" id="buffer_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Buffer Cost 8%:" style="width:100%">
+<!--                <input name="buffer_cost_amt" id="buffer_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">-->
               </div>
               <div style="float:left; width: 33%; padding-right: 5px;">
-                <input name="interest_cost" id="interest_cost" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Interest Cost %:" style="width:100%">
-                <input name="interest_cost_amt" id="interest_cost_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
+                <input name="interest_cost_amt" id="interest_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Interest Cost 2%:" style="width:100%">
+<!--                <input name="interest_cost" id="interest_cost" class="easyui-numberbox hpp2" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Interest Cost %:" style="width:100%">-->
+<!--                <input name="interest_cost_amt" id="interest_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">-->
               </div>
               <div style="float:right; width:33%;">
               </div>
@@ -108,7 +110,7 @@
             <div style="display:inline-block; width:100%; height:2px; margin-bottom: 15px; margin-top: 5px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"><b>HPP 2 + Ekspedisi</b></div>
             <div style="margin-bottom:1px">
               <div style="float:left; width: 50%; padding-right: 5px;">
-                <input name="ekspedisi" id="ekspedisi" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Ekspedisi:" style="width:100%">
+                <input name="ekspedisi" id="ekspedisi" class="easyui-numberbox hpp3" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Ekspedisi:" style="width:100%">
               </div>
               <div style="float:left; width: 50%; padding-right: 5px;">
               </div>
@@ -140,7 +142,7 @@
 <script type="text/javascript">
 	var options={
 		method:"POST",
-		url : base_url+"hpp/grid",
+		url : base_url+"hpp/grid/"+'<?php echo $article_code ?>',
 		pagePosition:"top",
 		resizeHandle:"right",
 		resizeEdge:10,
@@ -165,13 +167,14 @@
 			{field:"keterangan",   title:"Remark",      sortable: true},
 			{field:"hpp1",   title:"HPP",    align:'right',  sortable: true, formatter:numberFormat},
 			{field:"hpp2",   title:"HPP 2",  align:'right',  sortable: true, formatter:numberFormat},
-			{field:"hpp_ekspedisi",   title:"Ekspedisi",    align:'right',  sortable: true, formatter:numberFormat}
+			{field:"hpp_ekspedisi",   title:"Hpp2 + Ekspedisi",    align:'right',  sortable: true, formatter:numberFormat}
 		]],
 		onLoadSuccess:function(){
 			authbutton();
 		},
 	};
 
+	var uom_convertion = <?php echo $uom_conv;?>;
 	var opsion = <?php echo json_encode($opsi);?>;
 	var tipe = <?php echo json_encode($tipe);?>;
 	var header = <?php echo json_encode($item);?>;
@@ -179,7 +182,7 @@
 		opsi:'',
 		tipe:'',
 		keterangan:'',
-		article_code:'<?php echo json_encode($article_code)?>',
+		article_code:'<?php echo $article_code?>',
 		effdate:'',
 		product_qty:0,
 		product_price:0,
@@ -223,12 +226,12 @@
 				if(rec.id===1){
 					$("#ekspedisi").numberbox({readonly:true})
           $(".opsi2").hide()
-				}else if(rec.id===2){
+				}else if(rec.id===2 || rec.id===3){
 					$("#ekspedisi").numberbox({readonly:false})
 					$(".opsi2").show()
-        }else if(rec.id===3){
-					$("#ekspedisi").numberbox({readonly:false})
-					$(".opsi2").hide()
+//        }else if(rec.id===3){
+//					$("#ekspedisi").numberbox({readonly:false})
+//					$(".opsi2").hide()
         }
 			}
 		});
@@ -243,8 +246,102 @@
 			}
 		});
 		$(".headbutton").hide();
+		$('.hpp1').numberbox({
+			onChange:function (newValue, oldValue) {
+				detail.opsi = $('#opsi').combobox('getValue');
+				detail.tipe = $("#tipe").combobox('getValue');
+				detail.keterangan = $("#keterangan").textbox('getValue');
+				detail.effdate = $("#effdate").datebox('getValue');
+
+				detail.product_qty = isNaN(parseFloatt($("#product_qty").numberbox('getValue')))?0:parseFloatt($("#product_qty").numberbox('getValue'));
+				detail.product_price = isNaN(parseFloatt($("#product_price").numberbox('getValue')))?0:parseFloatt($("#product_price").numberbox('getValue'));
+				detail.disc1_persen = isNaN(parseFloatt($("#disc1_persen").numberbox('getValue')))?0:parseFloatt($("#disc1_persen").numberbox('getValue'));
+				detail.disc1_amt = (detail.product_price*detail.disc1_persen/100)*-1;
+				detail.disc2_persen = isNaN(parseFloatt($("#disc2_persen").numberbox('getValue')))?0:parseFloatt($("#disc2_persen").numberbox('getValue'));
+				if(detail.disc2_persen>0){
+					detail.disc2_amt = ((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100)*-1;
+				}else{
+					detail.disc2_amt = isNaN(parseFloatt($("#disc2_amt").numberbox('getValue')))?0:parseFloatt($("#disc2_amt").numberbox('getValue'));
+				}
+				detail.product_amount = detail.product_price+detail.disc1_amt+detail.disc2_amt;
+				detail.product_pcs = isNaN(detail.product_amount/detail.product_qty)?0:detail.product_amount/detail.product_qty*uom_convertion;
+				detail.bom_pcs = isNaN(parseFloatt($("#bom_pcs").numberbox('getValue')))?0:parseFloatt($("#bom_pcs").numberbox('getValue'));
+				detail.foh_pcs = isNaN(parseFloatt($("#foh_pcs").numberbox('getValue')))?0:parseFloatt($("#foh_pcs").numberbox('getValue'));
+				detail.ongkos_jahit_pcs = isNaN(parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue')))?0:parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue'));
+				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+
+				$("#buffer_cost_amt").numberbox('setValue',detail.hpp1*8/100)
+				$("#interest_cost_amt").numberbox('setValue',detail.hpp1*2/100)
+				detail.interest_cost_amt = isNaN(parseFloatt($("#interest_cost_amt").numberbox('getValue')))?0:parseFloatt($("#interest_cost_amt").numberbox('getValue'))
+				detail.buffer_cost_amt = isNaN(parseFloatt($("#buffer_cost_amt").numberbox('getValue')))?0:parseFloatt($("#buffer_cost_amt").numberbox('getValue'))
+//				if(detail.buffer_cost_amt===0){
+//					detail.buffer_cost_amt = detail.hpp1*8/100
+//				}
+//				if(detail.interest_cost_amt===0){
+//					detail.interest_cost_amt = detail.hpp1*2/100
+//				}
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				$("#fm").form('load',detail);
+			}
+		})
+		$('.hpp2').numberbox({
+			onChange:function (newValue, oldValue) {
+				detail.opsi = $('#opsi').combobox('getValue');
+				detail.tipe = $("#tipe").combobox('getValue');
+				detail.keterangan = $("#keterangan").textbox('getValue');
+				detail.effdate = $("#effdate").datebox('getValue');
+
+//				detail.interest_cost = 2
+				detail.interest_cost_amt = detail.hpp1*2/100
+//				detail.buffer_cost = 8
+				detail.buffer_cost_amt = detail.hpp1*8/100
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				$("#fm").form('load',detail);
+			}
+		})
+		$('.hpp2amt').numberbox({
+			onChange:function (newValue, oldValue) {
+				detail.opsi = $('#opsi').combobox('getValue');
+				detail.tipe = $("#tipe").combobox('getValue');
+				detail.keterangan = $("#keterangan").textbox('getValue');
+				detail.effdate = $("#effdate").datebox('getValue');
+
+				detail.interest_cost = 2
+				detail.interest_cost_amt = isNaN(parseFloatt($("#interest_cost_amt").numberbox('getValue')))?0:parseFloatt($("#interest_cost_amt").numberbox('getValue'))
+				detail.buffer_cost = 8
+				detail.buffer_cost_amt = isNaN(parseFloatt($("#buffer_cost_amt").numberbox('getValue')))?0:parseFloatt($("#buffer_cost_amt").numberbox('getValue'))
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				$("#fm").form('load',detail);
+			}
+		})
+		$('.hpp3').numberbox({
+			onChange:function (newValue, oldValue) {
+				detail.opsi = $('#opsi').combobox('getValue');
+				detail.tipe = $("#tipe").combobox('getValue');
+				detail.keterangan = $("#keterangan").textbox('getValue');
+				detail.effdate = $("#effdate").datebox('getValue');
+
+				detail.ekspedisi = isNaN(parseFloatt($("#ekspedisi").numberbox('getValue')))?0:parseFloatt($("#ekspedisi").numberbox('getValue'));
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
+				$("#fm").form('load',detail);
+			}
+		})
+    disable_enable(true)
 	});
 
+	function forms(bool) {
+//		if(bool){
+			$('.easyui-datebox').prop('disabled',true);
+			$('.easyui-combobox').prop('disabled',true);
+			$('.easyui-numberbox').prop('disabled',true);
+			$('.easyui-textbox').prop('disabled',true);
+//		}
+//		else $('#fm').removeAttr("disabled");
+//		$('.easyui-datebox').datebox({disabled:bool});
+//		$('.easyui-combobox').combobox({disabled:bool});
+//		$('.easyui-numberbox').numberbox({disabled:bool});
+//		$('.easyui-textbox').textbox({disabled:bool});
+	}
 	function hitungHPP() {
 		detail.opsi = $('#opsi').combobox('getValue');
 		detail.tipe = $("#tipe").combobox('getValue');
@@ -256,7 +353,11 @@
 		detail.disc1_persen = parseFloatt($("#disc1_persen").numberbox('getValue'));
 		detail.disc1_amt = (detail.product_price*detail.disc1_persen/100)*-1;
 		detail.disc2_persen = parseFloatt($("#disc2_persen").numberbox('getValue'));
-		detail.disc2_amt = ((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100)*-1;
+		if(detail.disc2_persen>0){
+			detail.disc2_amt = ((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100)*-1;
+		}else{
+			detail.disc2_amt = parseFloatt($("#disc2_amt").numberbox('getValue'));
+		}
 		detail.product_amount = detail.product_price+detail.disc1_amt+detail.disc2_amt;
 		detail.product_pcs = isNaN(detail.product_amount/detail.product_qty)?0:detail.product_amount/detail.product_qty;
 		detail.bom_pcs = parseFloatt($("#bom_pcs").numberbox('getValue'));
@@ -264,10 +365,15 @@
 		detail.ongkos_jahit_pcs = parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue'));
 		detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 
-		detail.interest_cost = parseFloatt($("#interest_cost").numberbox('getValue'))
+		detail.interest_cost = isNaN(parseFloatt($("#interest_cost").numberbox('getValue')))?2:parseFloatt($("#interest_cost").numberbox('getValue'))
 		detail.interest_cost_amt = detail.hpp1*detail.interest_cost/100
-		detail.buffer_cost = parseFloatt($("#buffer_cost").numberbox('getValue'))
-		detail.buffer_cost_amt = detail.hpp1*detail.buffer_cost/100
+		detail.buffer_cost = isNaN(parseFloatt($("#buffer_cost").numberbox('getValue')))?8:parseFloatt($("#buffer_cost").numberbox('getValue'))
+		if(detail.buffer_cost>0){
+			detail.buffer_cost_amt = detail.hpp1*detail.buffer_cost/100
+    }else{
+			detail.buffer_cost_amt = parseFloatt($("#buffer_cost_amt").numberbox('getValue'))
+      detail.buffer_cost = detail.buffer_cost_amt/detail.hpp1*100
+    }
 		detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 
 		detail.ekspedisi = parseFloatt($("#ekspedisi").numberbox('getValue'));
@@ -297,10 +403,11 @@
 	function submitForm() {
 		var val = {};
 		val['header'] = header;
-		$.redirectFormValues(base_url+"hpp/entryp","#fm",val,"post","");
+		$.redirectFormValues(base_url+"hpp/entryp/"+'<?php echo $article_code; ?>',"#fm",val,"post","");
 	}
 	function cancelForm() {
 		$(".headbutton").hide();
+		disable_enable(true)
 		$("#fm").form('clear')
 	}
 	function addData() {
@@ -330,6 +437,8 @@
 			hpp2:0,
 			hpp_ekspedisi:0
 		}
+
+		disable_enable(false)
 		$("#fm").form('load',detail)
 	}
 	function editData() {
@@ -338,6 +447,7 @@
 		$(".headbutton").show();
 		detail = r;
 		console.log(detail);
+		disable_enable(false)
 		$("#fm").form('load',detail)
 	}
 </script>

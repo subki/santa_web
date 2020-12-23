@@ -223,7 +223,7 @@ class Wholesales extends IO_Controller {
     function get_seripajak(){
         try {
             $input = $this->toUpper($this->input->post());
-            pre($input);
+//            pre($input);
             $this->db->trans_start();
             $read = $this->model_faktur->read_available_faktur(date('Y'));
             if ($read->num_rows() > 0) {
