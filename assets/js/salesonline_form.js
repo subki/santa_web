@@ -103,7 +103,7 @@ function reload_header() {
 function initGrid() {
     if(!pl_item) return
     $("#dg").edatagrid({
-        fitColumns: true,
+        fitColumns: false,
         width: "100%",
         url: base_url + "Salesonline/load_grid_detail/"+pl_item.docno,
         saveUrl: base_url + "Salesonline/save_data_detail/"+pl_item.docno,
@@ -188,10 +188,10 @@ function initGrid() {
         },
         columns: [
         [
-            {field: "nobar",rowspan:2, title: "Article#", width: '15%', formatter:function(index, row){return row.product_code;}, sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "nmbar",rowspan:2, title: "Product Description", width: '25%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "nobar",rowspan:2, title: "Article#", width: '10%', formatter:function(index, row){return row.product_code;}, sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "nmbar",rowspan:2, title: "Product Name", width: '12%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
            // {field: "tipe", title: "Type", width: '5%', sortable: true, editor: {type: 'textbox', options:{disabled:true}}},
-            {field: "qty_order",rowspan:2, title: "Qty Sales", width: '10%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "qty_order",rowspan:2, title: "Qty Sales", width: '8%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
             {field: "uom_id",rowspan:2, title: "UOM", width: '5%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
             {field: "total_tax",rowspan:2, title: "DPP",width: '8%', sortable: true, formatter:function (index, row) {
                 return numberFormat(row.total_tax);
