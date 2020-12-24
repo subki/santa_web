@@ -253,7 +253,7 @@
 				console.log(detail.product_pcs,detail.bom_pcs,detail.foh_pcs,detail.ongkos_jahit_pcs);
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
-				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp1 = (isNaN(detail.product_pcs)?0:detail.product_pcs)+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 				detail.buffer_cost_amt = detail.hpp1*8/100;
 				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
@@ -268,7 +268,7 @@
 				hitungHPP();
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
-				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp1 = (isNaN(detail.product_pcs)?0:detail.product_pcs)+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 				detail.buffer_cost_amt = detail.hpp1*8/100;
 				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
@@ -282,7 +282,7 @@
 				hitungHPP();
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
-				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp1 = (isNaN(detail.product_pcs)?0:detail.product_pcs)+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 				detail.buffer_cost_amt = detail.hpp1*8/100;
 				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
@@ -306,7 +306,7 @@
         }
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
-				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp1 = (isNaN(detail.product_pcs)?0:detail.product_pcs)+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 				detail.buffer_cost_amt = detail.hpp1*8/100;
 				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
@@ -329,7 +329,7 @@
         }
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
-				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp1 = (isNaN(detail.product_pcs)?0:detail.product_pcs)+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 				detail.buffer_cost_amt = detail.hpp1*8/100;
 				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
@@ -352,7 +352,7 @@
         }
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
-				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp1 = (isNaN(detail.product_pcs)?0:detail.product_pcs)+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 				detail.buffer_cost_amt = detail.hpp1*8/100;
 				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
@@ -375,7 +375,7 @@
         }
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
-				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp1 = (isNaN(detail.product_pcs)?0:detail.product_pcs)+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
 				detail.buffer_cost_amt = detail.hpp1*8/100;
 				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
