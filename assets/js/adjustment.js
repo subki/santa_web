@@ -1,5 +1,5 @@
 $(document).ready(function () { 
-    populateLocation();
+    populateLocation(); 
 });
 var options={
     url: base_url+"Stockadjustment/load_grid", 
@@ -24,11 +24,11 @@ var options={
   columns:[[
         {field:"docno",   title:"Nomor Trx",      width: '12%', sortable: true},
         {field:"doc_date",   title:"Tanggal",      width: '9%', sortable: true},
-        {field:"outlet_code",   title:"Location Code",      width: '16%', sortable: true},
-        {field:"description",   title:"Nama Location",      width: '20%', sortable: true},
+        {field:"outlet_code",   title:"Location Code",      width: '10%', sortable: true},
+        {field:"description",   title:"Nama Location",      width: '15%', sortable: true},
         {field:"status",   title:"Status",      width: '7%', sortable: true},
         {field:"remark",   title:"Remark",      width: '13%', sortable: true},
-        {field:"action", title:"Action",    width:"18%", formatter: function(value, row){
+        {field:"action", title:"Action",    width:"30%", formatter: function(value, row){
                var a = `<a href="#" onclick="editData('`+row.docno+`');" title="Edit" class="easyui-tooltip l-btn l-btn-small l-btn-plain" group="" id="">
                         <span class="l-btn-left l-btn-icon-left">
                         <span class="l-btn-text l-btn-empty">&nbsp;</span>
@@ -48,6 +48,11 @@ var options={
                         <span class="l-btn-left l-btn-icon-left">
                         <span class="l-btn-text l-btn-empty">&nbsp;</span>
                         <span class="l-btn-icon icon-ok">&nbsp;</span></span>
+                        </a>
+                        <a href="#" onclick="Opendialog('`+row.docno+`');" title="Generate From Opname" class="easyui-tooltip l-btn l-btn-small l-btn-plain" group="" id="">
+                        <span class="l-btn-left l-btn-icon-left">
+                        <span class="l-btn-text l-btn-empty">&nbsp;</span>
+                        <span class="l-btn-icon icon-search">&nbsp;</span></span>
                         </a>
                         
                         `;
@@ -143,8 +148,22 @@ function clearFormInput() {
 }
 function clearFormInputDetail() {
     document.getElementById("form_editing_detail").reset();
+    document.getElementById("form_stockadjopname").reset();
+} 
+function Opendialog(){
+    let row = getRow(true);
+    console.log(row)
+    if(row===null) return;
+
+    if(row.status==="OPEN") {
+        //clearFormInputDetail();
+        flag = "Stockadjustment/save_data_detail2"; 
+        $("#docno_idopn").textbox('setValue',row.docno);
+        $('#modal_adj_stockopname').dialog('open').dialog('center').dialog('setTitle','Adjustment Stock Opname'); 
+    }else{
+        alert("tidak bisa tambah detail, "+row.status)
+    }
 }
-   
 function submit(){
     //console.log(flag)
     var data = $('#form_editing').serialize();
@@ -161,10 +180,33 @@ function submit(){
                     alert(res.msg)
                 } else {
                     $('#dg').datagrid('reload');    //
-                    clearFormInput();
+                    clearFormInputDetail(); 
                 }
           }
         });
+}
+function submitadjopn(){
+     console.log(flag)
+    var data = $('#form_stockadjopname').serialize();
+     $.ajax({
+          type: 'POST',
+          dataType:"json",
+          url: base_url+flag,
+          data: data,
+          success: function(result) {
+                var res = result;
+                console.log(result);
+                console.log(res.status);
+                if (res.status===1){
+                    alert(res.msg)
+                } else {
+                    $('#dg').datagrid('reload');  
+                    $('#modal_adj_stockopname').dialog('close');   //
+                    clearFormInputDetail();
+                }
+          }
+        });
+      
 }
 function populateLocation() {
     $('#location_code').combogrid({
@@ -385,4 +427,79 @@ function submit_detail() {
                 }
           }
         }); 
+}
+ 
+
+function addOpn() {   
+    let row = getRow(true);
+    console.log(row)
+    if(row===null) return; 
+
+    // $('#modal_detailOpname').dialog('refresh').dialog('center').dialog('setTitle',' Form Data'); 
+    //             $("#skuopn").textbox('setValue',"");
+    //             $("#skucodeopn").textbox('setValue',"");
+    //             $("#sohopn").textbox('setValue',"");  
+    //             $("#adjustopn").textbox('setValue',""); 
+    //             $("#remarkopn").textbox('setValue',""); 
+        $('#tt_opn').datagrid({ 
+            url:base_url+"Stockadjustment/load_gridopname/"+row.outlet_code,
+            method:"POST", 
+            fitColumns: true,
+            pagePosition:"top",
+            resizeHandle:"right",
+            resizeEdge:10,
+            pageSize:20,
+            clientPaging: false,
+            remoteFilter: true,
+            rownumbers: false,
+            pagination:true, striped:true, nowrap:false,
+            sortName:"nobar",
+            sortOrder:"asc",
+            singleSelect:true,
+            toolbar:'#toolbar1',
+            loadFilter: function(data){
+                data.rows = [];
+                if (data.data) data.rows = data.data;
+                return data;
+            },
+            columns:[[
+                { field: 'trx_no',      title: 'Nomor Opname',        width: '18%', sortable: true},
+                { field: 'item',      title: 'Kode Barang',        width: '18%', sortable: true},
+                { field: 'product_code',      title: 'Nama Barang',        width: '30%', sortable: true},
+                { field: 'QTYStock',      title: 'Qty Stock',        width: '10%', sortable: true},
+                { field: 'QTYScan',      title: 'Qty Scan',        width: '10%', sortable: true},
+                { field: 'Selisih',      title: 'Variant',    formatter:numberFormat,    width: '10%', sortable: true}, 
+            ]], 
+            onClickCell:function(index, field, value){
+                var rr =  $('#tt_opn').datagrid('getRows')[index];
+                console.log(rr)
+                $("#skuopn").textbox('setValue',rr.product_code);
+                $("#skucodeopn").textbox('setValue',rr.item);
+                $("#sohopn").textbox('setValue',rr.QTYStock);  
+                $("#remarkopn").textbox('setValue',rr.trx_no);  
+
+               // let resulty =  Math.abs(rr.Selisih); 
+                $("#adjustopn").textbox('setValue',rr.Selisih);  
+                $('#modal_detailOpname').dialog('close');  
+            },
+            onSuccess: function (index, row) {
+                if (row.status === 1) {
+                    $.messager.show({    // show error message
+                        title: 'Error',
+                        msg: row.msg
+                    });
+                }
+                $('#tt_opn').edatagrid('reload');   
+            },
+            onError: function (index, e) {
+                $.messager.show({
+                    title: 'Error',
+                    msg: e.message
+                });
+            }
+        }); 
+    $('#tt_opn').datagrid('enableFilter'); 
+    $('#tt_opn').datagrid('destroyFilter');
+    $('#tt_opn').datagrid('enableFilter');
+    $('#modal_detailOpname').dialog('open').dialog('center').dialog('setTitle',' Form Data'); 
 }

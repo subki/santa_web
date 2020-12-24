@@ -78,9 +78,8 @@ class Stockopname_model extends CI_Model {
         $q = $this->queryheader." where a.trx_date between '$from' and '$to' and a.store_code='$store_code' and a.on_loc='$location_code' and a.status='Open' and (a.ref_no IS NULL OR a.ref_no ='')";
         return $this->db->query($q);
     }
-    function update_refno($docno,$from,$to,$location_code,$store_code,$no_trx){
+    function update_refno($docno,$from,$to,$location_code,$store_code){
         $q = "UPDATE hal_gondola a set a.ref_no='$docno' where a.trx_date between '$from' and '$to' and a.store_code='$store_code' and a.on_loc='$location_code' and a.status='Open' and (a.ref_no IS NULL OR a.ref_no ='') ";
-        $q .=" and a.trx_no IN ('".implode("','",$no_trx)."')";
         return $this->db->query($q);
     }
     function read_data($code){
@@ -114,6 +113,10 @@ class Stockopname_model extends CI_Model {
     function update_data($code, $data){
         $this->db->where('trx_no',$code);
         $this->db->update($this->table2,$data); 
+    }
+    function update_dataclose($code, $data){
+        $this->db->where('trx_no',$code);
+        $this->db->update($this->table,$data); 
     }
     function update_dataprint($code, $data){
         $this->db->where('trx_no',$code);
@@ -179,12 +182,40 @@ class Stockopname_model extends CI_Model {
         return $this->db->query($sql)->result();
     }
  
+    function get_list_dataopname($page,$rows,$sort,$order,$role,$fltr){ 
+             $sql = "create temporary table tmp2 as 
+               SELECT a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,
+                IFNULL(SUM(b.taking_qty),0) 'QTYScan',SUM(b.taking_qty)-a.qty Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan 
+                FROM adjustment_dtl a 
+                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no 
+                COLLATE utf8mb4_general_ci 
+                INNER JOIN dtl_gondola b ON b.item=a.item AND b.trx_no=g.trx_no  
+                GROUP BY a.item 
+                ORDER BY b.crtdt DESC,b.product_code ASC  ";
+        $this->db->query($sql);
+        $sql = "create temporary table tmp as select * from tmp2 ";
+        if($fltr!=''){
+            $sql .= $fltr;
+        }
+        $this->db->query($sql);
+        $sql = "select a.*,
+                (select count(a1.trx_no) from tmp a1 ) as total
+                 from tmp a ";
+        $sql .="HAVING Selisih <> 0 order by trx_no $order
+                limit ".($page-1)*$rows.",".$rows;
+        $data = $this->db->query($sql)->result();
+        $sql = "drop table tmp2";
+        $this->db->query($sql);
+
+        return $data;
+    }
     function get_list_data_detailall($page,$rows,$sort,$order,$role,$fltr,$opt=0){
         $sql = "create temporary table temp as
-                SELECT a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,IFNULL(SUM(b.taking_qty),0) 'QTYScan',SUM(b.taking_qty)-a.qty Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan
+                SELECT a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,
+                IFNULL(SUM(b.taking_qty),0) 'QTYScan',SUM(b.taking_qty)-a.qty  Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan 
                 FROM adjustment_dtl a 
-                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no  
-                COLLATE utf8mb4_general_ci
+                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no 
+                COLLATE utf8mb4_general_ci 
                 LEFT JOIN dtl_gondola b ON b.item=a.item AND b.trx_no=g.trx_no 
                 GROUP BY a.item 
                 ORDER BY b.crtdt DESC,b.product_code ASC  ";
@@ -203,9 +234,7 @@ class Stockopname_model extends CI_Model {
 
         $data = $opt==1?$this->db->query($sql) : $this->db->query($sql)->result();
         $sql = "drop table tmp";
-        $this->db->query($sql);
-        $sql = "drop table temp";
-        $this->db->query($sql);
+        $this->db->query($sql); 
         return $data;
     }
     function get_list_data_detailgondola($page,$rows,$sort,$order,$role,$fltr,$opt=0){

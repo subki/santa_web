@@ -47,6 +47,13 @@ var options={
         handler: function(){
             printOPN()
         }
+    },{
+        id:'adjOpn',
+        iconCls: 'icon-search',
+        text:'Adjustment Opname',
+        handler: function(){
+            adjOPN()
+        }
     }
     //     {
     //     iconCls: 'icon-download', id:'download',
@@ -82,41 +89,6 @@ var options={
     },
 };
 
-
-var print_selected = undefined;
-function printOPN() {
-	var row = getRow();
-	if(row==null) return;
-	print_selected = undefined;
-	$.messager.confirm({
-		title:'Option print',
-		msg:`<p>Select Print Option</p>
-            <input class="easyui-combobox" data-options="
-                valueField: 'label',
-                textField: 'value',
-                data: [{
-                    label: '1',
-                    value: 'Print',
-                    selected:true
-                },{
-                    label: '2',
-                    value: 'Print Excel'
-                }],
-                onSelect:function(rec){
-                    print_selected = rec;
-                }"
-                 />`,
-		fn: function(r){
-			if (r){
-				if(print_selected.label=="1"){
-					$.redirect(base_url+'Stockopname/print_opfull/'+row.ref_no,null,"GET","_blank")
-				}else if(print_selected.label=="2"){
-					$.redirect(base_url+'Stockopname/print_opfullexcel/'+row.ref_no,null,"GET","_blank")
-				}
-			}
-		}
-	});
-}
 setTimeout(function () {
     initGrid();
 },500);
@@ -172,3 +144,83 @@ function getRow() {
 }
  
  
+
+function addOpn() {   
+
+     var opn = $("#opn_noadj").numberbox('getValue'); 
+        $('#tt_opn').datagrid({ 
+            url:base_url+"Stockopname/load_gridopname/"+opn,
+            method:"POST", 
+            fitColumns: true,
+            pagePosition:"top",
+            resizeHandle:"right",
+            resizeEdge:10,
+            pageSize:20,
+            clientPaging: false,
+            remoteFilter: true,
+            rownumbers: false,
+            pagination:true, striped:true, nowrap:false,
+            sortName:"nobar",
+            sortOrder:"asc",
+            singleSelect:true,
+            toolbar:'#toolbar1',
+            loadFilter: function(data){
+                data.rows = [];
+                if (data.data) data.rows = data.data;
+                return data;
+            },
+            columns:[[
+                { field: 'trx_no',      title: 'Nomor Opname',        width: '18%', sortable: true},
+                { field: 'item',      title: 'Kode Barang',        width: '18%', sortable: true},
+                { field: 'product_code',      title: 'Nama Barang',        width: '30%', sortable: true},
+                { field: 'QTYStock',      title: 'Qty Stock',        width: '10%', sortable: true},
+                { field: 'QTYScan',      title: 'Qty Scan',        width: '10%', sortable: true},
+                { field: 'Selisih',      title: 'Variant',    formatter:numberFormat,    width: '10%', sortable: true}, 
+            ]],  
+            onSuccess: function (index, row) {
+                if (row.status === 1) {
+                    $.messager.show({    // show error message
+                        title: 'Error',
+                        msg: row.msg
+                    });
+                }
+                $('#tt_opn').edatagrid('reload');   
+            },
+            onError: function (index, e) {
+                $.messager.show({
+                    title: 'Error',
+                    msg: e.message
+                });
+            }
+        }); 
+    $('#tt_opn').datagrid('enableFilter'); 
+    $('#tt_opn').datagrid('destroyFilter');
+    $('#tt_opn').datagrid('enableFilter');
+    $('#modal_detailOpname').dialog('open').dialog('center').dialog('setTitle',' Form Data'); 
+}
+function submitadjopn(){
+
+     var opn = $("#opn_noadj").numberbox('getValue'); 
+     flag = "Stockopname/save_data_adj";   
+         $.ajax({
+              type: 'POST',
+              dataType:"json",
+              url: base_url+flag,
+              data: {
+                   opn:opn
+               },
+              success: function(result) {
+                    var res = result;
+                    console.log(result);
+                    console.log(res.status);
+                    if (res.status===1){
+                        alert(res.msg)
+                    } else {
+                        $('#dg').datagrid('reload');  
+                        $('#modal_detailOpname').dialog('close'); 
+                        $('#wadj').dialog('close'); 
+                    }
+              }
+            });
+          
+}

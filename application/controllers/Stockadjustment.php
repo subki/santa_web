@@ -44,6 +44,19 @@ class Stockadjustment extends IO_Controller {
 
     }
 
+    function load_gridopname($location){
+        $prd=date('Y-m');
+        $f = $this->getParamGrid(" on_loc='$location' and trx_date LIKE '$prd%' ","trx_no");
+        $data = $this->model->get_list_dataopname($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+
+        echo json_encode(array(
+                "status" => 1,
+                "msg" => "OK",
+                "total"=>(count($data)>0)?$data[0]->total:0,
+                "data" =>$data)
+        );
+
+    }
     function load_grid_detail($docno){
         $f = $this->getParamGrid(" docno='$docno' ","nobar");
         $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
@@ -186,6 +199,30 @@ class Stockadjustment extends IO_Controller {
         ));
     }
 
+    function save_data_detail2(){
+        try {
+            $input = $this->input->post(); 
+            $data = array(
+                'docno' => $input['docno_idopn'],
+                'sku' => $input['skucodeopn'],
+                'soh' => $input['sohopn'],
+                'adjust' => $input['adjustopn'],
+                'keterangan' => $input['remarkopn'],
+                'so_number' => $input['remarkopn'],
+            );
+
+            $this->model->insert_data_detail($data);
+            $result = 0;
+            $msg="OK";
+        }catch (Exception $e){
+            $result = 1;
+            $msg=$e->getMessage();
+        }
+        echo json_encode(array(
+            "status" => $result,
+            "msg" => $msg,
+        ));
+    }
     function edit_data_detail(){
         try {
             $input = $this->input->post();
@@ -280,14 +317,23 @@ class Stockadjustment extends IO_Controller {
             $read = $this->model->read_data_header($code);
             if ($read->num_rows() > 0) {
                 $header = $read->result()[0];
-
+                $nobarqty = [];
                 $f = $this->getParamGrid(" docno='$header->docno' ","sku");
                 $data = $this->model->get_list_data_detail(1,999999999,$f['sort'],$f['order'],$f['role'], $f['app']);
                 foreach ($data as $row){
+                    $nobarqty[$row->sku] = $row->adjust;
                     $cek_stok = $this->model->cek_stok($row->sku, $header->outlet_code, $header->periode);
                     if ($cek_stok->num_rows() > 0) {
-                        //update
-                        $this->model->update_adjustment($header->periode, $header->outlet_code, $row->sku, $row->adjust);
+                        //update 
+                    $this->updateStock($header->outlet_code
+                        ,$header->periode
+                        ,$nobarqty,'penyesuaian'
+                        , array("docno"=>$header->docno,"tanggal"=>$header->doc_date,"remark"=>$header->remark));
+                        $this->model->update_data_adjOpname($header->docno);
+// var_dump($r);
+// var_dump(array("docno"=>$header->docno,"tanggal"=>$header->doc_date,"remark"=>$header->remark));
+// die();
+                       // $this->model->update_adjustment($header->periode, $header->outlet_code, $row->sku, $row->adjust);
 //                    }else{
 //                        //insert
 //                        $this->model->insert_adjustment($header->periode, $header->outlet_code, $row->sku, $row->adjust);
@@ -296,7 +342,7 @@ class Stockadjustment extends IO_Controller {
                 $datae = array(
                     'status' => 'CLOSED',
                 );
-                $this->model->update_data_header($header->docno, $datae);
+                 //$this->model->update_data_header($header->docno, $datae);
                 $result = 0;
                 $msg="OK";
             } else {
