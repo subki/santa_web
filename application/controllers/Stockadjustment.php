@@ -325,11 +325,11 @@ class Stockadjustment extends IO_Controller {
                     $cek_stok = $this->model->cek_stok($row->sku, $header->outlet_code, $header->periode);
                     if ($cek_stok->num_rows() > 0) {
                         //update 
-                    $this->updateStock($header->outlet_code
-                        ,$header->periode
-                        ,$nobarqty,'penyesuaian'
-                        , array("docno"=>$header->docno,"tanggal"=>$header->doc_date,"remark"=>$header->remark));
-                        $this->model->update_data_adjOpname($header->docno);
+//                    $this->updateStock($header->outlet_code
+//                        ,$header->periode
+//                        ,$nobarqty,'penyesuaian'
+//                        , array("docno"=>$header->docno,"tanggal"=>$header->doc_date,"remark"=>$header->remark));
+//                        $this->model->update_data_adjOpname($header->docno);
 // var_dump($r);
 // var_dump(array("docno"=>$header->docno,"tanggal"=>$header->doc_date,"remark"=>$header->remark));
 // die();

@@ -463,12 +463,12 @@ class Stockopname extends IO_Controller {
            foreach ($data as $row){
                 $nobarqty[$row->item] = $row->Selisih; 
                     //update 
-                 $this->updateStock($r->on_loc
-                    ,date('Ym', strtotime($r->trx_date))
-                    ,$nobarqty,'penyesuaian'
-                    , array("docno"=>$opn,"tanggal"=>$r->trx_date,"remark"=>$r->remark)); 
-                
-                    $this->model->update_dataclose($docno, array("status"=>'Posted'));
+//                 $this->updateStock($r->on_loc
+//                    ,date('Ym', strtotime($r->trx_date))
+//                    ,$nobarqty,'penyesuaian'
+//                    , array("docno"=>$opn,"tanggal"=>$r->trx_date,"remark"=>$r->remark));
+
+//                    $this->model->update_dataclose($docno, array("status"=>'Posted'));
                 // var_dump($r); var_dump($nobarqty);
                 // die();          
                  } 
