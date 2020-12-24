@@ -94,6 +94,14 @@
                     <input name="payment_sum" id="payment_sum" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Payment:" style="width:100%">
                   </div>
                 </div>
+                <div style="margin-bottom:1px">
+                  <div style="float:left; width: 50%; padding-right: 5px;">
+<!--                    <input name="sales_after_tax" id="sales_after_tax" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Net Sales:" style="width:100%">-->
+                  </div>
+                  <div style="float:right; width:50%;">
+                    <input name="payment_ret" id="payment_ret" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Kembalian:" style="width:100%">
+                  </div>
+                </div>
               </div>
             </div>
           </td>
@@ -174,15 +182,21 @@
 				{field:"qty_refund", title:"qty_refund"},
 				{field:"uom_code", title:"uom_code"},
 				{field:"uom_id", title:"UOM"},
-				{field:"unit_price", title:"Retail"},
+				{field:"unit_price", title:"Retail", formatter:function (index, row) {
+					return numberFormat(row.unit_price);
+				}},
 				{field:"disc1_persen", title:"disc1_persen"},
 				{field:"disc1_amount", title:"disc1_amount"},
 				{field:"disc2_persen", title:"disc2_persen"},
 				{field:"disc2_amount", title:"disc2_amount"},
-				{field:"disc_total", title:"Discount"},
+				{field:"disc_total", title:"Discount", formatter:function (index, row) {
+					return numberFormat(row.disc_total);
+				}},
 				{field:"net_unit_price", title:"net_unit_price"},
 				{field:"sales_before_ppn", title:"sales_before_ppn"},
-				{field:"sales_after_ppn", title:"Sub Total"},
+				{field:"sales_after_ppn", title:"Sub Total", formatter:function (index, row) {
+					return numberFormat(row.sales_after_ppn);
+				}},
 				{field:"net_total_price", title:"net_total_price"},
 				{field:"jumlah_hpp", title:"jumlah_hpp"},
 				{field:"status_detail", title:"status_detail"},
@@ -384,9 +398,10 @@
 
 			detail_item = det;
 			$('#dg').datagrid('loadData',detail_item);
-			hitungHeader();
+//			hitungHeader();
 
 			for(var i=0;i<bayar.length;i++)addDetail(bayar[i])
+      hitungHeader()
 
 			Mousetrap.bind('s s enter', function(e) {
 				tb_scan.textbox('clear').textbox('textbox').focus();
@@ -480,10 +495,6 @@
 						$(this).combobox('setValue','')
 					}
 					$('#'+id2).textbox({required:newValue!=="1"});
-					if(newValue!=="1"){
-						var sls = $("#sales_after_tax").numberbox('getValue');
-						$("#nilai_bayar"+ctr).numberbox('setValue',sls)
-          }
 				}
 			});
 		}
@@ -508,6 +519,7 @@
 			var total = 0;
 			for (var i = 0; i < result.length; i++) total += isNaN(result[i])?0:result[i];
 			header.payment_sum = total;
+			header.payment_ret = total-nett;
 
 			header.gross_sales = bruto;
 			header.total_discount = disc;
@@ -619,19 +631,41 @@
 			$(".easyui-checkbox"+counter).checkbox();
 			$(".easyui-linkbutton"+counter).linkbutton();
 			populatePayment('paymenttypeid'+counter,'keterangan'+counter, counter)
-			$("#nilai_bayar"+counter).textbox('textbox').bind('keydown', function(e){
-				if(e.key==='Enter' || e.keyCode===13){ 	// when press ENTER key, accept the inputed value.
-					var bayar = $(this).val();
+      if(d.nilai_bayar==='') {
+				var sls = $("#sales_after_tax").numberbox('getValue');
+				var pay = $("#payment_sum").numberbox('getValue');
+				var rem = parseFloat(sls) - parseFloat(pay)
+				$("#nilai_bayar" + counter).numberbox('setValue', rem)
+				hitungHeader();
+			}
+			$('#nilai_bayar'+counter).numberbox({
+				onChange:function (newValue, oldValue) {
+					console.log("onChange HPP1",newValue, oldValue)
 					var tipe = $("#paymenttypeid"+counter).combobox('getValue');
 					if(tipe!=="1"){
 						if(parseFloat(bayar)<=50000){
 							$.messager.show({title: 'Warning', msg: "Minimal belanja harus lebih dari 50 ribu"});
 							$("#nilai_bayar"+counter).textbox('setValue',"")
+              return;
 						}
-					}
-					hitungHeader();
+          }
+          hitungHeader();
 				}
-			});
+			})
+
+//			$("#nilai_bayar"+counter).textbox('textbox').bind('keydown', function(e){
+//				if(e.key==='Enter' || e.keyCode===13){ 	// when press ENTER key, accept the inputed value.
+//					var bayar = $(this).val();
+//					var tipe = $("#paymenttypeid"+counter).combobox('getValue');
+//					if(tipe!=="1"){
+//						if(parseFloat(bayar)<=50000){
+//							$.messager.show({title: 'Warning', msg: "Minimal belanja harus lebih dari 50 ribu"});
+//							$("#nilai_bayar"+counter).textbox('setValue',"")
+//						}
+//					}
+//					hitungHeader();
+//				}
+//			});
 		}
 
   </script>
