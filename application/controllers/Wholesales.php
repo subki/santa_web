@@ -182,7 +182,7 @@ class Wholesales extends IO_Controller {
 												}
 												$msg = $this->updateStock($lokasi->lokasi_stock,
 													$this->formatDate("Ym", $input['faktur_date']),$nobarqty, "penjualan",
-													array("docno"=>$input['no_faktur'], $this->formatDate("Y-m-d", $input['faktur_date']),$input['remark']));
+													array("docno"=>$input['no_faktur'],"tanggal"=> $this->formatDate("Y-m-d", $input['faktur_date']),"remark"=>$input['remark']));
 
 												if($msg!="ok") $result = 1;
 											}else{
