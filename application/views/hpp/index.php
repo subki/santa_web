@@ -60,14 +60,14 @@
             <div style="display:inline-block; width:100%; height:2px; margin-bottom: 15px; margin-top: 5px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"><b>HPP 1</b></div>
             <div style="margin-bottom:1px" class="opsi2">
               <div style="float:left; width: 30%; padding-right: 5px;">
-                <input name="product_qty" id="product_qty" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Qty Barang Jadi:" style="width:100%">
+                <input name="product_qty" id="product_qty" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Qty Barang Jadi:" style="width:100%">
               </div>
               <div style="float:left; width: 30%; padding-right: 5px;">
-                <input name="product_price" id="product_price" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Harga Barang Jadi:" style="width:100%">
+                <input name="product_price" id="product_price" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Harga Barang Jadi:" style="width:100%">
               </div>
               <div style="float:left; width: 20%; padding-right: 5px;">
                 <input name="disc1_persen" id="disc1_persen" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 1 %:" style="width:100%">
-                <input name="disc1_amt" readonly id="disc1_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
+                <input name="disc1_amt" readonly id="disc1_amt" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
               </div>
               <div style="float:right; width:20%;">
                 <input name="disc2_persen" id="disc2_persen" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 2 %:" style="width:100%">
@@ -76,9 +76,9 @@
             </div>
             <div style="margin-bottom:1px" class="opsi2">
               <div style="float:left; width: 50%; padding-right: 5px;">
-                <input name="product_amount" id="product_amount" readonly class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Total Harga Barang Jadi:" style="width:100%">              </div>
+                <input name="product_amount" id="product_amount" readonly class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Total Harga Barang Jadi:" style="width:100%">              </div>
               <div style="float:right; width:50%;">
-                <input name="product_pcs" id="product_pcs" readonly class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Barang Jadi / Pcs:" style="width:100%">
+                <input name="product_pcs" id="product_pcs" readonly class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Barang Jadi / Pcs:" style="width:100%">
               </div>
             </div>
             <div style="margin-bottom:1px">
@@ -96,11 +96,11 @@
             <div style="margin-bottom:1px">
               <div style="float:left; width: 33%; padding-right: 5px;">
 <!--                <input name="buffer_cost" id="buffer_cost" class="easyui-numberbox hpp2" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Buffer Cost %:" style="width:100%">-->
-                <input name="buffer_cost_amt" id="buffer_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Buffer Cost 8%:" style="width:100%">
+                <input name="buffer_cost_amt" id="buffer_cost_amt" class="easyui-numberbox hpp2" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Buffer Cost 8%:" style="width:100%">
 <!--                <input name="buffer_cost_amt" id="buffer_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">-->
               </div>
               <div style="float:left; width: 33%; padding-right: 5px;">
-                <input name="interest_cost_amt" id="interest_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Interest Cost 2%:" style="width:100%">
+                <input name="interest_cost_amt" id="interest_cost_amt" class="easyui-numberbox hpp2" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Interest Cost 2%:" style="width:100%">
 <!--                <input name="interest_cost" id="interest_cost" class="easyui-numberbox hpp2" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Interest Cost %:" style="width:100%">-->
 <!--                <input name="interest_cost_amt" id="interest_cost_amt" class="easyui-numberbox hpp2amt" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">-->
               </div>
@@ -229,9 +229,6 @@
 				}else if(rec.id===2 || rec.id===3){
 					$("#ekspedisi").numberbox({readonly:false})
 					$(".opsi2").show()
-//        }else if(rec.id===3){
-//					$("#ekspedisi").numberbox({readonly:false})
-//					$(".opsi2").hide()
         }
 			}
 		});
@@ -248,80 +245,111 @@
 		$(".headbutton").hide();
 		$('.hpp1').numberbox({
 			onChange:function (newValue, oldValue) {
-				detail.opsi = $('#opsi').combobox('getValue');
-				detail.tipe = $("#tipe").combobox('getValue');
-				detail.keterangan = $("#keterangan").textbox('getValue');
-				detail.effdate = $("#effdate").datebox('getValue');
-
-				detail.product_qty = isNaN(parseFloatt($("#product_qty").numberbox('getValue')))?0:parseFloatt($("#product_qty").numberbox('getValue'));
-				detail.product_price = isNaN(parseFloatt($("#product_price").numberbox('getValue')))?0:parseFloatt($("#product_price").numberbox('getValue'));
-				detail.disc1_persen = isNaN(parseFloatt($("#disc1_persen").numberbox('getValue')))?0:parseFloatt($("#disc1_persen").numberbox('getValue'));
-				detail.disc1_amt = (detail.product_price*detail.disc1_persen/100)*-1;
-				detail.disc2_persen = isNaN(parseFloatt($("#disc2_persen").numberbox('getValue')))?0:parseFloatt($("#disc2_persen").numberbox('getValue'));
-				if(detail.disc2_persen>0){
-					detail.disc2_amt = ((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100)*-1;
-				}else{
-					detail.disc2_amt = isNaN(parseFloatt($("#disc2_amt").numberbox('getValue')))?0:parseFloatt($("#disc2_amt").numberbox('getValue'));
-				}
-				detail.product_amount = detail.product_price+detail.disc1_amt+detail.disc2_amt;
-				detail.product_pcs = isNaN(detail.product_amount/detail.product_qty)?0:detail.product_amount/detail.product_qty*uom_convertion;
-				detail.bom_pcs = isNaN(parseFloatt($("#bom_pcs").numberbox('getValue')))?0:parseFloatt($("#bom_pcs").numberbox('getValue'));
-				detail.foh_pcs = isNaN(parseFloatt($("#foh_pcs").numberbox('getValue')))?0:parseFloatt($("#foh_pcs").numberbox('getValue'));
-				detail.ongkos_jahit_pcs = isNaN(parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue')))?0:parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue'));
+				console.log("onChange HPP1",newValue, oldValue)
+        hitungHPP();
 				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
-
-				$("#buffer_cost_amt").numberbox('setValue',detail.hpp1*8/100)
-				$("#interest_cost_amt").numberbox('setValue',detail.hpp1*2/100)
-				detail.interest_cost_amt = isNaN(parseFloatt($("#interest_cost_amt").numberbox('getValue')))?0:parseFloatt($("#interest_cost_amt").numberbox('getValue'))
-				detail.buffer_cost_amt = isNaN(parseFloatt($("#buffer_cost_amt").numberbox('getValue')))?0:parseFloatt($("#buffer_cost_amt").numberbox('getValue'))
-//				if(detail.buffer_cost_amt===0){
-//					detail.buffer_cost_amt = detail.hpp1*8/100
-//				}
-//				if(detail.interest_cost_amt===0){
-//					detail.interest_cost_amt = detail.hpp1*2/100
-//				}
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
 			}
 		})
 		$('.hpp2').numberbox({
 			onChange:function (newValue, oldValue) {
-				detail.opsi = $('#opsi').combobox('getValue');
-				detail.tipe = $("#tipe").combobox('getValue');
-				detail.keterangan = $("#keterangan").textbox('getValue');
-				detail.effdate = $("#effdate").datebox('getValue');
-
-//				detail.interest_cost = 2
-				detail.interest_cost_amt = detail.hpp1*2/100
-//				detail.buffer_cost = 8
-				detail.buffer_cost_amt = detail.hpp1*8/100
+				console.log("onChange HPP2",newValue, oldValue)
+				hitungHPP();
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
-				$("#fm").form('load',detail);
-			}
-		})
-		$('.hpp2amt').numberbox({
-			onChange:function (newValue, oldValue) {
-				detail.opsi = $('#opsi').combobox('getValue');
-				detail.tipe = $("#tipe").combobox('getValue');
-				detail.keterangan = $("#keterangan").textbox('getValue');
-				detail.effdate = $("#effdate").datebox('getValue');
-
-				detail.interest_cost = 2
-				detail.interest_cost_amt = isNaN(parseFloatt($("#interest_cost_amt").numberbox('getValue')))?0:parseFloatt($("#interest_cost_amt").numberbox('getValue'))
-				detail.buffer_cost = 8
-				detail.buffer_cost_amt = isNaN(parseFloatt($("#buffer_cost_amt").numberbox('getValue')))?0:parseFloatt($("#buffer_cost_amt").numberbox('getValue'))
-				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
 			}
 		})
 		$('.hpp3').numberbox({
 			onChange:function (newValue, oldValue) {
-				detail.opsi = $('#opsi').combobox('getValue');
-				detail.tipe = $("#tipe").combobox('getValue');
-				detail.keterangan = $("#keterangan").textbox('getValue');
-				detail.effdate = $("#effdate").datebox('getValue');
-
-				detail.ekspedisi = isNaN(parseFloatt($("#ekspedisi").numberbox('getValue')))?0:parseFloatt($("#ekspedisi").numberbox('getValue'));
+				console.log("onChange HPP3",newValue, oldValue)
+				hitungHPP();
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
+				$("#fm").form('load',detail);
+			}
+		})
+		$('#disc1_persen').numberbox({
+			onChange:function (newValue, oldValue) {
+				console.log("onChange disc1_persen",newValue, oldValue)
+        hitungHPP();
+				if(parseFloatt(detail.disc1_amt)===0) {
+					detail.disc1_amt = Math.round(detail.product_price * detail.disc1_persen / 100);
+				}else{
+					var t = Math.round(detail.product_price * detail.disc1_persen / 100);
+					console.log(detail.disc1_amt, t)
+					if(detail.disc1_amt !== t){
+						detail.disc1_amt = Math.round(detail.product_price * detail.disc1_persen / 100);
+          }
+        }
+				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
+				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
+				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
+				$("#fm").form('load',detail);
+			}
+		})
+		$('#disc1_amt').numberbox({
+			onChange:function (newValue, oldValue) {
+				console.log("onChange disc1_amt",newValue, oldValue)
+				hitungHPP();
+				if(parseFloatt(detail.disc1_persen)===0) {
+          detail.disc1_persen = (detail.disc1_amt/detail.product_price*100).toFixed(2);
+				}else{
+					var t = (detail.disc1_amt/detail.product_price*100).toFixed(2);
+					console.log(detail.disc1_persen, t)
+					if(detail.disc1_persen !== t){
+						detail.disc1_persen = (detail.disc1_amt/detail.product_price*100).toFixed(2);
+          }
+        }
+				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
+				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
+				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
+				$("#fm").form('load',detail);
+			}
+		})
+		$('#disc2_persen').numberbox({
+			onChange:function (newValue, oldValue) {
+				console.log("onChange disc2_persen",newValue, oldValue)
+				hitungHPP();
+				if(parseFloatt(detail.disc2_amt)===0) {
+					detail.disc2_amt = Math.round((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100);
+				}else{
+					var t = Math.round((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100);
+					console.log(detail.disc2_amt, t)
+					if(detail.disc2_amt !== t){
+						detail.disc2_amt = Math.round((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100);
+					}
+				}
+				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
+				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
+				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
+				$("#fm").form('load',detail);
+			}
+		})
+		$('#disc2_amt').numberbox({
+			onChange:function (newValue, oldValue) {
+				console.log("onChange disc2_amt",newValue, oldValue)
+				hitungHPP();
+				if(parseFloatt(detail.disc2_persen)===0) {
+					detail.disc2_persen = (detail.disc2_persen/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
+				}else{
+					var t = (detail.disc2_persen/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
+					console.log(detail.disc2_persen, t)
+					if(detail.disc2_persen !== t){
+						detail.disc2_persen = (detail.disc2_persen/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
+					}
+				}
+				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
+				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
+				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
 			}
@@ -329,57 +357,34 @@
     disable_enable(true)
 	});
 
-	function forms(bool) {
-//		if(bool){
-			$('.easyui-datebox').prop('disabled',true);
-			$('.easyui-combobox').prop('disabled',true);
-			$('.easyui-numberbox').prop('disabled',true);
-			$('.easyui-textbox').prop('disabled',true);
-//		}
-//		else $('#fm').removeAttr("disabled");
-//		$('.easyui-datebox').datebox({disabled:bool});
-//		$('.easyui-combobox').combobox({disabled:bool});
-//		$('.easyui-numberbox').numberbox({disabled:bool});
-//		$('.easyui-textbox').textbox({disabled:bool});
-	}
 	function hitungHPP() {
 		detail.opsi = $('#opsi').combobox('getValue');
 		detail.tipe = $("#tipe").combobox('getValue');
 		detail.keterangan = $("#keterangan").textbox('getValue');
 		detail.effdate = $("#effdate").datebox('getValue');
 
-		detail.product_qty = parseFloatt($("#product_qty").numberbox('getValue'));
-		detail.product_price = parseFloatt($("#product_price").numberbox('getValue'));
-		detail.disc1_persen = parseFloatt($("#disc1_persen").numberbox('getValue'));
-		detail.disc1_amt = (detail.product_price*detail.disc1_persen/100)*-1;
-		detail.disc2_persen = parseFloatt($("#disc2_persen").numberbox('getValue'));
-		if(detail.disc2_persen>0){
-			detail.disc2_amt = ((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100)*-1;
-		}else{
-			detail.disc2_amt = parseFloatt($("#disc2_amt").numberbox('getValue'));
-		}
-		detail.product_amount = detail.product_price+detail.disc1_amt+detail.disc2_amt;
-		detail.product_pcs = isNaN(detail.product_amount/detail.product_qty)?0:detail.product_amount/detail.product_qty;
-		detail.bom_pcs = parseFloatt($("#bom_pcs").numberbox('getValue'));
-		detail.foh_pcs = parseFloatt($("#foh_pcs").numberbox('getValue'));
-		detail.ongkos_jahit_pcs = parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue'));
-		detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+		detail.product_qty = isNaN(parseFloatt($("#product_qty").numberbox('getValue')))?0:parseFloatt($("#product_qty").numberbox('getValue'));
+		detail.product_price = isNaN(parseFloatt($("#product_price").numberbox('getValue')))?0:parseFloatt($("#product_price").numberbox('getValue'));
+		detail.disc1_persen = isNaN(parseFloatt($("#disc1_persen").numberbox('getValue')))?0:parseFloatt($("#disc1_persen").numberbox('getValue'));
+		detail.disc1_amt = isNaN(parseFloatt($("#disc1_amt").numberbox('getValue')))?0:parseFloatt($("#disc1_amt").numberbox('getValue'));
+		detail.disc2_persen = isNaN(parseFloatt($("#disc2_persen").numberbox('getValue')))?0:parseFloatt($("#disc2_persen").numberbox('getValue'));
+    detail.disc2_amt = isNaN(parseFloatt($("#disc2_amt").numberbox('getValue')))?0:parseFloatt($("#disc2_amt").numberbox('getValue'));
+		detail.product_amount = isNaN(parseFloatt($("#product_amount").numberbox('getValue')))?0:parseFloatt($("#product_amount").numberbox('getValue'));
+		detail.product_pcs = isNaN(detail.product_amount/detail.product_qty)?0:detail.product_amount/detail.product_qty*uom_convertion;
+		detail.bom_pcs = isNaN(parseFloatt($("#bom_pcs").numberbox('getValue')))?0:parseFloatt($("#bom_pcs").numberbox('getValue'));
+		detail.foh_pcs = isNaN(parseFloatt($("#foh_pcs").numberbox('getValue')))?0:parseFloatt($("#foh_pcs").numberbox('getValue'));
+		detail.ongkos_jahit_pcs = isNaN(parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue')))?0:parseFloatt($("#ongkos_jahit_pcs").numberbox('getValue'));
+		detail.hpp1 = isNaN(parseFloatt($("#hpp1").numberbox('getValue')))?0:parseFloatt($("#hpp1").numberbox('getValue'));
 
-		detail.interest_cost = isNaN(parseFloatt($("#interest_cost").numberbox('getValue')))?2:parseFloatt($("#interest_cost").numberbox('getValue'))
-		detail.interest_cost_amt = detail.hpp1*detail.interest_cost/100
-		detail.buffer_cost = isNaN(parseFloatt($("#buffer_cost").numberbox('getValue')))?8:parseFloatt($("#buffer_cost").numberbox('getValue'))
-		if(detail.buffer_cost>0){
-			detail.buffer_cost_amt = detail.hpp1*detail.buffer_cost/100
-    }else{
-			detail.buffer_cost_amt = parseFloatt($("#buffer_cost_amt").numberbox('getValue'))
-      detail.buffer_cost = detail.buffer_cost_amt/detail.hpp1*100
-    }
-		detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
-
-		detail.ekspedisi = parseFloatt($("#ekspedisi").numberbox('getValue'));
-		detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
-		console.log(detail);
-		$("#fm").form('load',detail);
+//		detail.interest_cost = isNaN(parseFloatt($("#interest_cost").numberbox('getValue')))?0:parseFloatt($("#interest_cost").numberbox('getValue'));
+		detail.interest_cost_amt = isNaN(parseFloatt($("#interest_cost_amt").numberbox('getValue')))?0:parseFloatt($("#interest_cost_amt").numberbox('getValue'));
+//		detail.buffer_cost = isNaN(parseFloatt($("#buffer_cost").numberbox('getValue')))?0:parseFloatt($("#buffer_cost").numberbox('getValue'));
+    detail.buffer_cost_amt = isNaN(parseFloatt($("#buffer_cost_amt").numberbox('getValue')))?0:parseFloatt($("#buffer_cost_amt").numberbox('getValue'));
+		detail.hpp2 = isNaN(parseFloatt($("#hpp2").numberbox('getValue')))?0:parseFloatt($("#hpp2").numberbox('getValue'));
+		detail.ekspedisi = isNaN(parseFloatt($("#ekspedisi").numberbox('getValue')))?0:parseFloatt($("#ekspedisi").numberbox('getValue'));
+		detail.hpp_ekspedisi = isNaN(parseFloatt($("#hpp_ekspedisi").numberbox('getValue')))?0:parseFloatt($("#hpp_ekspedisi").numberbox('getValue'));
+//		console.log(detail);
+//		$("#fm").form('load',detail);
 	}
 
 	function parseFloatt(val){

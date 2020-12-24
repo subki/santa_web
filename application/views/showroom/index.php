@@ -14,7 +14,7 @@
           <input name="periode" id="periode" value="<?php echo isset($tanggal)?$tanggal:''?>" class="easyui-datebox" labelPosition="left" label="Tanggal:" style="width:100%;">
           </input>
         </div>
-        <div style="float:left; width: 40%; padding-right: 5px;">
+        <div style="float:left; width: 40%; padding-right: 5px; display: none">
           <input name="location_code" id="location_code" labelPosition="left" tipPosition="bottom" label="Lokasi:" style="width:100%">
         </div>
       </div>
@@ -55,7 +55,7 @@
 			{field:"doc_date",   title:"Trx Date",  sortable: true},
 			{field:"location_code",   title:"Lokasi",  sortable: true},
 			{field:"store_name",   title:"Store Name",  sortable: true},
-			{field:"remark",   title:"Remark",  sortable: true},
+//			{field:"remark",   title:"Remark",  sortable: true},
 			{field:"status",   title:"Status",  sortable: true},
 			{field:"sales_after_tax",   title:"Sls Aft Tax",  sortable: true},
 		]],
@@ -144,9 +144,7 @@
 	function editData() {
 		var r = getRow();
 		if(r===null) return;
-		var vl = {};
-		vl['location_code'] = $("#location_code").combobox('getValue');
-		$.redirect(base_url+"showroom/form/"+r.docno,vl,"post","");
+		$.redirect(base_url+"showroom/form/"+r.docno+"?tanggal="+r.doc_date+"&location_code="+r.location_code,{},"GET","");
 	}
 	function rekap() {
 		var date = $("#periode").datebox('getDate');

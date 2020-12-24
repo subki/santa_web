@@ -100,6 +100,7 @@ class Showroom extends IO_Controller {
 				"jumlah_print"=>0
 			);
 			$this->db->insert($this->table, $insert);
+			redirect("showroom/form/".$docno."?tanggal=".$param['tanggal']."&location_code=".$param['location_code']);
 		}
 		$head = $this->db->select("a.*, b.store_code, b.store_name, (select sum(nilai_bayar) from kasir_payment where trx_no=a.docno) payment_sum")
 			->where('docno',$docno)
@@ -437,6 +438,7 @@ class Showroom extends IO_Controller {
 	}
 
 	function print_so($docno){
+		if(JANGAN_PRINT) return;
 		$item = $this->db->select('h.*, u.fullname crtbyname, l.description locname')
 			->join('users u','u.user_id=h.crtby')
 			->join("location l","l.location_code=h.location_code")
@@ -498,6 +500,7 @@ class Showroom extends IO_Controller {
 		return "OK";
 	}
 	public function print_rekap(){
+		if(JANGAN_PRINT) return;
 		$param = $this->input->post();
 //		pre($param);
 		$payment = $this->db->select("a.*, pt.description, pt.tipe")

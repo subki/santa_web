@@ -45,7 +45,6 @@ class Counter extends IO_Controller {
 
 	public function form($docno = ""){
 		$param = $this->input->get();
-//		pre($param);
 		$tgl = date("ymd");
 		$lokasi = $this->session->userdata(sess_location_code);
 		if(isset($param['location_code'])) $lokasi=$param['location_code'];
@@ -64,6 +63,7 @@ class Counter extends IO_Controller {
 			$docno = $lokasi . "." . $tgl . "." . str_pad($nomor, 3, "0", STR_PAD_LEFT);
 			$insert = array(
 				"docno"=>$docno,
+				"periode" => $this->formatDate("Ym",$param['tanggal']),
 				"doc_date" => $this->formatDate("Y-m-d",$param['tanggal']),
 				"trans_date" => $this->formatDate("Y-m-d",$param['tanggal']),
 				"location_code" => $lokasi,
@@ -75,6 +75,7 @@ class Counter extends IO_Controller {
 				"jumlah_print"=>0
 			);
 			$this->db->insert($this->table, $insert);
+			redirect("counter/form/".$docno."?tanggal=".$param['tanggal']."&location_code=".$param['location_code']);
 		}
 		$head = $this->db->select("a.*, b.store_code, b.store_name, (select sum(nilai_bayar) from kasir_payment where trx_no=a.docno) payment_sum")
 			->where('docno',$docno)
@@ -190,7 +191,7 @@ class Counter extends IO_Controller {
 
 		$data = $this->db->select("h.*")
 			->where("rekap",0)
-			->where("h.doc_date",$tgl)
+			->where("h.periode",$this->formatDate("Ym",$tgl))
 			->where("h.location_code",$lokasi)
 			->get($this->table." h")->result();
 		if(count($data)>0) {
@@ -314,6 +315,7 @@ class Counter extends IO_Controller {
 	}
 
 	function print_so($docno){
+		if(JANGAN_PRINT) return;
 		$item = $this->db->select('h.*, u.fullname crtbyname, l.description locname')
 			->join('users u','u.user_id=h.crtby')
 			->join("location l","l.location_code=h.location_code")
@@ -375,6 +377,7 @@ class Counter extends IO_Controller {
 		return "OK";
 	}
 	public function print_rekap(){
+		if(JANGAN_PRINT) return;
 		$param = $this->input->post();
 //		pre($param);
 		$payment = $this->db->select("a.*, pt.description, pt.tipe")

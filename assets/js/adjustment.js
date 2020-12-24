@@ -140,7 +140,7 @@ function initGrid() {
 function addnew(){
     clearFormInput();
     flag = "Stockadjustment/save_data_header";
-        $('#modal_edit').dialog('open').dialog('center').dialog('setTitle','Add Adj'); 
+        $('#modal_edit').dialog('open').dialog('center').dialog('setTitle','Add Adjustment');
     } 
  
 function clearFormInput() {
@@ -180,7 +180,12 @@ function submit(){
                     alert(res.msg)
                 } else {
                     $('#dg').datagrid('reload');    //
+<<<<<<< HEAD
                     clearFormInputDetail(); 
+=======
+                    clearFormInput();
+									$('#modal_edit').dialog('close');
+>>>>>>> 97a0011d3fd8ded4ab846db9b3b3a75ba1191bf0
                 }
           }
         });

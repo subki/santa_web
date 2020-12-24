@@ -1,4 +1,4 @@
-<?php 
+<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Stockadjustment extends IO_Controller {
@@ -81,9 +81,9 @@ class Stockadjustment extends IO_Controller {
                 'outlet_code' => $input['location_code'],
                 'remark' => $input['remark'],
                 'status' => 'OPEN',
-                'crtby' => $this->session->userdata('user_id'), 
+                'crtby' => $this->session->userdata('user_id'),
                 'crtdt' => date('Y-m-d H:i:s')
-            ); 
+            );
             $this->model->insert_data_header($data);
             $result = 0;
             $msg="OK";
@@ -177,7 +177,7 @@ class Stockadjustment extends IO_Controller {
 
     function save_data_detail(){
         try {
-            $input = $this->input->post(); 
+            $input = $this->input->post();
             $data = array(
                 'docno' => $input['docno_id'],
                 'sku' => $input['skucode'],
@@ -312,7 +312,7 @@ class Stockadjustment extends IO_Controller {
         ));
     }
 
-    function adjustclose($code){ 
+    function adjustclose($code){
         try {
             $read = $this->model->read_data_header($code);
             if ($read->num_rows() > 0) {
@@ -433,7 +433,7 @@ class Stockadjustment extends IO_Controller {
                 $excel->setActiveSheetIndex($i)->setCellValue('D6', "Nama Barang");
                 $excel->setActiveSheetIndex($i)->setCellValue('E6', "SOH");
                 $excel->setActiveSheetIndex($i)->setCellValue('F6', "Adjustment");
-                $excel->setActiveSheetIndex($i)->setCellValue('G6', "Remark"); 
+                $excel->setActiveSheetIndex($i)->setCellValue('G6', "Remark");
 
                 $excel->getActiveSheet()->getStyle('B6:G6')->getFont()->setSize(11);
                 $excel->getActiveSheet()->getStyle('B6:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -449,7 +449,7 @@ class Stockadjustment extends IO_Controller {
             $excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $row->nmbar);
             $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $row->soh);
             $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $row->adjust);
-            $excel->setActiveSheetIndex(0)->setCellValue('G' . $numrow, $row->keterangan); 
+            $excel->setActiveSheetIndex(0)->setCellValue('G' . $numrow, $row->keterangan);
 
             $excel->getActiveSheet()->getStyle('B'.$numrow.':G'.$numrow)->applyFromArray($style_row);
 
@@ -468,7 +468,7 @@ class Stockadjustment extends IO_Controller {
         $excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
         $excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
         $excel->getActiveSheet()->getColumnDimension('F')->setWidth(12);
-        $excel->getActiveSheet()->getColumnDimension('G')->setWidth(12); 
+        $excel->getActiveSheet()->getColumnDimension('G')->setWidth(12);
 
         // Set height semua kolom menjadi auto (mengikuti height isi dari kolommnya, jadi otomatis)
         $excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);

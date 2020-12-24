@@ -33,7 +33,7 @@
                            required="true" label="Trx. Date:" style="width:100%">
                 </div>
                 <div style="float:left; width: 100%; padding-right: 5px;">
-                    <input name="remark" id="remark" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
+                    <input name="remark" id="remark" class="easyui-textbox" multiline="true" labelPosition="top" tipPosition="bottom"
                        required="true" label="Keterangan:" style="width:100%; height: 100px;">
                 </div>
             </div>      
@@ -51,16 +51,16 @@
      <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
         <div style="width: 100%; padding: 10px;">
             <div style="margin-bottom:1px">
-                <div id="docnoheader" style="float:left; width: 100%; padding-right: 5px;"> 
+                <div id="docnoheader" style="float:left; width: 100%; padding-right: 5px;">
                     <input name="docno_id" id="docno_id" class="easyui-textbox docno_id" labelPosition="top" tipPosition="bottom"
                            label="Nomor Trx:" readonly style="width:100%">
                 </div>
-                <div id="Product" style="float:left; width: 100%; padding-right: 5px;"> 
+                <div id="Product" style="float:left; width: 100%; padding-right: 5px;">
                     <input name="sku" id="sku" class="easyui-textbox sku" labelPosition="top" tipPosition="bottom"
                            label="Product:" readonly style="width:100%">
                     <input name="skucode" id="skucode" class="easyui-textbox skucode" labelPosition="top" tipPosition="bottom"
                            label="Product Code:" readonly style="width:100%">
-                           <a href="javascript:void(0)" id="btn_simpan"  class="easyui-linkbutton btn_simpan" onclick="addnewsku()" iconCls="icon-search"  style="width:90px; height: 20px;">Find</a> </a> 
+                           <a href="javascript:void(0)" id="btn_simpan"  class="easyui-linkbutton btn_simpan" onclick="addnewsku()" iconCls="icon-search"  style="width:90px; height: 20px;">Find</a> </a>
                 </div>
                 <div style="float:left; width: 100%; padding-right: 5px;">
                     <input name="soh" id="soh" class="easyui-textbox soh" labelPosition="top" tipPosition="bottom"
@@ -71,7 +71,7 @@
                            label="Qty Adjustment:" style="width:100%"> 
                 </div>
                 <div style="float:left; width: 100%; padding-right: 5px;">
-                    <input name="remark" id="remark" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
+                    <input name="remark" id="remark" class="easyui-textbox" multiline="true" labelPosition="top" tipPosition="bottom"
                        required="true" label="Keterangan:" style="width:100%; height: 100px;">
                 </div>
             </div>      

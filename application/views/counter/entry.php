@@ -43,6 +43,7 @@
     <form id="fm" method="post" novalidate style="margin:0;padding:5px 5px">
       <table style="width:100%;">
         <tr>
+          <td style="width: 20%"></td>
           <td style="width: 60%">
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
               <div style="width: 50%; padding: 10px;">
@@ -78,48 +79,27 @@
               <div style="width: 50%; padding: 10px;">
 
                 <div style="margin-bottom:1px">
-                  <div style="float:left; width: 50%; padding-right: 5px;">
                     <input name="gross_sales" id="gross_sales" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Bruto:" style="width:100%">
-                  </div>
-                  <div style="float:right; width:50%;">
-                    <input name="total_discount" id="total_discount" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Discount:" style="width:100%">
-                  </div>
                 </div>
-
                 <div style="margin-bottom:1px">
-                  <div style="float:left; width: 50%; padding-right: 5px;">
+                    <input name="total_discount" id="total_discount" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Discount:" style="width:100%">
+                </div>
+                <div style="margin-bottom:1px">
                     <input name="sales_after_tax" id="sales_after_tax" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Net Sales:" style="width:100%">
-                  </div>
-                  <div style="float:right; width:50%;">
-                    <input name="payment_sum" id="payment_sum" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Payment:" style="width:100%">
-                  </div>
                 </div>
               </div>
             </div>
           </td>
-          <td style="width:40%; vertical-align: top">
-            <div id="detail" style="margin-bottom:1px;display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: space-between;">
-              <div>
-                <div style="margin: 10px">
-                  <div style="float:left; width: 35%;">Type</div>
-                  <div style="float:left; width: 25%;">Document</div>
-                  <div style="float:left; width: 22%;">Nilai Bayar</div>
-                  <div style="float:left; width: 5%;">
-                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" onclick="addDetail(null)" >Add</a>
-                  </div>
-                </div>
-              </div>
-              <div style="display:inline-block; margin-top: 5px; margin-bottom: 5px; width:100%; height:2px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"></div>
-            </div>
+          <td style="width:20%; vertical-align: top">
           </td>
         </tr>
         <tr>
-          <td colspan="2">
+          <td colspan="3">
             <div style="display:inline-block; width:100%; height:2px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"></div>
           </td>
         </tr>
         <tr>
-          <td colspan="2">
+          <td colspan="3">
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
               <div style="width: 40%; ">
                 <div style="margin-bottom:1px">
@@ -249,22 +229,24 @@
 						});
 						$('#qty'+index_edit).textbox('textbox').bind('keydown',function (e) {
 							if(e.key==='Enter' || e.keyCode===13){
-								var rowee = $('#dg').datagrid('getRows')[index_edit];
-								rowee.qty_order = $('#qty'+index_edit).textbox('getValue');
-								for(var i=0; i<detail_item.length; i++){
-									if(detail_item[i].idlocal===rowee.idlocal) {
-										detail_item[i].qty_order = rowee.qty_order;
-										detail_item[i].sales_before_ppn = Math.round((detail_item[i].net_unit_price*detail_item[i].qty_order)/1.1);
-										detail_item[i].sales_after_ppn = detail_item[i].net_unit_price*detail_item[i].qty_order
-										detail_item[i].net_total_price = detail_item[i].unit_price-detail_item[i].disc_total
-										detail_item[i].jumlah_hpp = detail_item[i].hpp*detail_item[i].qty_order*detail_item[i].convertion
-										rowee = detail_item[i];
-										hitungHeader()
-										break;
+								setTimeout(function () {
+									var rowee = $('#dg').datagrid('getRows')[index_edit];
+									rowee.qty_order = $('#qty'+index_edit).textbox('getValue');
+									for(var i=0; i<detail_item.length; i++){
+										if(detail_item[i].idlocal===rowee.idlocal) {
+											detail_item[i].qty_order = rowee.qty_order;
+											detail_item[i].sales_before_ppn = Math.round((detail_item[i].net_unit_price*detail_item[i].qty_order)/1.1);
+											detail_item[i].sales_after_ppn = detail_item[i].net_unit_price*detail_item[i].qty_order
+											detail_item[i].net_total_price = detail_item[i].unit_price-detail_item[i].disc_total
+											detail_item[i].jumlah_hpp = detail_item[i].hpp*detail_item[i].qty_order*detail_item[i].convertion
+											rowee = detail_item[i];
+											hitungHeader()
+											break;
+										}
 									}
-								}
-								$('#dg').datagrid('updateRow', {index:index_edit,row:rowee})
-								index_edit = undefined;
+									$('#dg').datagrid('updateRow', {index:index_edit,row:rowee})
+									index_edit = undefined;
+								},500)
 							}
 						})
 					}
@@ -277,9 +259,7 @@
 		var product = <?php echo json_encode($products);?>;
 		var promo_header = <?php echo json_encode($promo_header);?>;
 		var det = <?php echo json_encode($detail);?>;
-		var bayar = <?php echo json_encode($bayar);?>;
 		var promo_detail = <?php echo json_encode($promo_detail);?>;
-		var paymenttipe = <?php echo json_encode($paymenttype);?>;
 		var ctr = 0;
 		$(document).ready(function () {
 			$('#fm').form('load', header);
@@ -384,16 +364,6 @@
 			$('#dg').datagrid('loadData',detail_item);
 			hitungHeader();
 
-			for(var i=0;i<bayar.length;i++)addDetail(bayar[i])
-
-			Mousetrap.bind('s s enter', function(e) {
-				tb_scan.textbox('clear').textbox('textbox').focus();
-				return false;
-			});
-			Mousetrap.bind('a s enter', function(e) {
-				addDetail(null)
-				return false;
-			});
 		});
 		function populatePromo() {
 			$('#promoid').combobox({
@@ -452,46 +422,7 @@
 			});
 		}
 
-		function populatePayment(id,id2, ctr) {
-			var promo = $('#promoid').combobox('getValue');
-			console.log(promo)
-      var paymentsaring = [];
-			for(var i=0; i<paymenttipe.length; i++){
-				if(promo!==""){
-					console.log("masuk sini")
-					if(paymenttipe[i].description==="CASH") continue;
-				}
-				paymentsaring.push(paymenttipe[i])
-			}
-			$('#'+id).combobox({
-				valueField:'id',
-				textField:'description',
-				data:paymentsaring,
-				prompt:'-Please Select-',
-				validType:'inList["#'+id+'"]',
-				onChange:function (newValue, oldValue) {
-					var promo1 = $('#promoid').combobox('getValue');
-					if(newValue==="") return
-					console.log("promo1",promo1,newValue);
-					if(promo1!=="" && newValue==="1"){
-						$.messager.alert("Error", "Type Pembayaran tidak bisa di pakai untuk promo ini")
-						$(this).combobox('setValue','')
-					}
-					$('#'+id2).textbox({required:newValue!=="1"});
-					if(newValue!=="1"){
-						var sls = $("#sales_after_tax").numberbox('getValue');
-						$("#nilai_bayar"+ctr).numberbox('setValue',sls)
-          }
-				}
-			});
-		}
-		function remove(index) {
-			detail_item = detail_item.filter(item => item.idlocal !== index)
-			setTimeout(function () {
-				$('#dg').datagrid('loadData',detail_item);
-				hitungHeader()
-			},100)
-		}
+
 		function hitungHeader() {
 			var bruto = 0;
 			var disc = 0;
@@ -501,12 +432,6 @@
 				disc += parseFloat(detail_item[i].qty_order)*parseFloat(detail_item[i].disc_total)
 				nett += parseFloat(detail_item[i].sales_after_ppn)
 			}
-			var l = $('.nilai_bayar').length; var result = [];
-			for (var i = 0; i < l; i++) result.push(parseFloat($('.nilai_bayar').eq(i).val()));
-			var total = 0;
-			for (var i = 0; i < result.length; i++) total += isNaN(result[i])?0:result[i];
-			header.payment_sum = total;
-
 			header.gross_sales = bruto;
 			header.total_discount = disc;
 			header.sales_after_tax = nett;
@@ -517,7 +442,7 @@
 		function printForm(){
 			$.ajax({
 				type:"POST",
-				url:base_url+'showroom/print_so/'+header.docno,
+				url:base_url+'counter/print_so/'+header.docno,
 				dataType:"json",
 				success:function(result){
 					header.jumlah_print = parseInt(header.jumlah_print)+1;
@@ -533,7 +458,7 @@
 			for(var i=0;i<detail_item.length; i++){
 				values['detailitem'][i] = detail_item[i]
 			}
-			$.redirectFormValues("<?php echo base_url('showroom/entryp')?>","#fm",values,"post","")
+			$.redirectFormValues("<?php echo base_url('counter/entryp')?>","#fm",values,"post","")
 		}
 		function batalForm() {
       myConfirm("Batal Transaction","Are you sure?","Yes","No", function (res) {
@@ -548,76 +473,10 @@
 							detail_item[i].status_detail = "BATAL";
 							values['detailitem'][i] = detail_item[i]
 						}
-						$.redirectFormValues("<?php echo base_url('showroom/entryp')?>","#fm",values,"post","")
+						$.redirectFormValues("<?php echo base_url('counter/entryp')?>","#fm",values,"post","")
 					})
         }
 			})
-		}
-
-		function removeItem(baris, idd) {
-			if(idd>0){
-				myConfirm("Alert","Anda yakin ingin hapus?","Ya","Tidak",function (r) {
-					if(r==="Ya"){
-						var values = {};
-						values['id_det'] = idd;
-						values['id_head'] = id;
-						$.redirect(base_url+"showroom/delete_detail/"+idd,values,"GET","")
-					}
-				})
-			}else{
-				$('#detailBaris'+baris).remove();
-			}
-		}
-
-		var counter = 0;
-		function addDetail(e) {
-			counter++;
-			var d = {
-				id: e === null ? 0 : e.id === null ? 0 : e.id,
-				paymenttypeid: e === null ? '' : e.paymenttypeid === null ? '' : e.paymenttypeid,
-				trx_no: e === null ? header.docno : e.trx_no === null ? header.docno : e.trx_no,
-				keterangan: e === null ? '' : e.keterangan === null ? '' : e.keterangan,
-				nilai_bayar: e === null ? '' : e.nilai_bayar === null ? '' : e.nilai_bayar,
-			}
-			var html =' ' +
-				'<div id="detailBaris'+counter+'" >' +
-				'	<div> ' +
-				'		<div style="float:left; width: 35%; padding-right: 2px;">' +
-				'		 	<input name="detail['+counter+'][id]" id="detail['+counter+'][id]" type="hidden" value="'+d.id+'" > ' +
-				'		 	<input name="detail['+counter+'][trx_no]" id="detail['+counter+'][trx_no]" type="hidden" value="'+d.trx_no+'" > ' +
-				'     <input name="detail['+counter+'][paymenttypeid]" id="paymenttypeid'+counter+'" value="'+d.paymenttypeid+'" class="paymenttipe easyui-combobox easyui-combobox'+counter+'" labelPosition="top" tipPosition="bottom" placeholder="Type:" style="width:100%">' +
-				'		</div> ' +
-				'		<div style="float:left; width: 25%; padding-right: 2px;">' +
-				'		 	<input name="detail['+counter+'][keterangan]" id="keterangan'+counter+'" value="'+d.keterangan+'" class="easyui-textbox'+counter+'" labelPosition="top" tipPosition="bottom" placeholder="Document" style="width:100%;"> ' +
-				'		</div>' +
-				'		<div style="float:left; width: 35%; padding-right: 2px;">' +
-				'				<input value="'+d.nilai_bayar+'" name="detail['+counter+'][nilai_bayar]" id="nilai_bayar'+counter+'" class="nilai_bayar easyui-numberbox'+counter+'" labelPosition="top" tipPosition="bottom" required="true" style="width:100%"> ' +
-				'		</div>' +
-				'		<div style="float:left; width: 5%;">' +
-				' 		<a href="javascript:void(0)" class="easyui-linkbutton'+counter+'" iconCls="icon-clear" onclick="removeItem('+counter+', '+d.id+')" ></a> ' +
-				'		</div> ' +
-				'	</div>' +
-				'</div>';
-			$("#detail").append(html);
-			$(".easyui-textbox"+counter).textbox();
-			$(".easyui-numberbox"+counter).numberbox({groupSeparator:',', decimalSeparator:'.'});
-			$(".easyui-combobox"+counter).combobox();
-			$(".easyui-checkbox"+counter).checkbox();
-			$(".easyui-linkbutton"+counter).linkbutton();
-			populatePayment('paymenttypeid'+counter,'keterangan'+counter, counter)
-			$("#nilai_bayar"+counter).textbox('textbox').bind('keydown', function(e){
-				if(e.key==='Enter' || e.keyCode===13){ 	// when press ENTER key, accept the inputed value.
-					var bayar = $(this).val();
-					var tipe = $("#paymenttypeid"+counter).combobox('getValue');
-					if(tipe!=="1"){
-						if(parseFloat(bayar)<=50000){
-							$.messager.show({title: 'Warning', msg: "Minimal belanja harus lebih dari 50 ribu"});
-							$("#nilai_bayar"+counter).textbox('setValue',"")
-						}
-					}
-					hitungHeader();
-				}
-			});
 		}
 
   </script>

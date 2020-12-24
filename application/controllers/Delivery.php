@@ -425,15 +425,35 @@ class Delivery extends IO_Controller {
 	}
 
 	function get_product($code){
-
+		$code = urldecode($code);
 		$read = $this->model->read_data($code);
+//		pre($read);
 		if($read->num_rows()>0){
 			$loc = $read->row()->from_location_code;
 			$prd = $this->formatDate('Ym', $read->row()->doc_date);
-			$special = " nobar in(select nobar from stock where location_code='$loc' and periode='$prd') ";
-			$f = $this->getParamGrid("","nobar");
-			$data = $this->model->get_product($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],$code,$loc,$prd);
+//			$special = " nobar in(select nobar from stock where location_code='$loc' and periode='$prd') ";
+			$total = $this->getParamGrid_BuilderComplete(array(
+				"tipe"=>"total",
+				"table"=>"product_barang a",
+				"sortir"=>"nobar",
+				"select"=>"a.product_id, a.nobar, a.nmbar, b.satuan_jual, c.uom_id, c.description as satuan_jual_desc
+                , c1.uom_id uom_stock, c1.description as satuan_stock_desc, b.product_code",
+				"join"=>["product b"=>"a.product_id = b.id","product_uom c"=>"b.satuan_jual=c.uom_code","product_uom c1"=>"b.satuan_stock=c1.uom_code","stock s"=>"a.nobar=s.nobar and s.periode='$prd' and s.location_code='$loc'"],
+				"posisi"=>["product b"=>"","product_uom c"=>"","product_uom c1"=>"","stock s"=>""]
+			));
+			$data = $this->getParamGrid_BuilderComplete(array(
+				"tipe"=>"query",
+				"table"=>"product_barang a",
+				"sortir"=>"nobar",
+				"select"=>"a.product_id, a.nobar, a.nmbar, b.satuan_jual, c.uom_id, c.description as satuan_jual_desc
+                , c1.uom_id uom_stock, c1.description as satuan_stock_desc, b.product_code",
+				"join"=>["product b"=>"a.product_id = b.id","product_uom c"=>"b.satuan_jual=c.uom_code","product_uom c1"=>"b.satuan_stock=c1.uom_code","stock s"=>"a.nobar=s.nobar and s.periode='$prd' and s.location_code='$loc'"],
+				"posisi"=>["product b"=>"","product_uom c"=>"","product_uom c1"=>"","stock s"=>""]
+			));
+//			$f = $this->getParamGrid("","nobar");
+//			$data = $this->model->get_product($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],$code,$loc,$prd);
 		}else{
+			$total = 0;
 			$data = array();
 		}
 
@@ -441,7 +461,7 @@ class Delivery extends IO_Controller {
 		echo json_encode(array(
 				"status" => 1,
 				"msg" => "OK",
-				"total"=>(count($data)>0)?$data[0]->total:0,
+				"total"=>$total,
 				"data" =>$data)
 		);
 

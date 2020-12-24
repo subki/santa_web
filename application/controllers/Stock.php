@@ -25,13 +25,31 @@ class Stock extends IO_Controller {
     }
 
     function load_grid($location, $prd){
-        $f = $this->getParamGrid(" a.location_code='$location' and a.periode='$prd' ","a.nobar");
-        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+			$total = $this->getParamGrid_BuilderComplete(array(
+				"tipe"=>"total",
+				"table"=>"stock a",
+				"sortir"=>"nobar",
+				"special"=>["a.location_code"=>$location,"a.periode"=>$prd],
+				"select"=>"a.id, a.nobar, a.location_code, a.periode, a.saldo_awal
+                  , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir
+                  , b.description as location_name, c.nmbar",
+				"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"]
+			));
+			$data = $this->getParamGrid_BuilderComplete(array(
+				"tipe"=>"query",
+				"table"=>"stock a",
+				"sortir"=>"nobar",
+				"special"=>["a.location_code"=>$location,"a.periode"=>$prd],
+				"select"=>"a.id, a.nobar, a.location_code, a.periode, a.saldo_awal
+                  , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir
+                  , b.description as location_name, c.nmbar",
+				"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"]
+			));
 
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
 

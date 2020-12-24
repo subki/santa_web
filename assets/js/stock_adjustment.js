@@ -47,12 +47,14 @@ var options={
 
         var editor = $(this).edatagrid('getEditor', {index:index,field:'from_store_code'});
         var grid = $(editor.target).combogrid('grid');
+			  grid.datagrid('destroyFilter');
         grid.datagrid('enableFilter');
         editor = $(this).edatagrid('getEditor', {index:index,field:'from_location_code'});
         grid = $(editor.target).combogrid('grid');
         if(!row.isNewRecord) {
             grid.datagrid({url: base_url + "delivery/get_location/" + row.from_store_code});
         }
+        grid.datagrid('destroyFilter');
         grid.datagrid('enableFilter');
 
         editor = $(this).edatagrid('getEditor', {index:index,field:'status'});
@@ -112,6 +114,8 @@ var options={
                 }),
                 editable: false,
                 pagination: true,
+                mode:'remote',
+                clientPaging:false,
                 loadFilter: function (data) {
                     data.rows = [];
                     if (data.data){
@@ -131,6 +135,8 @@ var options={
                     });
                     var dg = $(ed.target).combogrid('grid');
                     dg.datagrid({url:base_url+"delivery/get_location/"+row.store_code});
+                    dg.datagrid('destroyFilter')
+                    dg.datagrid('enableFilter')
                 },
                 columns: [[
                     {field:'store_code',title:'Kode Store',width:150},
@@ -159,6 +165,8 @@ var options={
                 }),
                 editable: false,
                 pagination: true,
+                  mode:'remote',
+                  clientPaging:false,
                 loadFilter: function (data) {
                     data.rows = [];
                     if (data.data){
