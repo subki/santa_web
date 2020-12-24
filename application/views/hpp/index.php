@@ -66,12 +66,12 @@
                 <input name="product_price" id="product_price" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Harga Barang Jadi:" style="width:100%">
               </div>
               <div style="float:left; width: 20%; padding-right: 5px;">
-                <input name="disc1_persen" id="disc1_persen" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 1 %:" style="width:100%">
-                <input name="disc1_amt" readonly id="disc1_amt" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
+                <input name="disc1_persen" id="disc1_persen" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 1 %:" style="width:100%">
+                <input name="disc1_amt" readonly id="disc1_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
               </div>
               <div style="float:right; width:20%;">
-                <input name="disc2_persen" id="disc2_persen" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 2 %:" style="width:100%">
-                <input name="disc2_amt" id="disc2_amt" class="easyui-numberbox hpp1" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
+                <input name="disc2_persen" id="disc2_persen" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Disc 2 %:" style="width:100%">
+                <input name="disc2_amt" id="disc2_amt" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" tipPosition="bottom" style="width:100%">
               </div>
             </div>
             <div style="margin-bottom:1px" class="opsi2">
@@ -93,6 +93,7 @@
               </div>
             </div>
             <div style="display:inline-block; width:100%; height:2px; margin-bottom: 15px; margin-top: 5px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"><b>HPP 2</b></div>
+
             <div style="margin-bottom:1px">
               <div style="float:left; width: 33%; padding-right: 5px;">
 <!--                <input name="buffer_cost" id="buffer_cost" class="easyui-numberbox hpp2" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Buffer Cost %:" style="width:100%">-->
@@ -108,6 +109,8 @@
               </div>
             </div>
             <div style="display:inline-block; width:100%; height:2px; margin-bottom: 15px; margin-top: 5px; border-top:1px solid #ccc; border-bottom:1px solid #fff; vertical-align:middle;"><b>HPP 2 + Ekspedisi</b></div>
+
+
             <div style="margin-bottom:1px">
               <div style="float:left; width: 50%; padding-right: 5px;">
                 <input name="ekspedisi" id="ekspedisi" class="easyui-numberbox hpp3" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="Ekspedisi:" style="width:100%">
@@ -123,7 +126,7 @@
               <div style="float:left; width: 33%; padding-right: 5px;">
                 <input name="hpp2" id="hpp2" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="HPP 2:" style="width:100%">
               </div>
-              <div style="float:right; width:33%;">
+              <div style="float:left; width:33%;">
                 <input name="hpp_ekspedisi" id="hpp_ekspedisi" class="easyui-numberbox" data-options="precision:2, groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" label="HPP + Ekspedisi:" style="width:100%">
               </div>
             </div>
@@ -247,9 +250,15 @@
 			onChange:function (newValue, oldValue) {
 				console.log("onChange HPP1",newValue, oldValue)
         hitungHPP();
+				console.log(detail.product_pcs,detail.bom_pcs,detail.foh_pcs,detail.ongkos_jahit_pcs);
+				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
+				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
 				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.buffer_cost_amt = detail.hpp1*8/100;
+				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
+				console.log(detail)
 				$("#fm").form('load',detail);
 			}
 		})
@@ -257,6 +266,11 @@
 			onChange:function (newValue, oldValue) {
 				console.log("onChange HPP2",newValue, oldValue)
 				hitungHPP();
+				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
+				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
+				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.buffer_cost_amt = detail.hpp1*8/100;
+				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
@@ -266,6 +280,13 @@
 			onChange:function (newValue, oldValue) {
 				console.log("onChange HPP3",newValue, oldValue)
 				hitungHPP();
+				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
+				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
+				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.buffer_cost_amt = detail.hpp1*8/100;
+				detail.interest_cost_amt = detail.hpp1*2/100;
+				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
+				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
 			}
@@ -286,6 +307,8 @@
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
 				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.buffer_cost_amt = detail.hpp1*8/100;
+				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
@@ -307,6 +330,8 @@
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
 				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.buffer_cost_amt = detail.hpp1*8/100;
+				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
@@ -315,19 +340,21 @@
 		$('#disc2_persen').numberbox({
 			onChange:function (newValue, oldValue) {
 				console.log("onChange disc2_persen",newValue, oldValue)
-				hitungHPP();
+        hitungHPP();
 				if(parseFloatt(detail.disc2_amt)===0) {
-					detail.disc2_amt = Math.round((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100);
+					detail.disc2_amt = Math.round((detail.product_price-detail.disc1_amt) * detail.disc2_persen / 100);
 				}else{
-					var t = Math.round((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100);
+					var t = Math.round((detail.product_price-detail.disc1_amt) * detail.disc2_persen / 100);
 					console.log(detail.disc2_amt, t)
 					if(detail.disc2_amt !== t){
-						detail.disc2_amt = Math.round((detail.product_price-detail.disc1_amt)*detail.disc2_persen/100);
-					}
-				}
+						detail.disc2_amt = Math.round((detail.product_price-detail.disc1_amt) * detail.disc2_persen / 100);
+          }
+        }
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
 				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.buffer_cost_amt = detail.hpp1*8/100;
+				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
@@ -338,22 +365,25 @@
 				console.log("onChange disc2_amt",newValue, oldValue)
 				hitungHPP();
 				if(parseFloatt(detail.disc2_persen)===0) {
-					detail.disc2_persen = (detail.disc2_persen/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
+          detail.disc2_persen = (detail.disc2_amt/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
 				}else{
-					var t = (detail.disc2_persen/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
+					var t = (detail.disc2_amt/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
 					console.log(detail.disc2_persen, t)
 					if(detail.disc2_persen !== t){
-						detail.disc2_persen = (detail.disc2_persen/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
-					}
-				}
+						detail.disc2_persen = (detail.disc2_amt/(detail.product_price-detail.disc1_amt)*100).toFixed(2);
+          }
+        }
 				detail.product_amount = detail.product_price-detail.disc1_amt-detail.disc2_amt;
 				detail.product_pcs = detail.product_amount/detail.product_qty*uom_convertion;
 				detail.hpp1 = detail.product_pcs+detail.bom_pcs+detail.foh_pcs+detail.ongkos_jahit_pcs;
+				detail.buffer_cost_amt = detail.hpp1*8/100;
+				detail.interest_cost_amt = detail.hpp1*2/100;
 				detail.hpp2 = detail.hpp1+detail.interest_cost_amt+detail.buffer_cost_amt;
 				detail.hpp_ekspedisi = detail.hpp2+detail.ekspedisi;
 				$("#fm").form('load',detail);
 			}
 		})
+
     disable_enable(true)
 	});
 

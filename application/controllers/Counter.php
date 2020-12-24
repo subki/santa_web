@@ -37,7 +37,10 @@ class Counter extends IO_Controller {
 		if(isset($param['location_code'])) $location_code = $param['location_code'];
 		$data['title'] = 'Sales Order Counter';
 		$data['tanggal'] = $tgl;
-		$data['lokasi'] = $this->db->get('location')->result();
+		$data['lokasi'] = $this->db->select("l.*")
+			->join("customer c","c.lokasi_stock=l.location_code")
+			->where("c.gol_customer","Counter")
+			->get('location l')->result();
 		$data['location_code'] = $location_code;
 		$data['content'] = $this->load->view('counter/index', $data, TRUE);
 		$this->load->view('main', $data);
