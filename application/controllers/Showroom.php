@@ -77,6 +77,12 @@ class Showroom extends IO_Controller {
 		if (isset($param['tanggal'])) $tgl = $this->formatDate("ymd", $param['tanggal']);
 		$customer = $this->db->get_where("customer",["lokasi_stock"=>$lokasi])->row();
 		if($docno=="") {
+			$cek = $this->db->order_by("docno asc")->limit(1)
+				->get_where($this->table,["location_code"=>$lokasi,"doc_date"=>$tgl,"status"=>"OPEN"])
+				->row();
+			if(isset($cek)){
+				redirect("showroom/form/".$cek->docno."?tanggal=".$param['tanggal']."&location_code=".$param['location_code']);
+			}
 			$prefix = $lokasi . "." . $tgl;
 			$nomor = $this->db->select("right(docno,3) as nomor")
 				->where("docno like '$prefix%'")
@@ -95,6 +101,7 @@ class Showroom extends IO_Controller {
 				"provinsi_id" => $customer->provinsi_id,
 				"regency_id" => $customer->regency_id,
 				"customer_code" => $customer->customer_code,
+				"status" => "OPEN",
 				"crtdt"=>date("Y-m-d H:i:s"),
 				"crtby"=>$this->session->userdata('user_id'),
 				"jumlah_print"=>0
@@ -144,15 +151,16 @@ class Showroom extends IO_Controller {
 		$tanggal=date("Y-m-d");
 		if(isset($param['location_code'])) $lokasi = $param['location_code'];
 		if(isset($param['tanggal'])) $tanggal = $param['tanggal'];
-		$data =["tipe"=>"total",
+		$total1 = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
 			"table"=>$this->table." a",
 			"sortir"=>"docno",
 			"special"=>["location_code"=>$lokasi,'doc_date'=>$tanggal],
 			"select"=>"a.*, b.store_name",
-			"join"=>["profile_p b"=>"b.default_stock_l=a.location_code"]];
-		$total = $this->getParamGrid_BuilderComplete($data);
-		$data['tipe'] = "query";
-		$data = $this->getParamGrid_BuilderComplete($data);
+			"join"=>["profile_p b"=>"b.default_stock_l=a.location_code"]
+		));
+		$total = $total1->total;
+		$data = $total1->data;
 		echo json_encode(array(
 				"total"=>$total,
 				"rows" =>$data)
@@ -164,15 +172,16 @@ class Showroom extends IO_Controller {
 		$tanggal=date("Y-m-d");
 		if(isset($param['location_code'])) $lokasi = $param['location_code'];
 		if(isset($param['tanggal'])) $tanggal = $param['tanggal'];
-		$data =["tipe"=>"total",
+		$total1 = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
 			"table"=>"rekap_payment_harian a",
 			"sortir"=>"tanggal",
 			"special"=>["a.location_code"=>$lokasi,'a.tanggal'=>$tanggal],
 			"select"=>"a.*, b.description locname, pt.description ptname",
-			"join"=>["location b"=>"b.location_code=a.location_code","payment_type pt"=>"pt.id=a.paymenttypeid"]];
-		$total = $this->getParamGrid_BuilderComplete($data);
-		$data['tipe'] = "query";
-		$data = $this->getParamGrid_BuilderComplete($data);
+			"join"=>["location b"=>"b.location_code=a.location_code","payment_type pt"=>"pt.id=a.paymenttypeid"]
+		));
+		$total = $total1->total;
+		$data = $total1->data;
 
 		echo json_encode(array(
 				"total"=>$total,
@@ -550,5 +559,19 @@ class Showroom extends IO_Controller {
 		echo json_encode(array(
 			"status"=>0
 		));
+	}
+	public function getsummary(){
+		$input = $this->input->post();
+		$data = $this->db->where("doc_date",$this->formatDate("Y-m-d", $input['tanggal']))
+			->where("location_code",$input['location_code'])
+			->get($this->table)->result();
+		$dt["summary"] = 0;
+		if(count($data)>0){
+			foreach ($data as $row){
+				$dt['summary'] += $row->sales_after_tax;
+			}
+		}
+		$dt['status'] = 0;
+		echo json_encode($dt);
 	}
 }

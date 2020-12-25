@@ -31,6 +31,7 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" id="add" onclick="addData()" iconCls="icon-add" plain="true">Add</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="editData()" iconCls="icon-edit" plain="true">Edit</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="rekap()" iconCls="icon-posting" plain="true">End of Day</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="summary()" iconCls="icon-posting" plain="true">Summary</a>
 </div>
 
 <script type="text/javascript">
@@ -158,5 +159,31 @@
 		v['tanggal'] = prd;
 		console.log(prd);
 		$.redirect(base_url+"showroom/rekap",v,"post","");
+	}
+	function summary() {
+		var date = $("#periode").datebox('getDate');
+		var y = date.getFullYear();
+		var m = date.getMonth()+1;
+		var d = date.getDate();
+		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
+		var location_code = $("#location_code").combobox('getValue');
+		var v = {};
+		v['location_code'] = location_code;
+		v['tanggal'] = prd;
+		$.ajax({
+			url: base_url+"showroom/getsummary",
+			type: 'post',
+			dataType:'json',
+			data: {
+				location_code:location_code,
+				tanggal:prd
+			},
+			success: function(res){
+				console.log(res);
+				if (res.status===0){
+					$.messager.alert("Information","Nilai total sales : "+numberFormat(res.summary))
+				}
+			}
+		});
 	}
 </script>

@@ -2,8 +2,8 @@
 
 class Wholesales_model extends CI_Model {
 
-    private $table;
-    private $query;
+	public $table;
+	public $query;
 	public function __construct(){
         parent::__construct();
         $this->table = "sales_trans_header";

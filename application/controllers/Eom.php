@@ -36,7 +36,7 @@ class Eom extends IO_Controller {
 		if($store==$store1){
 			$special = "";
 		}
-		$total = $this->getParamGrid_BuilderComplete(array(
+		$total1 = $this->getParamGrid_BuilderComplete(array(
 			"tipe"=>"total",
 			"table"=>"location a",
 			"sortir"=>"location_code",
@@ -44,14 +44,8 @@ class Eom extends IO_Controller {
 			"select"=>"a.location_code, a.description location_name, b.store_name, b.store_code",
 			"join"=>["cabang c"=>"c.location_code=a.location_code","profile_p b"=>"b.store_code=c.store_code"]
 		));
-		$data = $this->getParamGrid_BuilderComplete(array(
-			"tipe"=>"query",
-			"table"=>"location a",
-			"sortir"=>"location_code",
-			"special"=>$special,
-			"select"=>"a.location_code, a.description location_name, b.store_name, b.store_code",
-			"join"=>["cabang c"=>"c.location_code=a.location_code","profile_p b"=>"b.store_code=c.store_code"]
-		));
+		$total = $total1->total;
+		$data = $total1->data;
 
 		echo json_encode(array(
 				"status" => 1,
@@ -75,7 +69,7 @@ class Eom extends IO_Controller {
 				$special = " a.location_code ='$loc1' and a.periode='$prd' group by a.nobar";
 			}else $special = " a.location_code >='$loc1' and a.location_code<='$loc2' and a.periode='$prd' group by a.nobar";
 		}
-		$total = $this->getParamGrid_BuilderComplete(array(
+		$total1 = $this->getParamGrid_BuilderComplete(array(
 			"tipe"=>"total",
 			"table"=>"stock a",
 			"sortir"=>"nobar",
@@ -84,15 +78,8 @@ class Eom extends IO_Controller {
                   , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir",
 			"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"]
 		));
-		$data = $this->getParamGrid_BuilderComplete(array(
-			"tipe"=>"query",
-			"table"=>"stock a",
-			"sortir"=>"nobar",
-			"special"=>$special,
-			"select"=>"a.nobar, a.location_code, a.periode, a.saldo_awal, b.description as location_name, c.nmbar
-                  , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir",
-			"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"]
-		));
+		$total = $total1->total;
+		$data = $total1->data;
 
 		echo json_encode(array(
 				"status" => 1,

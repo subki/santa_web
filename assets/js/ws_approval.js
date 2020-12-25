@@ -20,20 +20,22 @@ var options={
         return data;
     },
     columns:[[
-        {field:"no_faktur",   title:"No Faktur",      width:120, sortable: true},
+        {field:"no_faktur",   title:"No Faktur",      sortable: true},
         // {field:"seri_pajak",   title:"Seri Pajak",      width: 100, sortable: true},
-        {field:"doc_date",   title:"Trx Date",      width: 100, sortable: true, formatter:function (index, row) {
+        {field:"doc_date",   title:"Trx Date",      sortable: true, formatter:function (index, row) {
             return row.ak_doc_date;
         }},
-        // {field:"base_so",   title:"Base SO",      width: 120, sortable: true},
-        // {field:"remark",   title:"Remark",      width: 300, sortable: true},
-        // {field:"status",   title:"Status",      width: 100, sortable: true},
-        {field:"customer_name",   title:"Customer",      width: 280, sortable: true},
-        {field:"ket",   title:"Remark",      width: 190, sortable: true},
-        {field:"crtby",   title:"Create By",      width: 100, sortable: true},
-        {field:"crtdt",   title:"Create Date",      width: 160, sortable: true},
-        {field:"updby",   title:"Update By",      width: 100, sortable: true},
-        {field:"upddt",   title:"Update Date",      width: 160, sortable: true},
+			{field:"customer_code",   title:"Code",      sortable: true},
+			{field:"customer_name",   title:"Customer",      sortable: true},
+			{field:"sales_after_tax",   title:"Total Sales",      sortable: true, formatter:numberFormat},
+			{field:"credit_limit",   title:"Credit Limit",      sortable: true, formatter:numberFormat},
+			{field:"outstanding",   title:"Credit Outstanding",      sortable: true, formatter:numberFormat},
+			{field:"credit_remain",   title:"Credit Remain",      sortable: true, formatter:numberFormat},
+        {field:"ket",   title:"Remark",      sortable: true},
+        {field:"crtby",   title:"Create By",      sortable: true},
+        {field:"crtdt",   title:"Create Date",      sortable: true},
+        {field:"updby",   title:"Update By",      sortable: true},
+        {field:"upddt",   title:"Update Date",      sortable: true},
     ]],
     onLoadSuccess:function(){
         authbutton();

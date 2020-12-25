@@ -25,14 +25,20 @@ class Autoconfig extends IO_Controller {
     }
 
     function load_grid(){
-		$f = $this->getParamGrid("","key");
-        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
-
-
+			$total1 = $this->getParamGrid_BuilderComplete(array(
+				"tipe"=>"total",
+				"table"=>"automatic_config a",
+				"sortir"=>"key",
+				"special"=>"",
+				"select"=>"a.id, a.kunci, a.nilai",
+				"join"=>[]
+			));
+			$total = $total1->total;
+			$data = $total1->data;
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
 

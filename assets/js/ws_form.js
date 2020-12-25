@@ -397,8 +397,8 @@ function initGrid() {
         width: "100%",
         url: base_url + "wholesales/load_grid_detail/"+so_item.id,
         saveUrl: base_url + "wholesales/save_data_detail/"+so_item.id,
-        updateUrl: base_url + "wholesales/edit_data_detail",
-        destroyUrl: base_url + "wholesales/delete_data_detail",
+        // updateUrl: base_url + "wholesales/edit_data_detail",
+        // destroyUrl: base_url + "wholesales/delete_data_detail",
         idField: 'id',
         method: "POST",
         pagePosition: "top",
@@ -417,81 +417,83 @@ function initGrid() {
             // iconCls: 'icon-add', id:'add', text:'New',
             // handler: function(){$('#dg').edatagrid('addRow',0)}
         // },
-            {
-            id:'delete', iconCls: 'icon-remove', text:'Delete',
-            handler: function(){
-                if (so_item.status!=="OPEN"){
-                    $.messager.show({
-                        title: 'Warning',
-                        msg: `Detail tidak bisa di hapus (status : ${so_item.status})`
-                    });
-                    return
-                }
-                $('#dg').edatagrid('destroyRow')
-            }
-        },{
-            id:'submit', iconCls: 'icon-save', text:'Submit',
-            handler: function(){
-                var selectedrow = $("#dg").edatagrid("getSelected");
-                var rowIndex = $("#dg").edatagrid("getRowIndex", selectedrow);
-
-                var ed = $('#dg').edatagrid('getEditor', {index: rowIndex, field: 'disc1_persen'});
-                var disc1 = $(ed.target).numberbox('getValue');
-
-                ed = $('#dg').edatagrid('getEditor', {index: rowIndex, field: 'disc2_persen'});
-                var disc2 = $(ed.target).numberbox('getValue');
-
-                ed = $('#dg').edatagrid('getEditor', {index: rowIndex, field: 'disc3_persen'});
-                var disc3 = $(ed.target).numberbox('getValue');
-
-                var h_d1 = $("#disc1_persen").numberbox('getValue');
-                var h_d2 = $("#disc2_persen").numberbox('getValue');
-                var h_d3 = $("#disc3_persen").numberbox('getValue');
-
-                if(disc1==="" || isNaN(disc1)) disc1 = 0;
-                if(disc2==="" || isNaN(disc2)) disc2 = 0;
-                if(disc3==="" || isNaN(disc3)) disc3 = 0;
-
-                if(h_d1==="" || isNaN(h_d1)) h_d1 = 0;
-                if(h_d2==="" || isNaN(h_d2)) h_d2 = 0;
-                if(h_d3==="" || isNaN(h_d3)) h_d3 = 0;
-
-                var confirm = false
-                if(h_d1!=="" && parseFloat(h_d1)>0 && parseFloat(h_d1) !== parseFloat(disc1)){
-                    console.log("true 1")
-                    confirm = true
-                }else if(h_d2!=="" && parseFloat(h_d2)>0 && parseFloat(h_d2) !== parseFloat(disc2)){
-                    console.log("true 2")
-                    confirm = true
-                }else if(h_d3!=="" && parseFloat(h_d3)>0 && parseFloat(h_d3) !== parseFloat(disc3)){
-                    console.log("true 3")
-                    confirm = true
-                }
-
-                if(confirm){
-                    var dlg = $.messager.confirm({
-                        title: 'Confirm',
-                        msg: 'Discount detail dan header berbeda. tekan Yes untuk tetap melanjutkan?',
-                        buttons:[{
-                            text: 'Yes',
-                            onClick: function(){
-                                $('#dg').edatagrid('saveRow')
-                                dlg.dialog('destroy')
-                            }
-                        },{
-                            text: 'No',
-                            onClick: function(){
-                                dlg.dialog('destroy')
-                            }
-                        }]
-                    });
-                }else $('#dg').edatagrid('saveRow')
-
-            }
-        },{
-            id:'cancel', iconCls: 'icon-undo', text:'Cancel',
-            handler: function(){$('#dg').edatagrid('cancelRow')}
-        },
+        //     {
+        //     id:'delete', iconCls: 'icon-remove', text:'Delete',
+        //     handler: function(){
+        //         if (so_item.status!=="OPEN"){
+        //             $.messager.show({
+        //                 title: 'Warning',
+        //                 msg: `Detail tidak bisa di hapus (status : ${so_item.status})`
+        //             });
+        //             return
+        //         }
+        //         $('#dg').edatagrid('destroyRow')
+        //     }
+        // },
+        //   {
+        //     id:'submit', iconCls: 'icon-save', text:'Submit',
+        //     handler: function(){
+        //         var selectedrow = $("#dg").edatagrid("getSelected");
+        //         var rowIndex = $("#dg").edatagrid("getRowIndex", selectedrow);
+				//
+        //         var ed = $('#dg').edatagrid('getEditor', {index: rowIndex, field: 'disc1_persen'});
+        //         var disc1 = $(ed.target).numberbox('getValue');
+				//
+        //         ed = $('#dg').edatagrid('getEditor', {index: rowIndex, field: 'disc2_persen'});
+        //         var disc2 = $(ed.target).numberbox('getValue');
+				//
+        //         ed = $('#dg').edatagrid('getEditor', {index: rowIndex, field: 'disc3_persen'});
+        //         var disc3 = $(ed.target).numberbox('getValue');
+				//
+        //         var h_d1 = $("#disc1_persen").numberbox('getValue');
+        //         var h_d2 = $("#disc2_persen").numberbox('getValue');
+        //         var h_d3 = $("#disc3_persen").numberbox('getValue');
+				//
+        //         if(disc1==="" || isNaN(disc1)) disc1 = 0;
+        //         if(disc2==="" || isNaN(disc2)) disc2 = 0;
+        //         if(disc3==="" || isNaN(disc3)) disc3 = 0;
+				//
+        //         if(h_d1==="" || isNaN(h_d1)) h_d1 = 0;
+        //         if(h_d2==="" || isNaN(h_d2)) h_d2 = 0;
+        //         if(h_d3==="" || isNaN(h_d3)) h_d3 = 0;
+				//
+        //         var confirm = false
+        //         if(h_d1!=="" && parseFloat(h_d1)>0 && parseFloat(h_d1) !== parseFloat(disc1)){
+        //             console.log("true 1")
+        //             confirm = true
+        //         }else if(h_d2!=="" && parseFloat(h_d2)>0 && parseFloat(h_d2) !== parseFloat(disc2)){
+        //             console.log("true 2")
+        //             confirm = true
+        //         }else if(h_d3!=="" && parseFloat(h_d3)>0 && parseFloat(h_d3) !== parseFloat(disc3)){
+        //             console.log("true 3")
+        //             confirm = true
+        //         }
+				//
+        //         if(confirm){
+        //             var dlg = $.messager.confirm({
+        //                 title: 'Confirm',
+        //                 msg: 'Discount detail dan header berbeda. tekan Yes untuk tetap melanjutkan?',
+        //                 buttons:[{
+        //                     text: 'Yes',
+        //                     onClick: function(){
+        //                         $('#dg').edatagrid('saveRow')
+        //                         dlg.dialog('destroy')
+        //                     }
+        //                 },{
+        //                     text: 'No',
+        //                     onClick: function(){
+        //                         dlg.dialog('destroy')
+        //                     }
+        //                 }]
+        //             });
+        //         }else $('#dg').edatagrid('saveRow')
+				//
+        //     }
+        // },
+        //   {
+        //     id:'cancel', iconCls: 'icon-undo', text:'Cancel',
+        //     handler: function(){$('#dg').edatagrid('cancelRow')}
+        // },
         ],
         loadFilter: function (data) {
             data.rows = [];
@@ -571,7 +573,6 @@ function initGrid() {
             {
                 field: "nobar",
                 title: "Article#",
-                width: '9%',
                 sortable: true,
                 formatter: function (value, row) {
                     return row.product_code;
@@ -650,22 +651,22 @@ function initGrid() {
                         columns: [[
                             // {field: 'article_code', title: 'Article', width: 100},
                             // {field: 'nobar', title: 'SKU', width: 150},
-                            {field: 'product_code', title: 'Product Code', width: 100},
-                            {field: 'nmbar', title: 'Product Name', width: 300},
+                            {field: 'product_code', title: 'Product Code'},
+                            {field: 'nmbar', title: 'Product Name'},
                             {field: 'stock', title: 'Stock', formatter:function (index, row) {
                                     return row.stock+" "+row.uom_stock
-                                }, width: 150},
+                                }},
                         ]],
                         fitColumns: true,
                         labelPosition: 'center'
                     }
                 }
             },
-            {field: "product_id", title: "Product Id", width: '8%', sortable: true, editor: {type: 'textbox',options:{readonly:true}}},
-            {field: "nmbar", title: "Product Name", width: '12%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "tipe", title: "Type", width: '5%', sortable: true, editor: {type: 'textbox'}},
-            {field: "qty_order", title: "Qty Ord", width: '6%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "qty_on_sales", title: "Qty Sls", width: '6%', sortable: true,
+            {field: "product_id", title: "Product Id", sortable: true, editor: {type: 'textbox',options:{readonly:true}}},
+            {field: "nmbar", title: "Product Name", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "tipe", title: "Type", sortable: true, editor: {type: 'textbox'}},
+            {field: "qty_order", title: "Qty Ord", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "qty_on_sales", title: "Qty Sls", sortable: true,
                 editor: {
                     type: 'numberbox',
                     options:{
@@ -709,13 +710,13 @@ function initGrid() {
                     }
                 }
             },
-            {field: "satuan_jual", title: "UOM", width: '6%', sortable: true, formatter:function(index, row){
+            {field: "satuan_jual", title: "UOM", sortable: true, formatter:function(index, row){
                     return row.uom_id;
                 },editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "unit_price", title: "Retail", width: '9%', sortable: true, formatter:function (index, row) {
+            {field: "unit_price", title: "Retail", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.unit_price);
                 }, editor: {type: 'textbox',options:{readonly:true}}},
-            {field: "disc1_persen", title: "Disc1%", width: '6%', sortable: true,
+            {field: "disc1_persen", title: "Disc1%", sortable: true,
                 editor: {
                     type: 'numberbox',
                     options:{
@@ -729,10 +730,10 @@ function initGrid() {
                     }
                 }
             },
-            {field: "disc1_amount", title: "Amt1", width: '9%', sortable: true, formatter:function (index, row) {
+            {field: "disc1_amount", title: "Amt1", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.disc1_amount);
                 }, editor: {type: 'numberbox',options:{readonly:true,min:2, precision:2,}}},
-            {field: "disc2_persen", title: "Disc2%", width: '6%', sortable: true,
+            {field: "disc2_persen", title: "Disc2%", sortable: true,
                 editor: {
                     type: 'numberbox',
                     options: {
@@ -746,10 +747,10 @@ function initGrid() {
                     }
                 }
             },
-            {field: "disc2_amount", title: "Amt2", width: '9%', sortable: true, formatter:function (index, row) {
+            {field: "disc2_amount", title: "Amt2", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.disc2_amount);
                 }, editor: {type: 'numberbox',options:{readonly:true,min:2, precision:2,}}},
-            {field: "disc3_persen", title: "Disc3%", width: '6%', sortable: true,
+            {field: "disc3_persen", title: "Disc3%", sortable: true,
                 editor: {
                     type: 'numberbox',
                     options: {
@@ -763,22 +764,22 @@ function initGrid() {
                     }
                 }
             },
-            {field: "disc3_amount", title: "Amt3", width: '9%', sortable: true, formatter:function (index, row) {
+            {field: "disc3_amount", title: "Amt3", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.disc3_amount);
                 }, editor: {type: 'numberbox',options:{readonly:true}}},
-            {field: "disc_total", title: "Total Disc", width: '10%', sortable: true, formatter:function (index, row) {
+            {field: "disc_total", title: "Total Disc", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.disc_total);
                 }, editor: {type: 'numberbox',options:{readonly:true, formatter:formatnumberbox}}},
-            {field: "bruto_before_tax", title: "Sls Bfr Tax", width: '10%', sortable: true, formatter:function (index, row) {
+            {field: "bruto_before_tax", title: "Sls Bfr Tax", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.bruto_before_tax);
                 }, editor: {type: 'numberbox',options:{readonly:true,formatter:formatnumberbox}}},
-            {field: "total_tax", title: "PPN", width: '10%', sortable: true, formatter:function (index, row) {
+            {field: "total_tax", title: "PPN", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.total_tax);
                 }, editor: {type: 'numberbox',options:{readonly:true, formatter:formatnumberbox}}},
-            {field: "net_unit_price", title: "Net Aft PPN", width: '10%', sortable: true, formatter:function (index, row) {
+            {field: "net_unit_price", title: "Net Aft PPN", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.net_unit_price);
                 }, editor: {type: 'numberbox',options:{readonly:true, formatter:formatnumberbox}}},
-            {field: "net_total_price", title: "Sls Aft PPN", width: '10%', sortable: true, formatter:function (index, row) {
+            {field: "net_total_price", title: "Sls Aft PPN", sortable: true, formatter:function (index, row) {
                     return numberFormat(row.net_total_price);
                 }, editor: {type: 'numberbox',options:{readonly:true, formatter:formatnumberbox}}},
         ]],

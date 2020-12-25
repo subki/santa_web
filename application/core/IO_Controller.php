@@ -224,6 +224,48 @@ class IO_Controller extends CI_Controller {
 	}
 
 	function getParamGrid_BuilderComplete($data){
+		return (object) ["total"=>$this->getParamGrid_BuilderCompleteTotal($data),"data"=>$this->getParamGrid_BuilderCompleteQuery($data)];
+	}
+	function getParamGrid_BuilderCompleteTotal($data){
+//		pre($data->table);
+		$page = ($this->input->post('page')) ? $this->input->post('page'):1;
+		$rows = ($this->input->post('rows')) ? $this->input->post('rows'):20;
+		$sort = ($this->input->post('sort')) ? $this->input->post('sort'):$data['sortir'];
+		$order = ($this->input->post('order')) ? $this->input->post('order'):'desc';
+		$fltr= ($this->input->post('filterRules')) ? json_decode($this->input->post('filterRules')):"";
+
+		if($sort=="crtdt") $sort = 'tanggal_crt';
+		if($sort=="upddt") $sort = 'tanggal_upd';
+
+		if(isset($data['select'])){
+			$this->db->select($data['select']);
+		}
+		if(isset($data['special'])) {
+			if(is_array($data['special'])) foreach ($data['special'] as $key => $row) $this->db->having($key,$row);
+			else {
+				if($data['special']!=="") $this->db->where($data['special']);
+			}
+		}
+		if(isset($data['join'])){
+			foreach ($data['join'] as $key => $row) $this->db->join($key, $row, isset($data['posisi'][$key])?$data['posisi'][$key]:"left");
+		}
+		if($fltr!=""){
+			foreach ($fltr as $r){
+				if($r->op=="equal") $this->db->having($r->field,$r->value);
+				if($r->op=="notequal") $this->db->having("$r->field !=",$r->value);
+				if($r->op=="contains") $this->db->having("$r->field like '%$r->value%'");
+				if($r->op=="beginwith") $this->db->having("$r->field like '$r->value%'");
+				if($r->op=="endwith") $this->db->having("$r->field like '%$r->value'");
+				if($r->op=="less") $this->db->having("$r->field < ",$r->value);
+				if($r->op=="lessorequal") $this->db->having("$r->field <= ",$r->value);
+				if($r->op=="greater") $this->db->having("$r->field > ",$r->value);
+				if($r->op=="greaterorequal") $this->db->having("$r->field >= ",$r->value);
+			}
+		}
+		$this->db->order_by("$sort $order");
+		return $this->db->get($data['table'])->num_rows();
+	}
+	function getParamGrid_BuilderCompleteQuery($data){
 //		pre($data->table);
 		$page = ($this->input->post('page')) ? $this->input->post('page'):1;
 		$rows = ($this->input->post('rows')) ? $this->input->post('rows'):20;
@@ -260,9 +302,6 @@ class IO_Controller extends CI_Controller {
 			}
 		}
 		$this->db->order_by("$sort $order");
-		if($data['tipe']=="total") {
-			return $this->db->get($data['table'])->num_rows();
-		}
 		return $this->db->limit($rows,($page-1)*$rows)->get($data['table'])->result();
 	}
 

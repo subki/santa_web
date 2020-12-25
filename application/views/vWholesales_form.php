@@ -22,6 +22,10 @@
         opacity: 0.6;
         filter: alpha(opacity=60);
     }
+    .border-kotak {
+      border: solid;
+      border-width: 2px !important;
+    }
 </style>
 <div id="tt">
     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
@@ -33,7 +37,7 @@
         <a href="javascript:void(0)" id="customer" class="easyui-linkbutton" iconCls="icon-customer" onclick="showCustomer()" style="width:90px; height: 20px;">Customer</a>
         <a href="javascript:void(0)" id="crt_faktur" class="easyui-linkbutton" iconCls="icon-tax" onclick="createFaktur()" style="width:140px; height: 20px;">Create Faktur</a>
         <a href="javascript:void(0)" id="btn_seri_pajak" class="easyui-linkbutton" iconCls="icon-tax" onclick="createSeriPajak()" style="width:90px; height: 20px;">Get FP</a>
-        <a href="javascript:void(0)" id="verify_fa" class="easyui-linkbutton" iconCls="icon-ok" onclick="verifyFA()" style="width:110px; height: 20px;">Finance</a>
+        <a href="javascript:void(0)" id="verify_fa" class="easyui-linkbutton" iconCls="icon-ok" onclick="verifyFA()" style="width:110px; height: 20px;">Verifikasi Finance</a>
     </div>
 </div>
 <div class="easyui-layout" style="width:100%;height:100%">
@@ -44,7 +48,7 @@
                 tools:'#tt', headerCls:'panel-titleq'">
         <form id="fm" method="post" novalidate style="margin:0;padding:5px 5px">
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-                <div style="width: 40%; padding: 10px;">
+                <div class="border-kotak" style="width: 40%; padding: 10px;">
                     <div style="margin-bottom:1px">
                         <div id="dis_faktur1" style="float:left; width: 55%; padding-right: 5px;">
                             <input name="no_faktur" id="no_faktur" class="easyui-textbox khusus" labelPosition="top" tipPosition="bottom"
@@ -132,7 +136,7 @@
                         <input readonly="true" name="salesman_id" id="salesman_id" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="Salesman:" style="width:100%">
                     </div>
                 </div>
-                <div style="width: 40%; padding: 10px;">
+                <div class="border-kotak" style="width: 40%; padding: 10px;">
                     <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                         <div style=" padding-right: 10px; width: 30%">
                             <input readonly="true" name="disc1_persen" id="disc1_persen" class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" required="false" label="Disc 1:" style="width:100%">
@@ -171,13 +175,13 @@
                         </div>
                     </div>
                     <div style="margin-bottom:1px">
-                        <input name="remark" id="remark" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
-                               required="true" label="Keterangan:" style="width:100%; height: 100px;">
+                        <input name="remark" id="remark" multiline="true" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
+                               required="true" label="Keterangan:" validType="length[0,50]" style="width:100%; height: 80px;">
                     </div>
                     <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                         <div style=" padding-right: 10px; width: 50%">
                             <input name="verifikasi_finance" id="verifikasi_finance" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
-                                   readonly="true" label="Finance:" style="width:100%;">
+                                   readonly="true" label="Verifikasi Finance:" style="width:100%;">
                         </div>
                         <div style="width: 50%">
                             <input name="jenis_faktur" id="jenis_faktur" class="easyui-combobox" labelPosition="top" tipPosition="bottom" required="true" label="Jenis Faktur:" style="width:100%;">
@@ -185,7 +189,7 @@
 
                     </div>
                 </div>
-                <div style="width: 20%; padding: 10px;">
+                <div class="border-kotak" style="width: 20%; padding: 10px;">
 
                     <div style="margin-bottom:1px">
                         <input name="gross_sales" id="gross_sales" class="easyui-textbox" labelPosition="top" tipPosition="bottom"

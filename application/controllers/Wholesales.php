@@ -41,12 +41,59 @@ class Wholesales extends IO_Controller {
     }
 
     function load_grid(){
-        $f = $this->getParamGrid("","doc_date");
-        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+
+			$total1 = $this->getParamGrid_BuilderComplete(array(
+				"table"=>"sales_trans_header a",
+				"sortir"=>"doc_date",
+				"special"=>[],
+				"select"=>"a.id, a.no_faktur,a.no_faktur2, a.seri_pajak
+                  , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date, a.jenis_faktur
+                  , DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2
+                  , a.faktur_date, DATE_FORMAT(a.faktur_date, '%d/%m/%Y') ak_faktur_date
+                  , IFNULL(a.verifikasi_finance,'') verifikasi_finance, c.top_day
+                  , so.doc_date tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so, so.docno as so_number
+                  , a.base_so, a.remark, a.status, a.qty_print, c.pkp, c.beda_fp, c.npwp, c.nama_pkp, c.alamat_pkp
+                  , so.customer_code, c.customer_name, so.store_code, so.location_code, c.payment_first
+                  , so.salesman_id, sl.salesman_name, c.address1, c.address2, r.name as regency_name
+                  , store.store_name, l.description as location_name, c.phone1
+                  , c.credit_limit, c.outstanding, (c.credit_limit-c.outstanding) credit_remain
+                  , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
+                  , coalesce(ifnull(u3.fullname,a.app_creditby),'') as creditby
+                  , coalesce(ifnull(u4.fullname, a.app_maxslsby),'') as maxslsby
+                  , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
+                  , coalesce(wp.keterangan,'') as ket
+                  , coalesce(wp.id,0) id_confirm
+                  , a.sales_after_tax
+                  , a.status as statushd
+                  , ifnull(si.id,0) sales_invoice_id
+                  , ifnull(spi.docno,'') as proforma_no",
+				"join"=>[
+					"wholesales_payment wp"=>"wp.sales_trans_header_id=a.id",
+					"sales_invoice si"=>" si.id=a.id",
+					"sales_proforma spi"=>"spi.docno=si.sales_proforma_id",
+					"packing_header ph"=>"ph.docno = a.base_so",
+					"sales_order_header so"=>"so.docno = ph.so_number",
+					"salesman sl"=>"sl.salesman_id=so.salesman_id",
+					"customer c"=>"so.customer_code=c.customer_code",
+					"regencies r"=>"r.id = c.regency_id",
+					"profile_p store"=>"store.store_code=so.store_code",
+					"location l"=>"l.location_code=so.location_code",
+					"users u1"=>"a.crtby=u1.user_id",
+					"users u2"=>"a.updby=u2.user_id",
+					"users u3"=>"a.app_creditby=u3.user_id",
+					"users u4"=>"a.app_maxslsby=u3.user_id",
+				],
+				"posisi"=>["left","left","left","left","left","left","inner","left","left","left","left","left","left","left"]
+			));
+			$total = $total1->total;
+			$data = $total1->data;
+//        $f = $this->getParamGrid("","doc_date");
+//        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
     }

@@ -134,8 +134,11 @@
                   <div style="float:left; width: 20%; padding-right: 5px;">
                     <input name="qty" id="qty" class="easyui-numberbox" labelPosition="top" tipPosition="bottom" label="Qty:" style="width:100%">
                   </div>
-                  <div style="float:left; width: 80%; padding-right: 5px;">
+                  <div style="float:left; width: 60%; padding-right: 5px;">
                     <input name="scan" id="scan" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="Item:" style="width:80%">
+                  </div>
+                  <div style="float:right; width: 20%; padding-right: 5px; margin-top: 20px;">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="removeAll()" style="width:120px; height: 20px;">Hapus Detail</a>
                   </div>
                 </div>
               </div>
@@ -500,6 +503,13 @@
 		}
 		function remove(index) {
 			detail_item = detail_item.filter(item => item.idlocal !== index)
+			setTimeout(function () {
+				$('#dg').datagrid('loadData',detail_item);
+				hitungHeader()
+			},100)
+		}
+		function removeAll() {
+			detail_item = []
 			setTimeout(function () {
 				$('#dg').datagrid('loadData',detail_item);
 				hitungHeader()

@@ -116,15 +116,16 @@ class Counter extends IO_Controller {
 		$tanggal=date("Y-m-d");
 		if(isset($param['location_code'])) $lokasi = $param['location_code'];
 		if(isset($param['tanggal'])) $tanggal = $param['tanggal'];
-		$data =["tipe"=>"total",
+		$total1 = $this->getParamGrid_BuilderComplete(array(
+			"tipe"=>"total",
 			"table"=>$this->table." a",
 			"sortir"=>"docno",
 			"special"=>["location_code"=>$lokasi,'doc_date'=>$tanggal],
 			"select"=>"a.*, b.store_name",
-			"join"=>["profile_p b"=>"b.default_stock_l=a.location_code"]];
-		$total = $this->getParamGrid_BuilderComplete($data);
-		$data['tipe'] = "query";
-		$data = $this->getParamGrid_BuilderComplete($data);
+			"join"=>["profile_p b"=>"b.default_stock_l=a.location_code"]
+		));
+		$total = $total1->total;
+		$data = $total1->data;
 		echo json_encode(array(
 				"total"=>$total,
 				"rows" =>$data)
