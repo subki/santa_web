@@ -455,7 +455,9 @@ class Rekapdaily extends IO_Controller {
         ));
     }
 
-    function delete_data_detail($code){
+    function delete_data_detail(){
+         $input = $this->toUpper($this->input->post());
+         $code=$input['id'];
         try {
             $read = $this->model->read_data_detailID($code);
             if ($read->num_rows() > 0) {
@@ -466,6 +468,7 @@ class Rekapdaily extends IO_Controller {
 //                    $msg="Data tidak bisa dihapus, sudah ada transaksi";
 //                }else{
                     $this->model->delete_data_detail($read->row()->docno, $code);
+                    $this->model->updateheaderdata2($read->row()->base_so);
                     $result = 0;
                     $msg="OK";
 //                }

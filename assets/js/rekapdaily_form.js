@@ -951,7 +951,7 @@ function read_packinglist() {
             console.log(result.data)
             if(result){
                 var rw = result.data;
-                $('#remark').textbox('setValue',rw.no_faktur+' '+rw.remark)
+                $('#remark').textbox('setValue',rw.no_faktur)
                 $('#customer_name').textbox('setValue',rw.customer_name)
                 $('#customer_code').combogrid('setValue',rw.customer_code)
                 $('#pkp').textbox('setValue',rw.pkp)
@@ -1391,7 +1391,7 @@ function populateCustomer() {
   $('#customer_code').combogrid({
         idField: 'customer_code',
         textField:'customer_name',
-        url:base_url+"customer/load_grid",
+        url:base_url+"customer/load_grid?golongan=Customer Online",
         // required:true,
         labelPosition:'top',
         tipPosition:'bottom',

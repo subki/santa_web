@@ -105,8 +105,22 @@ class Wholesales extends IO_Controller {
 
             $pl = $this->model_packing->read_data($input['base_so']);
             if($pl->num_rows()>0){
-                $so = $this->model_sales->read_data($pl->row()->so_number);
-                if($so->num_rows()>0){
+            	$pack = $pl->row();
+							$packing_det=$this->db->where("docno",$input['base_so'])
+								->where("qty_pl >",0)->get("packing_detail")->result();
+							$sales_det = $this->db->where("docno",$pack->so_number)
+								->where_in("seqno", array_column($packing_det,"seqno"))
+								->get("sales_order_detail")->result();
+							$temp_pack = [];
+            	foreach ($packing_det as $row)$temp_pack[$row->seqno] = $row;
+            	foreach ($sales_det as $key => $d){
+            		$d->gros = $d->unit_price*$temp_pack[$d->seqno]->qty_pl;
+            		$d->disc = $d->disc_total*$temp_pack[$d->seqno]->qty_pl;
+            		$d->ppn = $d->total_tax/$d->qty_order*$temp_pack[$d->seqno]->qty_pl;
+            		$d->bfr = $d->bruto_before_tax/$d->qty_order*$temp_pack[$d->seqno]->qty_pl;
+            		$d->aft = $d->net_total_price/$d->qty_order*$temp_pack[$d->seqno]->qty_pl;
+							}
+                if(count($sales_det)>0){
                     $data = array(
                         'doc_date' => $this->formatDate("Y-m-d", $input['doc_date']),
                         'faktur_date' => $this->formatDate("Y-m-d", $input['faktur_date']),
@@ -117,11 +131,11 @@ class Wholesales extends IO_Controller {
                         'remark' => $input['remark'],
                         'customer_code' => $input['customer_code'],
                         'base_so' => $input['base_so'],
-                        'gross_sales' => $so->row()->gross_sales,
-                        'total_ppn' => $so->row()->total_ppn,
-                        'total_disc' => $so->row()->total_discount,
-                        'sales_before_tax' => $so->row()->sales_before_tax,
-                        'sales_after_tax' => $so->row()->sales_after_tax,
+                        'gross_sales' => array_sum(array_column($sales_det,"gros")),
+                        'total_ppn' => array_sum(array_column($sales_det,"ppn")),
+                        'total_disc' => array_sum(array_column($sales_det,"disc")),
+                        'sales_before_tax' => array_sum(array_column($sales_det,"bfr")),
+                        'sales_after_tax' => array_sum(array_column($sales_det,"aft")),
                         'total_dp' => $input['total_dp'],
                         'sisa_faktur' => $input['sisa_faktur'],
                         'total_hpp' => $input['total_hpp'],
@@ -147,33 +161,42 @@ class Wholesales extends IO_Controller {
                             //cek ivs
                             $nomor_ivs = $this->model->generate_auto_number_ivs();
                             $data['no_faktur'] = $nomor_ivs;
+                            $data['no_faktur2'] = $nomor_ivs;
                             $docno = $this->model->insert_data($data);
                             $result = 0;
                             $msg = "OK";
                         }else{
+                        	$faktur = "";
                             if($input['no_faktur']!="") {
-//                                $ivs = $this->model->cek_nofaktur2($input['no_faktur2']);
-//                                if ($ivs->num_rows() == 0) {
-//                                    if(count($data['no_faktur2'])==13) {
-                                        $data['no_faktur'] = $data['no_faktur2'];
-                                        $docno = $this->model->insert_data($data);
-                                        $result = 0;
-                                        $msg = "OK";
-//                                    }else{
-//                                        $result = 1;
-//                                        $msg = "Nomor Faktur tidak valid. harus 13 digit";
-//                                    }
-//                                } else {
-//                                    $result = 1;
-//                                    $msg = "Nomor Faktur sudah digunakan, tidak bisa digunakan lagi.";
-//                                }
-                            }else {
-                                $result = 1;
-                                $msg = "Nomor Faktur harus diisi.";
-                            }
+                            	$faktur = $input['no_faktur'];
+														}else{
+                            	$faktur = $input['no_faktur2'];
+														}
+														if($faktur!=""){
+															$cfp = $this->db->where("no_faktur",$faktur)
+																->or_where("no_faktur2",$faktur)
+																->get('sales_trans_header')->row();
+															if(!isset($cfp)){
+																if(count($faktur)==13) {
+																	$data['no_faktur'] = $faktur;
+																	$data['no_faktur2'] = $faktur;
+																	$docno = $this->model->insert_data($data);
+																	$result = 0;
+																	$msg = "OK";
+																}else{
+																	$result = 1;
+																	$msg = "Nomor Faktur tidak valid. harus 13 digit";
+																}
+															}else{
+																$result = 1;
+																$msg = "Nomor Faktur sudah digunakan, tidak bisa digunakan lagi.";
+															}
+														}else{
+															$result = 1;
+															$msg = "Nomor Faktur harus diisi.";
+														}
                         }
                     }
-
                 }else{
                     $result = 1;
                     $msg = "Base SO Number tidak ditemukan";
@@ -192,71 +215,157 @@ class Wholesales extends IO_Controller {
         ));
     }
 
+    function clearFaktur($id){
+    	$data = $this->db->get_where("sales_trans_header",["id"=>$id])->row();
+    	if(isset($data)){
+    		if($data->status=="OPEN"){
+    			$this->db->trans_start();
+    			$this->db->where("sales_trans_header_id",$id)
+						->delete("sales_trans_detail");
+    			$upd = array(
+						'customer_code' => '',
+						'base_so' => '',
+						'gross_sales' => 0,
+						'total_ppn' => 0,
+						'total_disc' => 0,
+						'sales_before_tax' => 0,
+						'sales_after_tax' => 0,
+					);
+    			$this->db->update("sales_trans_header",$upd,["id"=>$id]);
+    			$this->db->trans_complete();
+    			$this->set_success("Clear detail Faktur berhasil");
+				}else{
+    			$this->set_error("Faktur is ".$data->status);
+				}
+			}else{
+    		$this->set_error("Faktur tidak ditemukan");
+			}
+			redirect('wholesales/form/edit?id='.$id);
+		}
+
     function edit_data_header(){
         $input = $this->toUpper($this->input->post());
         try {
 
+					$this->db->trans_start();
             $read = $this->model->read_data($input['id']);
             if ($read->num_rows() > 0) {
                 $dt = $read->row();
-                $data = array(
-                    'faktur_date' => $this->formatDate("Y-m-d", $input['faktur_date']),
-                    'no_faktur' => $input['no_faktur'],
-                    'no_faktur2' => $input['no_faktur2'],
-                    'seri_pajak' => $input['seri_pajak'],
-                    'jenis_faktur' => $input['jenis_faktur'],
-                    'remark' => $input['remark'],
-                    'total_dp' => $input['total_dp'],
-                    'sisa_faktur' => $input['sisa_faktur'],
-                    'total_hpp' => $input['total_hpp'],
-                    'status' => $input['status'],
-                    'updby' => $this->session->userdata('user_id'),
-                    'upddt' => date('Y-m-d H:i:s')
-                );
-                $result = 0;
-                $msg="OK";
-                if($input['status']=="CLOSED"){
-                    //cek customer yg perlu bayar dimuka atau bukan? or jika iya sudah di confirm finance atau blm
-                    $data['posting_date'] = date('Y-m-d');
-                    if($dt->payment_first=="No" || $dt->id_confirm > 0 ) {
+                if($dt->base_so != $input['base_so']) {
+									$pl = $this->model_packing->read_data($input['base_so']);
+									if ($pl->num_rows() > 0) {
+										$pack = $pl->row();
+										$packing_det = $this->db->where("docno", $input['base_so'])
+											->where("qty_pl >", 0)->get("packing_detail")->result();
+										$sales_det = $this->db->where("docno", $pack->so_number)
+											->where_in("seqno", array_column($packing_det, "seqno"))
+											->get("sales_order_detail")->result();
+										$temp_pack = [];
+										foreach ($packing_det as $row) $temp_pack[$row->seqno] = $row;
+										foreach ($sales_det as $key => $d) {
+											$d->gros = $d->unit_price * $temp_pack[$d->seqno]->qty_pl;
+											$d->disc = $d->disc_total * $temp_pack[$d->seqno]->qty_pl;
+											$d->ppn = $d->total_tax / $d->qty_order * $temp_pack[$d->seqno]->qty_pl;
+											$d->bfr = $d->bruto_before_tax / $d->qty_order * $temp_pack[$d->seqno]->qty_pl;
+											$d->aft = $d->net_total_price / $d->qty_order * $temp_pack[$d->seqno]->qty_pl;
+										}
+										if (count($sales_det) > 0) {
+											$data = array(
+												'doc_date' => $this->formatDate("Y-m-d", $input['doc_date']),
+												'faktur_date' => $this->formatDate("Y-m-d", $input['faktur_date']),
+												'no_faktur' => $input['no_faktur'],
+												'no_faktur2' => $input['no_faktur2'],
+												'seri_pajak' => $input['seri_pajak'],
+												'jenis_faktur' => $input['jenis_faktur'],
+												'remark' => $input['remark'],
+												'customer_code' => $input['customer_code'],
+												'base_so' => $input['base_so'],
+												'gross_sales' => array_sum(array_column($sales_det, "gros")),
+												'total_ppn' => array_sum(array_column($sales_det, "ppn")),
+												'total_disc' => array_sum(array_column($sales_det, "disc")),
+												'sales_before_tax' => array_sum(array_column($sales_det, "bfr")),
+												'sales_after_tax' => array_sum(array_column($sales_det, "aft")),
+												'total_dp' => $input['total_dp'],
+												'sisa_faktur' => $input['sisa_faktur'],
+												'total_hpp' => $input['total_hpp'],
+												'status' => $input['status'],
+												'updby' => $this->session->userdata('user_id'),
+												'upddt' => date('Y-m-d H:i:s'),
+											);
+											$this->model->update_data($input['id'], $data);
+											$this->model->copyPLtoWS($data, $input['id']);
+											$result = 0;
+											$msg="OK";
+										}else{
+											$result = 1;
+											$msg = "Base SO Number tidak ditemukan";
+										}
+									}else{
+										$result = 1;
+										$msg = "Base Packing Number tidak ditemukan";
+									}
+								}else{
+									$data = array(
+										'faktur_date' => $this->formatDate("Y-m-d", $input['faktur_date']),
+										'no_faktur' => $input['no_faktur'],
+										'no_faktur2' => $input['no_faktur2'],
+										'seri_pajak' => $input['seri_pajak'],
+										'jenis_faktur' => $input['jenis_faktur'],
+										'remark' => $input['remark'],
+										'total_dp' => $input['total_dp'],
+										'sisa_faktur' => $input['sisa_faktur'],
+										'total_hpp' => $input['total_hpp'],
+										'status' => $input['status'],
+										'updby' => $this->session->userdata('user_id'),
+										'upddt' => date('Y-m-d H:i:s')
+									);
+									$result = 0;
+									$msg="OK";
+									if($input['status']=="CLOSED"){
+										//cek customer yg perlu bayar dimuka atau bukan? or jika iya sudah di confirm finance atau blm
+										$data['posting_date'] = date('Y-m-d');
+										if($dt->payment_first=="No" || $dt->id_confirm > 0 ) {
 											$lokasi = $this->db->get_where('customer',['customer_code'=>$input['customer_code']])->row();
-											if(isset($lokasi)){
+											if(isset($lokasi) && $lokasi->lokasi_stock!=""){
 												$this->model->update_data($input['id'], $data);
-												$detail = $this->db->get_where('sales_tran_detail',['sales_trans_header_id'=>$input['id']])->result();
+												$detail = $this->db->get_where('sales_trans_detail', ['sales_trans_header_id' => $input['id']])->result();
 												$nobarqty = [];
-												foreach ($detail as $row){
+												foreach ($detail as $row) {
 													$nobarqty[$row->nobar] = $row->qty_on_sales;
 												}
 												$msg = $this->updateStock($lokasi->lokasi_stock,
-													$this->formatDate("Ym", $input['faktur_date']),$nobarqty, "penjualan",
-													array("docno"=>$input['no_faktur'],"tanggal"=> $this->formatDate("Y-m-d", $input['faktur_date']),"remark"=>$input['remark']));
+													$this->formatDate("Ym", $input['faktur_date']), $nobarqty, "penjualan",
+													array("docno" => $input['no_faktur'], "tanggal" => $this->formatDate("Y-m-d", $input['faktur_date']), "remark" => $input['remark']));
 
-												if($msg!="ok") $result = 1;
+												if ($msg != "ok") $result = 1;
 											}else{
 												$result = 1;
 												$msg = "Customer tidak memiliki lokasi stok untuk potong stock.";
 											}
-                    }else{
-                        $result = 1;
-                        $msg = "Customer harus melakukan pembayaran terlebih dahulu, dan perlu di konfirmasi oleh finance.";
-                    }
-                }else{
-                	if($dt->status=="CLOSED" && $input['status']=="OPEN"){
-                		$data['seri_pajak'] = '';
-										$data2 = array(
-											'inuse' => 0,
-											'refno' => '',
-											'updby' => $this->session->userdata('user_id'),
-											'upddt' => date('Y-m-d H:i:s')
-										);
-										$this->db->update("seri_pajak",$data2,["refno"=>$input['no_faktur']]);
+										}else{
+											$result = 1;
+											$msg = "Customer harus melakukan pembayaran terlebih dahulu, dan perlu di konfirmasi oleh finance.";
+										}
+									}else{
+										if($dt->status=="CLOSED" && $input['status']=="OPEN"){
+											$data['seri_pajak'] = '';
+											$data2 = array(
+												'inuse' => 0,
+												'refno' => '',
+												'updby' => $this->session->userdata('user_id'),
+												'upddt' => date('Y-m-d H:i:s')
+											);
+											$this->db->update("seri_pajak",$data2,["refno"=>$input['no_faktur']]);
+										}
+										$this->model->update_data($input['id'], $data);
 									}
-                    $this->model->update_data($input['id'], $data);
-                }
+								}
             } else {
                 $result = 1;
                 $msg="Kode tidak ditemukan";
             }
+
+					$this->db->trans_complete();
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();

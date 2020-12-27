@@ -54,14 +54,61 @@ class Customer extends IO_Controller {
     }
 
     function load_grid(){
-        $gol = $this->input->get('golongan');
+    	$input = $this->input->get();
         $f = $this->getParamGrid("","customer_code");
-        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],0,$gol);
+        $param = array(
+					"table"=>"customer a",
+					"sortir"=>"customer_code",
+					"select"=>"a.status, a.gol_customer, c.description customer_type_name
+				  , a.customer_class, a.customer_code
+                  , a.customer_name, d.nama_company head_customer_name
+                  , a.parent_cust, h.customer_name as parent_name
+                  , a.address1, a.address2, e.name provinsi, f.name kota
+                  , a.zip, a.fax, a.contact_person, a.phone1, a.phone2, a.phone3
+                  , b.salesman_name, a.top_day
+                  , a.pkp, a.npwp, a.nama_pkp, a.alamat_pkp
+                  , g.description lokasi
+                  , a.payment_first
+                  , a.credit_limit, a.outstanding, a.gl_account, a.cust_fk, a.info_cust
+                  , (a.credit_limit-a.outstanding) credit_remain
+                  , a.toc_day
+				  , a.provinsi_id
+				  , a.regency_id
+				  , a.customer_type
+				  , a.lokasi_stock, g.description as lokasi_stock_name
+				  , a.head_customer_id
+                  , a.salesman_id
+                  , a.margin_persen
+                  , a.beda_fp
+                  , c.diskon
+                  , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
+                  , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt",
+					"join"=>[
+						"salesman b"=>"a.salesman_id=b.salesman_id",
+						"customer_type c"=>"a.customer_type=c.code",
+						"head_company_customer d"=>"a.head_customer_id=d.head_customer_id",
+						"provinces e"=>"a.provinsi_id=e.id",
+						"regencies f"=>"a.regency_id=f.id and a.provinsi_id=f.province_id",
+						"location g"=>"a.lokasi_stock=g.location_code",
+						"customer h"=>"a.parent_cust=h.customer_code",
+						"users u1"=>"a.crtby=u1.user_id",
+						"users u2"=>"a.updby=u2.user_id",
+					],
+					"posisi"=>["left","left","left","left"]
+				);
+        if(isset($input['golongan'])){
+					$param["special"] = ["a.gol_customer"=>$input['golongan']];
+				}
+			$total1 = $this->getParamGrid_BuilderComplete($param);
+			$total = $total1->total;
+			$data = $total1->data;
+//        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],0,$gol);
 
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
 

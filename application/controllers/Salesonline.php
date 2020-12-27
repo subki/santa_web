@@ -38,24 +38,52 @@ class Salesonline extends IO_Controller {
         $tgl = $y."-".$m."-".$d;  
         // var_dump($prd)  ;
         if($status=='ALL' AND $prd=='ALL1'){   
-            $f = $this->getParamGrid("","doc_date");
+            $special = [];
+           // $f = $this->getParamGrid("","doc_date");
         }
         else{
             if($status=='ALL'){  
-                $f = $this->getParamGrid(" doc_date='$tgl' ","doc_date");
+                $special = ["doc_date ="=>$tgl];
+              //  $f = $this->getParamGrid(" doc_date='$tgl' ","doc_date");
             }
             else{ 
-                $f = $this->getParamGrid(" status='$status' and doc_date='$tgl' ","doc_date");
+                $special = ["doc_date ="=>$tgl,"status"=>$status];
+                //$f = $this->getParamGrid(" status='$status' and doc_date='$tgl' ","doc_date");
             }
-        } 
-        //var_dump($f);
-        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+        }
+        $total1 = $this->getParamGrid_BuilderComplete(array(
+            "table"=>"sales_online_header so ",
+            "sortir"=>"doc_date",
+            "special"=>$special,
+            "select"=>" DATE_FORMAT(p.tgl_pickup, '%d/%b/%Y') tgl_pickup,so.docno,so.remark
+                      , a.sales_date, DATE_FORMAT(a.sales_date, '%d/%m/%Y') ak_doc_date
+                      , DATE_FORMAT(so.doc_date, '%d/%b/%Y') tgl_so, DATE_FORMAT(so.doc_date, '%d/%m/%Y') ak_tgl_so
+                      , a.so_number,so.so_no, so.status, c.address1, c.phone1, c.pkp, c.beda_fp
+                      , so.customer customer_code, c.customer_name, so.qty_item, so.qty, so.sales
+                      , so.disc1_persen, so.disc2_persen , so.doc_date  
+                      , so.gross_sales, so.total_discount, so.sales_before_tax, so.total_ppn, so.sales_after_tax
+                      , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby
+                      , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                      , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt ",
+            "join"=>[
+                "sales_online_detail a "=>"so.docno=a.so_number",
+                "pickup_d d"=>"so.docno=d.barcode",
+                "pickup_h p"=>"p.id=d.pickup_h_id",
+                "customer c "=>"so.customer=c.customer_code",
+                "users u1"=>" a.crtby=u1.user_id",
+                "users u2 "=>"a.updby=u2.user_id",
+            ]
+        ));
+
+        $total = $total1->total;
+        $data = $total1->data;
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
+
     }
     function load_gridlist(){
         $f = $this->getParamGrid("","status");
@@ -101,6 +129,30 @@ class Salesonline extends IO_Controller {
         ));
     }
 
+    function cekrekapdaily(){
+        $input = $this->toUpper($this->input->post());
+        $tgl=$this->formatDate("Y-m-d",$input['tgl']);
+        try {
+            $read = $this->model->read_datarekap($tgl);
+            if ($read->num_rows() > 0) {
+                $result = 1;
+                $msg="Rekap Daily sudah terbentuk di Tanggal ".$read->row()->doc_date;
+                $data = $read->result()[0];
+            } else {
+                $result = 0;
+                $msg="OK";
+                $data = null;
+            }
+        }catch (Exception $e){
+            $result = 1;
+            $msg=$e->getMessage();
+        }
+        echo json_encode(array(
+            "status" => $result, "isError" => ($result==1),
+            "msg" => $msg, "message" => $msg,
+            "data" => $data
+        ));
+    }
     function edit_data_header(){
         try {
             $input = $this->toUpper($this->input->post()); 
@@ -246,16 +298,42 @@ class Salesonline extends IO_Controller {
 
     }
 
-
     function load_grid_detail($docno){
-        $f = $this->getParamGrid(" a.docno='$docno' GROUP BY a.docno,a.nobar ","seqno");
-        $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+        $total1 = $this->getParamGrid_BuilderComplete(array(
+                "table"=>"sales_online_detail a ",
+                "sortir"=>"a.docno,a.nobar",
+                "special"=>"a.docno= '$docno'",
+                "select"=>"a.id, a.docno, a.seqno, a.type, a.nobar, SUM(a.qty_order) qty_order, 
+                    SUM(a.unitprice)unit_price, (SUM(a.unitprice))+ SUM(a.total_tax)  pricetax , 
+                    SUM(a.disc1_persen) disc1_persen,SUM( a.disc2_persen)disc2_persen, 
+                    SUM(a.disc1_amount) disc1_amount,SUM(a.disc2_amount) disc2_amount , 
+                    SUM(a.disc_total) disc_total,SUM(a.bruto_before_tax) bruto_before_tax,
+                    (SUM(a.unitprice)+ SUM(a.total_tax))/1.1  total_tax, SUM(a.net_unit_price) net_unit_price, 
+                    SUM(a.net_after_tax) net_total_price , a.status_detail , b.nmbar, c.satuan_jual, 
+                    d.description AS uom_jual, c.product_code, d.uom_id , c.product_name, b.product_id , 
+                    (SELECT IFNULL(SUM(pl.qty_pl),0) 
+                        FROM packing_detail pl 
+                        INNER JOIN packing_header ph ON ph.docno=pl.docno 
+                            WHERE pl.so_number=a.docno AND pl.seqno=a.seqno AND ph.status IN('POSTING','CLOSED')) AS qty_pl , 
+                        COALESCE(a.updby, a.crtby) last_user , COALESCE(a.upddt, a.crtdt) last_time ",
+                "join"=>[
+                    "product_barang b"=>" a.nobar=b.nobar",
+                    "product c"=>" b.product_id=c.id",
+                    "product_uom d"=>" c.satuan_jual=d.uom_code",
+                ],
+                "posisi"=>["INNER","INNER","INNER"]
+            ));
+            $total = $total1->total;
+            $data = $total1->data;
+//        $f = $this->getParamGrid("","doc_date");
+//        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
+
     }
 
 

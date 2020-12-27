@@ -37,12 +37,38 @@ class Packinglist extends IO_Controller {
     }
 
     function load_grid(){
-        $f = $this->getParamGrid("","doc_date");
-        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+			$total1 = $this->getParamGrid_BuilderComplete(array(
+				"table"=>"packing_header a",
+				"sortir"=>"doc_date",
+				"special"=>[],
+				"select"=>"a.docno
+                  , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date
+                  , so.doc_date tgl_so, DATE_FORMAT(so.doc_date, '%d/%b/%Y') ak_tgl_so
+                  , a.so_number, a.remark, a.status, c.address1, c.phone1, c.pkp, c.beda_fp
+                  , so.customer_code, c.customer_name, a.qty_item, a.qty_pl, so.salesman_id
+                  , so.disc1_persen, so.disc2_persen, so.disc3_persen
+                  , so.qty_order, so.qty_deliver, so.service_level
+                  , so.gross_sales, so.total_discount, so.sales_before_tax, so.total_ppn, so.sales_after_tax
+                  , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
+                  , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt",
+				"join"=>[
+					"sales_order_header so"=>"a.so_number=so.docno",
+					"customer c"=>"so.customer_code=c.customer_code",
+					"location l"=>"l.location_code=so.location_code",
+					"users u1"=>"a.crtby=u1.user_id",
+					"users u2"=>"a.updby=u2.user_id",
+				],
+				"posisi"=>["left","inner","left","left"]
+			));
+			$total = $total1->total;
+			$data = $total1->data;
+//        $f = $this->getParamGrid("","doc_date");
+//        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
     }
@@ -84,7 +110,7 @@ class Packinglist extends IO_Controller {
     function edit_data_header(){
         try {
             $input = $this->toUpper($this->input->post());
-
+            $this->db->trans_start();
             $read = $this->model->read_data($input['docno']);
             if ($read->num_rows() > 0) {
                 $rd = $read->row();
@@ -97,32 +123,54 @@ class Packinglist extends IO_Controller {
                     'updby' => $this->session->userdata('user_id'),
                     'upddt' => date('Y-m-d H:i:s')
                 );
-
+                if($input['status']=="OPEN" && $rd->status=="POSTING"){
+                	$sl = $this->db->get_where("sales_order_header",["docno"=>$rd->so_number])->row();
+                	if($sl->status=="CLOSE") {
+										$this->db->update("sales_order_header",
+											[
+												"status" => "ON ORDER",
+												"upddt" => date("Y-m-d H:i:s"),
+												"updby" => $this->session->userdata(sess_user_id)
+											], ["docno" => $rd->so_number]);
+										$this->insert_log("sales_order_header", $rd->so_number, "ON ORDER - PL." . $input['reason']);
+									}
+								}
+                $err = 0;
                 if($input['status']=="POSTING"){
-                    $data['posting_date'] = date('Y-m-d');
+                	$so = $this->db->get_where("sales_order_header",["docno"=>$rd->so_number])->row();
+//                	pre($so);
+                	if($so->status=="ON ORDER") {
+										$data['posting_date'] = date('Y-m-d');
+									}else{
+                		$err = 1;
+										$result = 1;
+										$msg="Status Sales order ".$so->status;
+									}
                 }
+                if($err==0) {
 
-                if($input['reason'] != ""){
-                    $this->insert_log("packing_header", $input['docno'], $input['reason']);
-                }
+									if ($input['reason'] != "") {
+										$this->insert_log("packing_header", $input['docno'], $input['status']." - PL.".$input['reason']);
+									}
 
+									if ($rd->so_number != $input['so_number']) {
+										$data['docno'] = $input['docno'];
+										$data['so_number'] = $input['so_number'];
+										$total = $this->model->copySOtoPL($data);
+										if ($total > 0) {
+											$data['so_number'] = $rd->so_number;
+										}
+									}
+									$this->model->update_data($input['docno'], $data);
 
-                if($rd->so_number!=$input['so_number']){
-                    $data['docno']=$input['docno'];
-                    $data['so_number']=$input['so_number'];
-                    $total = $this->model->copySOtoPL($data);
-                    if($total>0){
-                        $data['so_number']=$rd->so_number;
-                    }
-                }
-                $this->model->update_data($input['docno'], $data);
-
-                $result = 0;
-                $msg="OK";
+									$result = 0;
+									$msg = "OK";
+								}
             } else {
                 $result = 1;
                 $msg="Kode tidak ditemukan";
             }
+            $this->db->trans_complete();
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();
@@ -227,12 +275,29 @@ class Packinglist extends IO_Controller {
 
 
     function load_grid_detail($docno){
-        $f = $this->getParamGrid(" a.docno='$docno' ","seqno");
-        $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+			$total1 = $this->getParamGrid_BuilderComplete(array(
+				"table"=>"packing_detail a",
+				"sortir"=>"seqno",
+				"special"=>" a.docno='$docno' ",
+				"select"=>"a.id, a.docno, a.seqno, a.nobar, a.qty_order, a.qty_pl
+                    , b.nmbar, c.satuan_jual, d.description AS uom_jual, c.product_code, d.uom_id
+                    , c.product_name, sd.tipe, c.article_code",
+				"join"=>[
+					"sales_order_detail sd"=>"a.so_number=sd.docno and a.seqno=sd.seqno",
+					"product_barang b"=>"a.nobar=b.nobar",
+					"product c"=>"b.product_id=c.id",
+					"product_uom d"=>"c.satuan_jual=d.uom_code",
+				],
+				"posisi"=>["left","left","inner","inner"]
+			));
+			$total = $total1->total;
+			$data = $total1->data;
+//        $f = $this->getParamGrid(" a.docno='$docno' ","seqno");
+//        $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
     }
@@ -323,17 +388,18 @@ class Packinglist extends IO_Controller {
         ));
     }
 
-    function delete_data_detail($code){
+    function delete_data_detail(){
         try {
+					$code = $this->input->post("id");
             $read = $this->model->read_data_detailID($code);
             if ($read->num_rows() > 0) {
-
-                $read = $this->model->read_transactions_detail($code);
+            	$rd = $read->row();
+                $read = $this->model->read_transactions_detail($rd->docno);
                 if ($read->num_rows() > 0) {
                     $result = 1;
-                    $msg="Data tidak bisa dihapus, sudah ada transaksi";
+                    $msg="Data tidak bisa dihapus";
                 }else{
-                    $this->model->delete_data($read->row()->docno, $code);
+                    $this->model->delete_data_detail($rd->docno, $code);
                     $result = 0;
                     $msg="OK";
                 }

@@ -82,10 +82,10 @@ function getRow() {
     return row;
 }
 function addData() {
-    window.location.href = base_url+"Finance/ar/add"
+    window.location.href = base_url+"Finance/AR/add"
 }
 function editData() {
     var r = getRow();
     if(r===null) return;
-    window.location.href = base_url+"Finance/ar/edit?id="+r.id;
+    window.location.href = base_url+"Finance/AR/edit?id="+r.id;
 }

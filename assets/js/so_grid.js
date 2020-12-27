@@ -51,14 +51,15 @@ var options={
         return data;
     },
     columns:[[
-        {field:"docno",   title:"Trx No",      width:130, sortable: true},
-        {field:"ak_doc_date",   title:"Trx Date",      width: 100, sortable: true},
-        {field:"status",   title:"Status",      width: 90, sortable: true},
-        {field:"customer_code",   title:"Customer",      width: 100, sortable: true},
-        {field:"crtby",   title:"Create By",      width: 100, sortable: true},
-        {field:"crtdt",   title:"Create Date",      width: 160, sortable: true},
-        {field:"updby",   title:"Update By",      width: 100, sortable: true},
-        {field:"upddt",   title:"Update Date",      width: 160, sortable: true},
+        {field:"docno",   title:"Trx No", sortable: true},
+        {field:"ak_doc_date",   title:"Trx Date", sortable: true},
+        {field:"status",   title:"Status", sortable: true},
+        {field:"customer_code",   title:"Code", sortable: true},
+        {field:"customer_name",   title:"Customer", sortable: true},
+        {field:"crtby",   title:"Create By", sortable: true},
+        {field:"crtdt",   title:"Create Date", sortable: true},
+        {field:"updby",   title:"Update By", sortable: true},
+        {field:"upddt",   title:"Update Date", sortable: true},
     ]],
     rowStyler:function(index,row){
         if (row.status==="OPEN"){

@@ -5,7 +5,7 @@ var barisSelect = 0;
 var counterSelect = 0;
 var options={
 	method:"POST",
-	url:base_url+"fa/ar/getFaktur",
+	url:base_url+"fa/AR/getFaktur",
 	pagePosition:"top",
 	resizeHandle:"right",
 	resizeEdge:10,
@@ -40,7 +40,7 @@ $(document).ready(function () {
 	populatePaymentBy();
 
 	if(aksi==="add"){
-		flag = "fa/ar/save_header";
+		flag = "fa/AR/save_header";
 		var date = new Date();
 		var y = date.getFullYear();
 		var m = date.getMonth()+1;
@@ -57,7 +57,7 @@ $(document).ready(function () {
 		$("#unposting").hide();
 		$("#submit").show();
 	}else{
-		flag = "fa/ar/edit_header";
+		flag = "fa/AR/edit_header";
 		reload_header()
 	}
 	$("#dg").datagrid(options)
@@ -93,7 +93,7 @@ function printAR() {
 function reload_header() {
 	$.ajax({
 		type:"POST",
-		url:base_url+"fa/ar/read_data/"+id,
+		url:base_url+"fa/AR/read_data/"+id,
 		dataType:"json",
 		success:function(result){
 			console.log(result.data)
@@ -119,13 +119,13 @@ function submitAR(){
 	$.redirectForm(base_url+flag,'#fm',"post","")
 }
 function updateAR(){
-	$.redirectForm(base_url+"fa/ar/edit_header",'#fm',"post","")
+	$.redirectForm(base_url+"fa/AR/edit_header",'#fm',"post","")
 }
 function postingAR(){
 	myConfirm("Alert","Anda yakin ingin Posting?","Ya","Tidak",function (r) {
 		if(r==="Ya"){
 			$("#status").textbox('setValue','ON PROGRESS')
-			$.redirectForm(base_url+"fa/ar/edit_header",'#fm',"post","")
+			$.redirectForm(base_url+"fa/AR/edit_header",'#fm',"post","")
 		}
 	})
 }
@@ -133,7 +133,7 @@ function unpostingAR(){
 	myConfirm("Alert","Anda yakin ingin Unposting?","Ya","Tidak",function (r) {
 		if(r==="Ya"){
 			$("#status").textbox('setValue','OPEN')
-			$.redirectForm(base_url+"fa/ar/edit_header",'#fm',"post","")
+			$.redirectForm(base_url+"fa/AR/edit_header",'#fm',"post","")
 		}
 	})
 }
@@ -284,7 +284,7 @@ function populateCBNumber() {
 			$("#cbtype").combobox('setValue',row.tipe_rekening)
 			$.ajax({
 				type:"POST",
-				url:base_url+"fa/ar/getLastNumber/"+row.tr_code,
+				url:base_url+"fa/AR/getLastNumber/"+row.tr_code,
 				dataType:"json",
 				success:function(result){
 					console.log(result);
@@ -380,7 +380,7 @@ function removeItem(baris, idd) {
 	if(idd>0){
 		myConfirm("Alert","Anda yakin ingin hapus?","Ya","Tidak",function (r) {
 			if(r==="Ya"){
-				$.redirect(base_url+"fa/ar/delete_detail/"+idd,{id_det:idd,id_head:id},"POST","")
+				$.redirect(base_url+"fa/AR/delete_detail/"+idd,{id_det:idd,id_head:id},"POST","")
 			}
 		})
 	}else{

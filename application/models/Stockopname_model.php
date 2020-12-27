@@ -311,7 +311,7 @@ class Stockopname_model extends CI_Model {
     }
     function updatestatusstokopname($docno, $data){ 
         $this->db->where('trx_no',$docno);
-        $this->db->update("adjustment_hdr",$data);
+        $this->db->update("hal_gondola",$data);
     }  
     function insert_datadetail($periode,$location_code,$store_code,$trx_no){ 
         $sql = "INSERT INTO adjustment_dtl(store_code,trx_no,item,product_code,UOM,location,qty,taking,unit_cost,total_cost)

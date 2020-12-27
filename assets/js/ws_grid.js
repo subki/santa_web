@@ -27,7 +27,7 @@ var options={
             return row.ak_doc_date;
         }},
         {field:"so_number",   title:"Base SO", sortable: true},
-        {field:"sales_after_tax",   title:"Total Faktur", sortable: true},
+        {field:"sales_after_tax",   title:"Total Faktur", sortable: true, formatter:numberFormat},
         {field:"remark",   title:"Remark", sortable: true},
         {field:"status",   title:"Status", sortable: true},
         {field:"crtby",   title:"Create By", sortable: true},

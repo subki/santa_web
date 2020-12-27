@@ -58,6 +58,11 @@ function initHeader() {
         $("#submit").hide();
         $("#posting").linkbutton({text:"Unposting"});
     }
+    if(parseInt(pl_item.qty_pl)===0){
+			$("#posting").hide();
+		}else{
+			$("#posting").show();
+    }
     if(pl_item.status==="CLOSE"){
         $("#submit").hide();
         $("#posting").hide();
@@ -114,8 +119,8 @@ function initGrid() {
         remoteFilter: true,
         rownumbers: false,
         pagination: true,
-        sortName: "seqno",
-        sortOrder: "asc",
+			sortName: "seqno",
+			sortOrder: "asc",
         singleSelect: true,
         toolbar: [
         //     {
@@ -211,6 +216,7 @@ function initGrid() {
             });
         }
     })
+  $("#dg").edatagrid('hideColumn','tipe');
 }
 
 function submit(stt){
@@ -238,7 +244,7 @@ function submit(stt){
         }
     }
     if(aksi==="add") {
-        submit_header("")
+        submit_header("",0)
     }else{
         if(pl_item!==undefined){
             if(pl_item.status==="POSTING" && status==="OPEN"){
@@ -253,7 +259,7 @@ function submit(stt){
                                 msg: 'Input reason unposting picking list:',
                                 fn: function (r) {
                                     if (r) {
-                                        submit_header(r)
+                                        submit_header(r,0)
                                     }
                                 }
                             });
@@ -263,7 +269,7 @@ function submit(stt){
                     }
                 })
             }else if(pl_item.status === status){
-                    submit_header("")
+                    submit_header("",0)
             }else{
                 if(x){
                     myConfirm("Confirm", "Anda yakin ingin mengubah status packing ini?", "Yes", "No", function (r) {
@@ -281,31 +287,19 @@ function submit(stt){
                                         },
                                         success:function(result){
                                             console.log(result.data)
-                                            submit_header("")
+                                            submit_header("",0)
                                         }
                                     });
                                 }else if(r==="Back Order"){
-                                    submit_header("")
+                                    submit_header("",0)
                                 }
                             })
                         }
                     })
                 }else{
                     if(qtypl===qtyord){
-                        $.ajax({
-                            type:"POST",
-                            url:base_url+"salesapp/edit_data_header",
-                            dataType:"json",
-                            data:{
-                                docno : pl_item.so_number,
-                                status : "CLOSE"
-                            },
-                            success:function(result){
-                                console.log(result.data)
-                                submit_header("")
-                            }
-                        });
-                    }else submit_header("");
+											submit_header("",1)
+                    }else submit_header("",0);
                 }
             }
         }
@@ -334,11 +328,12 @@ function read_wholesales(callback) {
 
 }
 
-function submit_header(reason) {
+function submit_header(reason, close_so) {
     $("#reason").textbox('setValue', reason);
     $('#fm').form('submit',{
         url: base_url+flag,
         type: 'post',
+        dataType:'json',
         success: function(result){
             console.log(result)
             try {
@@ -346,7 +341,22 @@ function submit_header(reason) {
                 console.log(result);
                 console.log(res.status);
                 if (res.status === 0) {
-                    window.location.href = base_url+"packinglist/form/edit?docno="+res.docno
+                    // if(close_so>0){
+											// $.ajax({
+											// 	type:"POST",
+											// 	url:base_url+"salesapp/edit_data_header",
+											// 	dataType:"json",
+											// 	data:{
+											// 		docno : pl_item.so_number,
+											// 		status : "CLOSE"
+											// 	},
+											// 	success:function(result){
+											// 	    window.location.href = base_url+"packinglist/form/edit?docno="+res.docno
+											// 	}
+											// });
+                    // }else{
+											window.location.href = base_url+"packinglist/form/edit?docno="+res.docno
+                    // }
                 } else {
                     $.messager.show({
                         title: 'Error',
@@ -446,6 +456,8 @@ function populateBaseSO() {
         remoteFilter:true,
         panelWidth: 500,
         multiple:false,
+		    sortName: "doc_date",
+		    sortOrder: "desc",
         panelEvents: $.extend({}, $.fn.combogrid.defaults.panelEvents, {
             mousedown: function(){}
         }),
@@ -467,10 +479,10 @@ function populateBaseSO() {
             $('#customer_name').textbox('setValue',rw.customer_name)
         },
         columns: [[
-			{field:'docno', title:'Base SO', width:75},
-			{field:'ak_doc_date', title:'Tanggal SO', width:175},
-			{field:'status', title:'Status', width:100},
-			{field:'customer_name', title:'Customer', width:100, formatter:function (index, row) {
+			{field:'docno', title:'Base SO'},
+			{field:'ak_doc_date', title:'Tanggal SO'},
+			{field:'status', title:'Status'},
+			{field:'customer_name', title:'Customer', formatter:function (index, row) {
                 return row.customer_code+" | "+row.customer_name;
             }},
 		]]

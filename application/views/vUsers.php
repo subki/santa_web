@@ -33,9 +33,9 @@
             <div style="margin-bottom:10px">
                 <input name="location_code" id="location_code" class="easyui-combobox" labelPosition="top" tipPosition="bottom" required="true" label="Loaction:" style="width:100%">
             </div>
-            <div style="margin-bottom:10px">
-                <input name="kode_otoritas" id="kode_otoritas" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="Kode Autorisasi:" style="width:100%">
-            </div>
+<!--            <div style="margin-bottom:10px">-->
+<!--                <input name="kode_otoritas" id="kode_otoritas" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="Kode Autorisasi:" style="width:100%">-->
+<!--            </div>-->
             <div id="dlg-buttons" style="float: right">
                 <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-ok" onclick="submit()" style="width:90px">Save</a>
                 <a href="javascript:void(0)" id="cancel" class="easyui-linkbutton" iconCls="icon-cancel" onclick="clearInput();" style="width:90px">Cancel</a>

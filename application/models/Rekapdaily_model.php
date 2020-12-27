@@ -217,7 +217,7 @@ class Rekapdaily_model extends CI_Model {
         return $this->db->query($sql)->row()->nomor;
     }
     function generate_auto_number_sg(){
-        $prefix="SGI";
+        $prefix="SGIO";
 
         if($prefix=="") return "";
         $sql = "SELECT IFNULL(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),LPAD(MAX(RIGHT(no_faktur,6))+1,6,'0')),
@@ -279,26 +279,15 @@ class Rekapdaily_model extends CI_Model {
     function delete_data_detail($docno, $id){
         $this->db->where('id',$id);
         $this->db->delete("sales_trans_detail");
-        $this->updateheaderdata($docno);
+        //$this->updateheaderdata($docno);
     }
     function read_transactions_detail($code){
         $this->db->where('brand_code',$code);
         return $this->db->get('product');
     }
-    function updateheaderdata($docno){
-//        $sql = "UPDATE packing_header AS dest
-//                , (SELECT COUNT(nobar) item, SUM(qty_pl) qty
-//                  FROM packing_detail WHERE docno='$docno') AS src
-//                SET dest.qty_item = src.item
-//                    , dest.qty_pl=src.qty
-//                WHERE dest.docno='$docno'";
-//        $this->db->query($sql);
-//        $sql = "UPDATE sales_order_header AS dest
-//                , (SELECT sum(qty_order) as orderan, sum(qty_pl) packing, so_number
-//                  FROM packing_detail WHERE docno='$docno' GROUP BY docno) AS src
-//                SET dest.service_level = ifnull(src.packing,0)/ifnull(src.orderan,0)*100
-//                WHERE dest.docno=src.so_number";
-//        $this->db->query($sql);
+    function updateheaderdata2($docno){
+       $sql = "UPDATE sales_online_header set status='POSTING' WHERE docno='$docno'";
+       $this->db->query($sql);
     }
 
 

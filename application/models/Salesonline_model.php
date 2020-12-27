@@ -241,4 +241,8 @@ class Salesonline_model extends CI_Model {
         return $this->db->query($sql)->result();
     }
  
+      function read_datarekap($tgl){
+        $q = "SELECT * FROM sales_trans_header WHERE doc_date='$tgl' AND jenis_faktur='SALES ONLINE' and status='CLOSED'";
+        return $this->db->query($q);
+    }
 }

@@ -24,6 +24,7 @@ $(document).ready(function () {
         $("#location_code").combogrid('setValue',location_code);
         $("#status").textbox('setValue','OPEN');
         $("#jumlah_print").textbox('setValue','0');
+        $("#close").hide();
         $("#update").hide();
         $("#posting").hide();
         $("#cancel").hide();
@@ -60,6 +61,7 @@ $(document).ready(function () {
     $('#regency_name').combogrid({"readonly":true});
 });
 function initHeader() {
+    console.log('initHeader',so_item)
     $('#province_name').combogrid({"readonly":true});
     $('#regency_name').combogrid({"readonly":true});
     $('#regency_id').textbox('setValue',so_item.regency_id)
@@ -68,6 +70,7 @@ function initHeader() {
     $('#provinsi_name').combogrid('setValue',so_item.provinsi)
     $('#customer_code').combogrid('setValue',so_item.customer_code)
     // $('#customer_code').combogrid('setText',so_item.customer_name)
+	$('#customer_type_name').textbox('setValue',so_item.customer_type_name)
 
     $('#credit_limit').textbox('setValue', numberFormat(so_item.credit_limit))
     $('#outstanding').textbox('setValue', numberFormat(so_item.outstanding))
@@ -91,14 +94,26 @@ function initHeader() {
     initGrid();
     $("#update").show();
     $("#submit").hide();
-    if(so_item.status==="ON ORDER"){
-        $("#posting").linkbutton({text:"Unposting"});
-        $("#update").hide();
+	if(so_item.status=="OPEN"){
+	    console.log("Masuk sini")
+		$("#close").hide();
+		// var d = dgrid.edatagrid('getData').rows.length;
+		// console.log("Masuk sini",d)
+		if(parseInt(so_item.qty_item)===0){
+			$("#posting").hide();
+		}else{
+			$("#posting").show();
+    }
+	}
+	if(so_item.status==="ON ORDER"){
+			$("#posting").linkbutton({text:"Unposting"});
+			$("#update").hide();
     }
     if(so_item.status==="CLOSE" || so_item.status==="EXPIRED"|| so_item.status==="CANCEL"){
         $("#posting").hide();
         $("#cancel").hide();
         $("#update").hide();
+        $("#close").hide();
     }
 
 }
@@ -262,6 +277,7 @@ function initGrid() {
                 $("#kopi").linkbutton({"disabled":false})
                 // $('#open_cust').hide();
             }
+            // reload_header()
         },
         onBeginEdit: function (index, row) {
             if (row.isNewRecord ){
@@ -299,9 +315,13 @@ function initGrid() {
                     value: row.product_code
                 });
                 grid.datagrid('doFilter');
+                console.log("cek",row)
+
+							product_selected = row;
             }
 
             if (row.isNewRecord) {
+
                 editor = $(this).edatagrid('getEditor', {index: index, field: 'disc1_persen'});
                 $(editor.target).numberbox('setValue', so_item.disc1_persen);
                 // if(parseFloat(so_item.disc1_persen)>0){
@@ -362,6 +382,7 @@ function initGrid() {
                         }),
                         editable: false,
                         pagination: true,
+                        clientPaging:false,
                         loadFilter: function (data) {
                             data.rows = [];
                             if (data.data) {
@@ -380,9 +401,19 @@ function initGrid() {
                                     jml_flg++;
                                 }
                             }
+													var selectedrow = $("#dg").edatagrid("getSelected");
+													var rowIndex = $("#dg").edatagrid("getRowIndex", selectedrow);
+													var ed = $('#dg').edatagrid('getEditor', {
+														index: rowIndex,
+														field: 'nobar'
+													});
+													$(ed.target).textbox('setValue', row.product_id);
+                            if(jml_flg>0){
+                                $.messager.show({title:'Error',msg:'Product sudah ada'})
+															$(ed.target).combogrid('setValue', '');
+                              return
+                            }
 
-                            var selectedrow = $("#dg").edatagrid("getSelected");
-                            var rowIndex = $("#dg").edatagrid("getRowIndex", selectedrow);
 
                             var ed = $('#dg').edatagrid('getEditor', {
                                 index: rowIndex,
@@ -390,7 +421,7 @@ function initGrid() {
                             });
                             $(ed.target).textbox('setValue', row.nmbar);
 
-                            var ed = $('#dg').edatagrid('getEditor', {
+                            ed = $('#dg').edatagrid('getEditor', {
                                 index: rowIndex,
                                 field: 'product_id'
                             });
@@ -404,14 +435,14 @@ function initGrid() {
                             $(ed.target).textbox('setText', row.id_jual);
 
 
-                            if(jml_flg>0){
-                                ed = $('#dg').edatagrid('getEditor', {
-                                    index: rowIndex,
-                                    field: 'tipe'
-                                });
-                                $(ed.target).textbox('setValue', jml_flg);
-                                $(ed.target).textbox('setText', jml_flg);
-                            }
+                            // if(jml_flg>0){
+                            //     ed = $('#dg').edatagrid('getEditor', {
+                            //         index: rowIndex,
+                            //         field: 'tipe'
+                            //     });
+                            //     $(ed.target).textbox('setValue', jml_flg);
+                            //     $(ed.target).textbox('setText', jml_flg);
+                            // }
 
                             get_unit_price(row, rowIndex, function(res){
                                 ed = $('#dg').edatagrid('getEditor', {
@@ -424,7 +455,7 @@ function initGrid() {
                         },
                         columns: [[
                             // {field: 'article_code', title: 'Article', width: 100},
-                            // {field: 'nobar', title: 'SKU', width: 150},
+                            {field: 'nobar', title: 'SKU', width: 150},
                             {field: 'product_code', title: 'Product Code', width: 100},
                             {field: 'nmbar', title: 'Product Name', width: 300},
                             {field: 'stock', title: 'Stock', width: 75},
@@ -437,8 +468,8 @@ function initGrid() {
             },
             {field: "product_id", title: "Product Id", width: '8%', sortable: true, editor: {type: 'textbox',options:{readonly:true}}},
             {field: "nmbar", title: "Product Name", width: '12%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "tipe", title: "Type", width: '5%', sortable: true, editor: {type: 'textbox'}},
-            {field: "qty_pl", title: "Qty PL", width: '6%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            // {field: "tipe", title: "Type", width: '5%', sortable: true, editor: {type: 'textbox'}},
+            {field: "qty_pl", title: "Qty PL", width: '6%', sortable: true, editor: {type: 'numberbox',options:{disabled:true}}},
             {field: "qty_order", title: "Qty Ord", width: '6%', sortable: true,
                 editor: {
                     type: 'numberbox',
@@ -460,10 +491,21 @@ function initGrid() {
 
                                 timer = setTimeout(function () {
                                     var prc = $(ed.target).textbox('getValue');
-                                    console.log("uki",prc)
+																	ed = $('#dg').edatagrid('getEditor', {
+																		index: rowIndex,
+																		field: 'qty_pl'
+																	});
+																	var qty_packing = $(ed.target).numberbox('getValue');
+                                    console.log("ukei",product_selected)
+                                    console.log("ukei",prc)
+                                    console.log("packing",qty_packing,e.target.value)
                                     if(product_selected!==null){
                                         if(parseInt(product_selected.stock)<parseInt(e.target.value)){
                                             $.messager.alert("Warning","Qty Stock lebih kecil dari Qty Order")
+                                        }else if(parseInt(qty_packing) > parseInt(e.target.value)){
+																					$.messager.alert("Warning","Qty Order tidak boleh kurang dari Qty Packing")
+																					ed = $('#dg').edatagrid('getEditor', {index: rowIndex,field: 'qty_order'});
+																					$(ed.target).numberbox('setValue',null);
                                         }else{
                                             if(prc==null || prc==="" || isNaN(prc) || parseFloat(prc)===0){
                                                 console.log("uki","masuk")
@@ -483,7 +525,7 @@ function initGrid() {
                                             }
                                         }
                                     }
-                                }, 1500);
+                                }, 500);
                             },
                         })
                     }
@@ -563,6 +605,7 @@ function initGrid() {
             }, editor: {type: 'numberbox',options:{readonly:true, formatter:formatnumberbox}}},
         ]],
         onSuccess: function (index, row) {
+            console.log(row)
             if (row.status === 1) {
                 $.messager.show({    // show error message
                     title: 'Error',
@@ -570,6 +613,9 @@ function initGrid() {
                 });
             }
             reload_header()
+        },
+			  onDestroy: function (index, e) {
+				    reload_header()
         },
         onError: function (index, e) {
             $.messager.show({
@@ -983,27 +1029,28 @@ function infoData() {
                 console.log(result.data)
                 if(result.status===0) {
                     var dt = '';
-                    dt += `<tr style="vertical-align: text-top">
-                            <td>Date</td>
-                            <td>User</td>
-                            <td>Remark</td>
+                    dt += `<tr style="vertical-align: text-top" class="tr_log">
+                            <td class="td_log">Date</td>
+                            <td class="td_log">User</td>
+                            <td class="td_log">Remark</td>
                         </tr>`;
                     for(var i=0; i<result.data.length; i++){
-                        dt += `<tr style="vertical-align: text-top">
-                            <td>${result.data[i].log_date}</td>
-                            <td>${result.data[i].user_id}</td>
-                            <td>${result.data[i].data_after}</td>
+                        dt += `<tr style="vertical-align: text-top" class="tr_log">
+                            <td class="td_log">${result.data[i].log_date}</td>
+                            <td class="td_log">${result.data[i].fullname}</td>
+                            <td class="td_log">${result.data[i].data_after}</td>
                         </tr>`;
                     }
                     var msg = `
-                    <table>
+                    <table id="data" class="table_log">
                         ${dt}
                     </table>
                     `;
                     $.messager.alert({
                         title: 'Info Data',
                         msg: msg,
-                        width: 400
+                        width: 500,
+                      height:'30%'
                     })
                 }
                 else {
@@ -1196,7 +1243,7 @@ function populateCustomer() {
    $('#customer_code').combogrid({
         idField: 'customer_code',
         textField:'customer_code',
-        url:base_url+"customer/load_grid",
+        url:base_url+"customer/load_grid?golongan=Wholesales",
         required:true,
         labelPosition:'top',
         tipPosition:'bottom',
@@ -1211,6 +1258,7 @@ function populateCustomer() {
         pagination: true,
         fitColumns: true,
         mode:'remote',
+        clientPaging:false,
         loadFilter: function (data) {
             console.log(data)
             data.rows = [];
@@ -1231,29 +1279,23 @@ function populateCustomer() {
             $('#provinsi_name').combogrid('setValue',rw.provinsi)
             $('#regency_id').textbox('setValue',rw.regency_id)
             $('#regency_name').combogrid('setValue',rw.kota)
+            $('#customer_type_name').textbox('setValue',rw.customer_type_name)
 
             $('#customer_code').textbox('setValue',rw.customer_code)
             $('#customer_name').textbox('setValue',rw.customer_name)
             $("#customer").show();
-
-            // var d = $("#dg").edatagrid('getData');
-            // if(d.data.length>0){
-            //     $("#customer_name").combogrid({'readonly':true})
-            // }
         },
         columns: [[
-			{field:'customer_code', title:'Kode', width:200},
-			{field:'customer_name', title:'Customer', width:300},
+					{field:'customer_code', title:'Kode', width:200},
+					{field:'customer_name', title:'Customer', width:200},
+					{field:'customer_type_name', title:'Price Type', width:100},
 		]]
     });
     var gr =  $('#customer_code').combogrid('grid')
     gr.datagrid('destroyFilter');
     gr.datagrid('enableFilter');
-    gr.datagrid('addFilterRule', {
-        field: 'gol_customer',
-        op: 'equal',
-        value: "Wholesales"
-    });
+    gr.datagrid('addFilterRule', {field: 'gol_customer',op: 'equal',value: "Wholesales"});
+    gr.datagrid('addFilterRule', {field: 'status',op: 'equal',value: "Aktif"});
     gr.datagrid('doFilter');
 }
 function populateRegency() {

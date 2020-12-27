@@ -38,7 +38,7 @@ $(document).ready(function () {
     so_item = undefined;
 
     // populateRegency();
-    // populateCustomer();
+    populateCustomer();
     // populateSalesman();
     // populateLocation();
     // populateStore();
@@ -46,47 +46,18 @@ $(document).ready(function () {
     // populateVerifyFA();
     populateBaseSO();
 
-    $("#no_faktur").textbox({
-        inputEvents:$.extend({},$.fn.textbox.defaults.inputEvents,{
-            focus: function(e){
-                var t = $(e.data.target);
-                var v = t.textbox('getValue');
-                if (v){t.textbox('setText', v);}
-            },
-            blur: function(e){
-                var t = $(e.data.target);
-                // formatValue(e.data.target);
-                var v = t.textbox('getValue');
-                if (v){
-                    if(v.length>7){
-                        var seri = v.substring(0, 3)+"."+v.substring(3,7)+"."+v.substring(7,9)+"."+v.substring(9, v.length);
-                        t.textbox('setText', seri)
-                    }else t.textbox('setText', v);
-                }
-            }
-        })
-    })
-
-    $("#no_faktur2").textbox({
-        inputEvents:$.extend({},$.fn.textbox.defaults.inputEvents,{
-            focus: function(e){
-                var t = $(e.data.target);
-                var v = t.textbox('getValue');
-                if (v){t.textbox('setText', v);}
-            },
-            blur: function(e){
-                var t = $(e.data.target);
-                // formatValue(e.data.target);
-                var v = t.textbox('getValue');
-                if (v){
-                    if(v.length>7){
-                        var seri = v.substring(0, 3)+"."+v.substring(3,7)+"."+v.substring(7,9)+"."+v.substring(9, v.length);
-                        t.textbox('setText', seri)
-                    }else t.textbox('setText', v);
-                }
-            }
-        })
-    })
+	$('#no_faktur').textbox('textbox').bind('keyup',function (e) {
+		console.log("Cek")
+		if(e.target.value.length<=9){
+			cekFaktur();
+		}
+	});
+	$('#no_faktur2').textbox('textbox').bind('keyup',function (e) {
+		console.log("Cek")
+		if(e.target.value.length<=9){
+			cekFaktur();
+		}
+	});
 
     if(aksi==="add"){
         flag = "wholesales/save_data_header";
@@ -122,6 +93,8 @@ $(document).ready(function () {
             success:function(result){
                 console.log(result.data)
                 if(result.status===0) {
+									$("#customer_code").combogrid({readonly:true})
+									$("#base_so").combogrid({readonly:true})
                     $('#fm').form('load',result.data);
                     so_item = result.data;
                     initHeader()
@@ -140,7 +113,29 @@ $(document).ready(function () {
         });
     }
 });
-
+function cekFaktur() {
+	if(aksi==="add") {
+		if(customer_selected!==undefined){
+			if(customer_selected.pkp==="YES") {
+				if (customer_selected.beda_fp === "YES") {
+					checkedFP(false)
+				} else {
+					checkedFP(true)
+				}
+			}
+		}
+	}else{
+		if(so_item!==undefined){
+			if(so_item.pkp==="YES") {
+				if (so_item.beda_fp === "YES") {
+					checkedFP(false)
+				} else {
+					checkedFP(true)
+				}
+			}
+		}
+	}
+}
 function initHeader() {
     $('#regency_id').textbox('setValue',so_item.regency_id)
     $('#provinsi_id').textbox('setValue',so_item.provinsi_id)
@@ -159,6 +154,17 @@ function initHeader() {
     $('#total_ppn').textbox('setValue', numberFormat(so_item.total_ppn))
     $('#sales_after_tax').textbox('setValue', numberFormat(so_item.sales_after_tax))
     $('#pkp').textbox('setValue',so_item.pkp)
+    // $('#seri_pajak').maskedbox('setValue',so_item.seri_pajak)
+  if(so_item.base_so==""){
+		$("#customer_code").combogrid({readonly:false})
+		$("#base_so").combogrid({readonly:false})
+    populateCustomer()
+    populateBaseSO()
+  }
+  if(so_item.store_code==null||so_item.store_code==""){
+		$("#store_code").combogrid('setValue',store_code);
+		$("#location_code").combogrid('setValue',location_code);
+  }
 
     var date = new Date(so_item.doc_date);
     var y = date.getFullYear();
@@ -175,7 +181,10 @@ function initHeader() {
         $("#posting").linkbutton({text:"Unposting"});
         $("#posting").show();
         $("#close").hide();
+        $("#clear_faktur").hide();
         $("#update").show();
+    }else{
+        $("#clear_faktur").show();
     }
     if(so_item.pkp==="YES"){
         if(so_item.beda_fp==="YES") {
@@ -187,15 +196,15 @@ function initHeader() {
             $("#dis_faktur1").hide();
             $("#dis_faktur2").show();
         }
-        if(so_item.no_faktur.length>7 && so_item.no_faktur2.length>7){
+        if(so_item.no_faktur.length>9 && so_item.no_faktur2.length>9){
             $("#crt_faktur").hide();
             $("#dis_faktur1").hide();
             $("#dis_faktur2").show();
         }
         if(so_item.seri_pajak!==""){
             var str = so_item.seri_pajak;
-            var seri = str.substring(0, 3)+"."+str.substring(3,6)+"-"+str.substring(6,8)+"."+str.substring(8, str.length);
-            $("#seri_pajak_formatted").textbox('setValue',seri)
+            // var seri = str.substring(0, 3)+"."+str.substring(3,6)+"-"+str.substring(6,8)+"."+str.substring(8, str.length);
+            $("#seri_pajak_formatted").maskedbox('setValue',str)
             $("#btn_seri_pajak").hide();
             $("#vseri").show();
         }else{
@@ -203,7 +212,9 @@ function initHeader() {
             $("#vseri").hide();
         }
     }else{
-        if(so_item.no_faktur.length>7 && so_item.no_faktur2.length>7){
+			$("#btn_seri_pajak").hide();
+			$("#vseri").hide();
+        if(so_item.no_faktur.length>9 && so_item.no_faktur2.length>9){
             $("#crt_faktur").hide();
             $("#dis_faktur1").hide();
             $("#dis_faktur2").show();
@@ -219,10 +230,10 @@ function initHeader() {
     }else{
         $("#verify_fa").hide();
     }
-    if(so_item.no_faktur.length>7){
+    if(so_item.no_faktur.length>9){
         $("#no_faktur").textbox('readonly',true);
     }
-    if(so_item.no_faktur.length>7 && so_item.no_faktur2.length>7){
+    if(so_item.no_faktur.length>9 && so_item.no_faktur2.length>9){
         $("#crt_faktur").hide();
     }else{
         $("#crt_faktur").show();
@@ -232,6 +243,13 @@ function initHeader() {
     $('#no_faktur').textbox('textbox').focus();
     $('#no_faktur2').textbox('textbox').focus();
     $('#seri_pajak_formatted').textbox('textbox').focus();
+}
+function clearFaktur() {
+  myConfirm("Clear Detail","Anda yakin?","Ya","No",function (r) {
+    if(r=="Ya"){
+        $.redirect(base_url+"wholesales/clearFaktur/"+so_item.id,{},"get","");
+    }
+	})
 }
 function verifyFA() {
     $.ajax({
@@ -264,12 +282,14 @@ function checkedFP(isChecked) {
         var y = date.getFullYear();
         if(isChecked){
             if(aksi==="add"){
-                $("#no_faktur").textbox('setValue','SGI'+y)
+                $("#no_faktur").textbox({readonly:false})
+                $("#no_faktur").textbox('setValue','SGI.'+y+'.')
                 $("#no_faktur2").textbox('setValue','')
             }else{
                 if(so_item!==undefined){
                     if(so_item.no_faktur===""){
-                        $("#no_faktur").textbox('setValue','SGI'+y)
+											$("#no_faktur").textbox({readonly:false})
+                        $("#no_faktur").textbox('setValue','SGI.'+y+'.')
                         $("#no_faktur2").textbox('setValue','')
                     }
                 }
@@ -278,17 +298,16 @@ function checkedFP(isChecked) {
             $('#dis_faktur2').hide();
         }else{
             if(aksi==="add"){
+							$("#no_faktur2").textbox({readonly:true})
                 $("#no_faktur").textbox('setValue','')
-                $("#no_faktur2").textbox('setValue','IVS'+y)
+                $("#no_faktur2").textbox('setValue','IVS.'+y+'.')
             }else{
                 if(so_item!==undefined){
                     console.log(so_item.no_faktur)
                     console.log(so_item.no_faktur2)
-                    // if(so_item.no_faktur.length===7){
-                    //     $("#no_faktur").textbox('setValue','SGI'+y)
-                    // }
-                    if(so_item.no_faktur2.length===7){
-                        $("#no_faktur2").textbox('setValue','SGI'+y)
+                    if(so_item.no_faktur2.length===9){
+											$("#no_faktur2").textbox({readonly:false})
+                        $("#no_faktur2").textbox('setValue','SGI.'+y+'.')
                     }
                 }
             }
@@ -392,11 +411,11 @@ function reload_header() {
 var timer=null;
 function initGrid() {
     if(!so_item) return
-    $("#dg").edatagrid({
+    $("#dg").datagrid({
         fitColumns: false,
         width: "100%",
         url: base_url + "wholesales/load_grid_detail/"+so_item.id,
-        saveUrl: base_url + "wholesales/save_data_detail/"+so_item.id,
+        // saveUrl: base_url + "wholesales/save_data_detail/"+so_item.id,
         // updateUrl: base_url + "wholesales/edit_data_detail",
         // destroyUrl: base_url + "wholesales/delete_data_detail",
         idField: 'id',
@@ -412,7 +431,7 @@ function initGrid() {
         sortName: "id",
         sortOrder: "desc",
         singleSelect: true, nowrap:false,
-        toolbar: [
+        // toolbar: [
             // {
             // iconCls: 'icon-add', id:'add', text:'New',
             // handler: function(){$('#dg').edatagrid('addRow',0)}
@@ -494,7 +513,7 @@ function initGrid() {
         //     id:'cancel', iconCls: 'icon-undo', text:'Cancel',
         //     handler: function(){$('#dg').edatagrid('cancelRow')}
         // },
-        ],
+        // ],
         loadFilter: function (data) {
             data.rows = [];
             if (data.data) {
@@ -911,6 +930,16 @@ function submit(stt){
     console.log(status)
     $('#status').textbox('setValue',status);
 
+    var pkp = $('#pkp').textbox('getValue');
+    var beda = $('#beda_fp').textbox('getValue');
+    var faktur = $('#no_faktur').textbox('getValue');
+    if(pkp=="YES" && beda=="NO"){
+        if(faktur=="" || faktur.length<=9){
+					$.messager.show({title:'Error', msg:'Faktur SGI Harus di input'});
+					return;
+        }
+    }
+
     if(aksi==="add"){
         submit_reason("")
     }else{
@@ -968,14 +997,14 @@ function submit(stt){
     }
 }
 function read_packinglist() {
-    if(so_item===undefined) return
+    if(so_item===undefined || so_item.base_so=="") return
     $.ajax({
         type:"POST",
         url:base_url+"packinglist/read_data/"+so_item.base_so,
         dataType:"json",
         success:function(result){
-            console.log(result.data)
-            if(result){
+            console.log("res",result.data)
+            if(result.status===0){
                 var rw = result.data;
                 $('#remark').textbox('setValue',rw.docno+' '+rw.remark)
                 $('#customer_name').textbox('setValue',rw.customer_name)
@@ -1076,8 +1105,10 @@ function cancelUpload() {
     $('#toolbar23').hide();
 }
 function submit_reason(reason) {
-    console.log(reason);
+    // console.log(reason);
     $("#reason").textbox('setValue', reason);
+    // $.redirectForm(base_url+flag,'#fm',"post","");
+    // return;
     $('#fm').form('submit',{
         url: base_url+flag,
         type: 'post',
@@ -1185,6 +1216,7 @@ function showCustomer2(r) {
     $.messager.alert("Customer Info",msg);
 }
 
+var customer_selected=undefined
 function populateBaseSO() {
     $('#base_so').combogrid({
         idField: 'docno',
@@ -1204,6 +1236,8 @@ function populateBaseSO() {
         pagination: true,
         fitColumns: true,
         mode:'remote',
+			sortName: "doc_date",
+			sortOrder: "desc",
         loadFilter: function (data) {
             console.log(data)
             data.rows = [];
@@ -1231,6 +1265,7 @@ function populateBaseSO() {
             $('#sales_before_tax').textbox('setValue',numberFormat(rw.sales_before_tax))
             $('#total_ppn').textbox('setValue',numberFormat(rw.total_ppn))
             $('#sales_after_tax').textbox('setValue',numberFormat(rw.sales_after_tax))
+          customer_selected=rw;
             if(rw.pkp==="YES") {
                 // $('#qty_deliver').textbox('setValue',rw.qty_deliver)
                 // $('#service_level').textbox('setValue',rw.service_level)
@@ -1240,7 +1275,7 @@ function populateBaseSO() {
                     // if(aksi=="add"){
                     //     var date = new Date();
                     //     var y = date.getFullYear();
-                    //     $("#no_faktur").textbox('setValue','SGI'+y)
+                    //     $("#no_faktur").textbox('setValue','SGI.'+y+'.')
                     // }
                 } else {
                     //input nomor faktur (SGI)
@@ -1249,12 +1284,13 @@ function populateBaseSO() {
             }
         },
         columns: [[
-            {field:'so_number', title:'SO Number', width:100},
-            {field:'ak_tgl_so', title:'Tanggal SO', width:90},
-            {field:'docno', title:'PL Number', width:100},
-            {field:'ak_doc_date', title:'Tanggal PL', width:90},
-            {field:'remark', title:'Keterangan', width:130},
-            {field:'status', title:'Status', width:100},
+            {field:'customer_name', title:'Customer'},
+            {field:'so_number', title:'SO Number'},
+            {field:'ak_tgl_so', title:'Tanggal SO'},
+            {field:'docno', title:'PL Number'},
+            {field:'ak_doc_date', title:'Tanggal PL'},
+            {field:'remark', title:'Keterangan'},
+            {field:'status', title:'Status'},
         ]]
     });
     var gr =  $('#base_so').combogrid('grid')
@@ -1423,8 +1459,8 @@ function populateSalesman() {
 function populateCustomer() {
    $('#customer_code').combogrid({
         idField: 'customer_code',
-        textField:'customer_name',
-        url:base_url+"customer/load_grid",
+        textField:'customer_code',
+        url:base_url+"customer/load_grid?golongan=Wholesales",
         // required:true,
         labelPosition:'top',
         tipPosition:'bottom',
@@ -1439,6 +1475,7 @@ function populateCustomer() {
         pagination: true,
         fitColumns: true,
         mode:'remote',
+        clientPaging:false,
         loadFilter: function (data) {
             console.log(data)
             data.rows = [];
@@ -1448,20 +1485,37 @@ function populateCustomer() {
         onSelect:function (index, rw) {
             console.log("select",rw);
             if(rw.customer_code==="") return
-            $('#salesman_id').combogrid('setValue',rw.salesman_id)
-            $('#disc1_persen').numberbox('setValue',rw.diskon)
-            $('#credit_limit').textbox('setValue',numberFormat(rw.credit_limit))
-            $('#outstanding').textbox('setValue',numberFormat(rw.outstanding))
-            $('#credit_remain').textbox('setValue',numberFormat(rw.credit_remain))
-            $('#pkp').textbox('setValue',rw.pkp)
-
-            $('#provinsi_id').textbox('setValue',rw.provinsi_id)
-            $('#provinsi_name').combogrid('setValue',rw.provinsi)
-            $('#regency_id').textbox('setValue',rw.regency_id)
-            $('#regency_name').combogrid('setValue',rw.kota)
+            // $('#salesman_id').combogrid('setValue',rw.salesman_id)
+            // $('#disc1_persen').numberbox('setValue',rw.diskon)
+            // $('#credit_limit').textbox('setValue',numberFormat(rw.credit_limit))
+            // $('#outstanding').textbox('setValue',numberFormat(rw.outstanding))
+            // $('#credit_remain').textbox('setValue',numberFormat(rw.credit_remain))
+            // $('#pkp').textbox('setValue',rw.pkp)
+						//
+						// $('#provinsi_id').textbox('setValue',rw.provinsi_id)
+						// $('#provinsi_name').combogrid('setValue',rw.provinsi)
+						// $('#regency_id').textbox('setValue',rw.regency_id)
+						// $('#regency_name').combogrid('setValue',rw.kota)
 
             $('#customer_code').textbox('setValue',rw.customer_code)
+					$('#customer_name').textbox('setValue',rw.customer_name)
             $("#customer").show();
+					var gr =  $('#base_so').combogrid('grid')
+					gr.datagrid('destroyFilter');
+					gr.datagrid('enableFilter');
+					gr.datagrid('removeFilterRule', 'status');
+					gr.datagrid('addFilterRule', {
+						field: 'status',
+						op: 'equal',
+						value: "POSTING"
+					});
+					gr.datagrid('addFilterRule', {
+						field: 'customer_code',
+						op: 'equal',
+						value: rw.customer_code
+					});
+					gr.datagrid('doFilter');
+					gr.edatagrid('hideColumn', 'status');
 
             // var d = $("#dg").edatagrid('getData');
             // if(d.data.length>0){
