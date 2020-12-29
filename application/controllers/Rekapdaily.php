@@ -183,6 +183,7 @@ class Rekapdaily extends IO_Controller {
         try {
             $input = $this->toUpper($this->input->post());
             $read = $this->model_faktur->read_available_faktur(date('Y'));
+//            pre($read->result());
             if ($read->num_rows() > 0) {
                 $dt =$read->row();
                 $data = array(

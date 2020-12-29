@@ -307,7 +307,9 @@ function initGrid() {
         onLoadSuccess: function () {
             authbutton();
 
-            $('#dg').edatagrid('addRow',0);
+            if(so_item.status==="OPEN") {
+							$('#dg').edatagrid('addRow', 0);
+						}
             //$('#dg').edatagrid('saveRow');
             var dt = $("#dg").edatagrid('getData');
             if(dt.data.length>0){

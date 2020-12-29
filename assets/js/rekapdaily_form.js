@@ -318,7 +318,7 @@ function createSeriPajak() {
             else {
                 $.messager.show({
                     title: 'Error',
-                    msg: e.message,
+                    msg: result.message,
                     handler:function () {
                         window.location.href = base_url+"Rekapdaily";
                     }

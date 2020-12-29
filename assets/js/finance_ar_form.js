@@ -372,7 +372,7 @@ function populateCustomer() {
 	var gr =  $('#customer_code').combogrid('grid')
 	gr.datagrid('destroyFilter');
 	gr.datagrid('enableFilter');
-	gr.datagrid('addFilterRule', {field: 'gol_customer', op: 'equal', value: "Wholesales"});
+	// gr.datagrid('addFilterRule', {field: 'gol_customer', op: 'equal', value: "Wholesales"});
 	gr.datagrid('addFilterRule', {field: 'status', op: 'equal', value: "Aktif"});
 	gr.datagrid('doFilter');
 }

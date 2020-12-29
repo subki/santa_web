@@ -47,10 +47,12 @@ class Online extends IO_Controller {
 
     function load_grid($status, $cust, $prd){  
 
-        $d= substr($prd,6); 
-        $y= substr($prd, 0, 4);
-        $m= substr($prd, 4, 2);
-        $tgl = $y."-".$m."-".$d;   
+//        $d= substr($prd,6);
+//        $y= substr($prd, 0, 4);
+//        $m= substr($prd, 4, 2);
+//        $tgl = $y."-".$m."-".$d;
+        $tgl = date("Y-m-d",strtotime($prd));
+//        pre($tgl);
         $kdcust = $cust; 
         $dtnow=date('Y-m-d');
         // $f = $this->getParamGrid(" CASE WHEN  status != '$status'  THEN doc_date <= '$tgl' ELSE  doc_date = '$tgl' END
@@ -59,11 +61,11 @@ class Online extends IO_Controller {
         //                      ","status");
         if($status=='ALL'){   
             if($cust=='~'){
-               $special = "a.doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN a.status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE a.status='OPEN'  END ";
+               $special = "a.doc_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN a.status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE a.status='OPEN'  END ";
                // $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END ","status");
              }
              else{
-              $special ="a.doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN a.status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE a.status='OPEN'  END  and a.customer_code like '%$cust%' ";
+              $special ="a.doc_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN a.status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE a.status='OPEN'  END  and a.customer_code like '%$cust%' ";
                  //$f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END  and customer_code like '%$cust%' ","status");
              }
         }

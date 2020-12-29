@@ -84,7 +84,7 @@ class Wholesales extends IO_Controller {
 					"users u3"=>"a.app_creditby=u3.user_id",
 					"users u4"=>"a.app_maxslsby=u3.user_id",
 				],
-				"posisi"=>["left","left","left","left","left","left","inner","left","left","left","left","left","left","left"]
+				"posisi"=>["left","left","left","left","left","left","left","left","left","left","left","left","left","left"]
 			));
 			$total = $total1->total;
 			$data = $total1->data;
