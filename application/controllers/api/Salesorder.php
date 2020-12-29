@@ -40,7 +40,7 @@ class Salesorder extends CI_Controller {
         $data = $xx->result();
         echo json_encode(array(
                 "status" => $stt,
-                "msg" => $msg, "message" => $msg
+                "msg" => $msg, "message" => $msg,
                 "data"=>$data,
                 "dump"=>array("offset"=>$offset,"outlet"=>$outlet,"search"=>$search,"status"=>$status)
             )
@@ -65,7 +65,7 @@ class Salesorder extends CI_Controller {
         }
         echo json_encode(array(
                 "status" => $stt,
-                "msg" => $msg, "message" => $msg
+                "msg" => $msg, "message" => $msg,
                 "data"=>$data
             )
         );
@@ -90,7 +90,7 @@ class Salesorder extends CI_Controller {
         }
         echo json_encode(array(
                 "status" => $stt,
-                "msg" => $msg, "message" => $msg
+                "msg" => $msg, "message" => $msg,
                 "data"=>$data
             )
         );
@@ -263,7 +263,7 @@ class Salesorder extends CI_Controller {
         $data = $xx->row();
         echo json_encode(array(
                 "status" => $stt,
-                "msg" => $msg, "message" => $msg
+                "msg" => $msg, "message" => $msg,
                 "data"=>$data
             )
         );
@@ -316,7 +316,7 @@ class Salesorder extends CI_Controller {
         $data = $xx->result();
         echo json_encode(array(
                 "status" => $stt,
-                "msg" => $msg, "message" => $msg
+                "msg" => $msg, "message" => $msg,
                 "data"=>$data
             )
         );

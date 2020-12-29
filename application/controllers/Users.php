@@ -72,26 +72,26 @@ class Users extends IO_Controller {
                 'user_password' => $input['user_password'],
                 'store_code' => $input['store_code'],
                 'location_code' => $input['location_code'],
-                'kode_otoritas' => $input['kode_otoritas'],
+//                'kode_otoritas' => $input['kode_otoritas'],
                 'crtby' => $this->session->userdata('user_id'),
                 'crtdt' => date('Y-m-d H:i:s'),
             );
 
-            if($input['kode_otoritas']!=""){
-                $cek = $this->model->cekOtoritas($input['kode_otoritas']);
-                if($cek->num_rows()>0){
-                    $result = 1;
-                    $msg="Kode Otoritas harus Unik";
-                }else{
-                    $this->model->insert_data($data);
-                    $result = 0;
-                    $msg = "OK";
-                }
-            }else{
+//            if($input['kode_otoritas']!=""){
+//                $cek = $this->model->cekOtoritas($input['kode_otoritas']);
+//                if($cek->num_rows()>0){
+//                    $result = 1;
+//                    $msg="Kode Otoritas harus Unik";
+//                }else{
+//                    $this->model->insert_data($data);
+//                    $result = 0;
+//                    $msg = "OK";
+//                }
+//            }else{
                 $this->model->insert_data($data);
                 $result = 0;
                 $msg = "OK";
-            }
+//            }
         }catch (Exception $e){
             $result = 1;
             $msg=$e->getMessage();
@@ -105,10 +105,11 @@ class Users extends IO_Controller {
     function edit_data(){
         try {
             $input = $this->input->post();
+//            pre($input);
 
             $read = $this->model->read_data($input['user_id']);
             if ($read->num_rows() > 0) {
-                if($read->row()->user_password != md5($input['user_password'])) {
+                if($read->row()->user_password != $input['user_password']) {
                     $this->model->update_data2($input['user_id'], $input['user_password']);
                 }
 
@@ -118,21 +119,21 @@ class Users extends IO_Controller {
                     'user_name' => $input['user_name'],
                     'store_code' => $input['store_code'],
                     'location_code' => $input['location_code'],
-                    'kode_otoritas' => $input['kode_otoritas'],
+//                    'kode_otoritas' => $input['kode_otoritas'],
                     'updby' => $this->session->userdata('user_id'),
                     'upddt' => date('Y-m-d H:i:s'),
                 );
 
                 if($read->row()->kode_otoritas != $input['kode_otoritas']) {
-                    $cek = $this->model->cekOtoritas($input['kode_otoritas']);
-                    if($cek->num_rows()>0){
-                        $result = 1;
-                        $msg="Kode Otoritas harus Unik";
-                    }else{
+//                    $cek = $this->model->cekOtoritas($input['kode_otoritas']);
+//                    if($cek->num_rows()>0){
+//                        $result = 1;
+//                        $msg="Kode Otoritas harus Unik";
+//                    }else{
                         $this->model->update_data($input['user_id'], $data);
                         $result = 0;
                         $msg="OK";
-                    }
+//                    }
                 }else{
                     $this->model->update_data($input['user_id'], $data);
                     $result = 0;

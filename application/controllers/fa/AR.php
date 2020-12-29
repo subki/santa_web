@@ -123,7 +123,7 @@ class AR extends IO_Controller {
 		}else{
 			$this->session->set_flashdata("Insert success");
 		}
-		redirect("Finance/ar/edit?id=".$input['id']);
+		redirect("Finance/AR/edit?id=".$input['id']);
 	}
 	public function edit_header(){
 		$input = $this->toUpper($this->input->post());
@@ -185,7 +185,7 @@ class AR extends IO_Controller {
 		}else{
 			$this->session->set_flashdata("Update success");
 		}
-		redirect("Finance/ar/edit?id=".$input['id']);
+		redirect("Finance/AR/edit?id=".$input['id']);
 	}
 
 	function read_data($docno){
@@ -219,7 +219,7 @@ class AR extends IO_Controller {
 		$total = array_sum(array_column($det,"payment_amt"));
 		$this->db->update($this->table,['payment_amount'=>$total],['id'=>$input['id_head']]);
 		$this->db->trans_complete();
-		redirect("Finance/ar/edit?id=".$input['id_head']);
+		redirect("Finance/AR/edit?id=".$input['id_head']);
 	}
 
 

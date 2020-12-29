@@ -307,7 +307,9 @@ function initGrid() {
         onLoadSuccess: function () {
             authbutton();
 
-            $('#dg').edatagrid('addRow',0);
+            if(so_item.status==="OPEN") {
+							$('#dg').edatagrid('addRow', 0);
+						}
             //$('#dg').edatagrid('saveRow');
             var dt = $("#dg").edatagrid('getData');
             if(dt.data.length>0){
@@ -699,7 +701,19 @@ function initGrid() {
                 title: 'Error',
                 msg: e.message
             });
-        }
+        },
+        onDestroy: function (index, row) {
+            if (row.status === 1) {
+                $.messager.show({    // show error message
+                    title: 'Error',
+                    msg: row.msg
+                });
+            }
+
+            $('#dg').edatagrid('reload');
+            reload_header()
+
+        },
     }) 
 
     $('#dg').edatagrid('hideColumn','product_id');
@@ -1081,7 +1095,7 @@ function showCustomer() {
     if(aksi==="edit"){
         $.ajax({
             type:"POST",
-            url:base_url+"customer/read_data/"+so_item.customer_code,
+            url:base_url+"Online/read_datacustomer/"+so_item.customer_code+"/"+so_item.so_no,
             dataType:"json",
             success:function(result){
                 //console.log(result.data)
@@ -1158,37 +1172,27 @@ function infoData() {
 function showCustomer2(r) {
     if(!r) return
     var msg = `
-    <table>
+    <table style='width:100%'>
         <tr style="vertical-align: text-top">
             <td>Name</td>
             <td> : </td>
-            <td>${r.customer_name}</td>
+            <td>${r.customer_name}/${r.nama_customer}</td>
         </tr>
         <tr style="vertical-align: text-top">
             <td>Address</td>
             <td> : </td>
-            <td>${r.address1}<br />${r.address2}</td>
+            <td>${r.alamat_kirimcust}</td>
         </tr>
         <tr style="vertical-align: text-top">
             <td>Wilayah</td>
             <td> : </td>
-            <td>${r.kota} - ${r.provinsi}</td>
-        </tr>
-        <tr style="vertical-align: text-top">
-            <td>ZIP</td>
-            <td> : </td>
-            <td>${r.zip}</td>
-        </tr>
+            <td>${r.kotacust} - ${r.provcust}</td>
+        </tr> 
         <tr style="vertical-align: text-top">
             <td>Phone1</td>
             <td> : </td>
-            <td>${r.phone1}</td>
-        </tr>
-        <tr style="vertical-align: text-top">
-            <td>Fax</td>
-            <td> : </td>
-            <td>${r.fax}</td>
-        </tr>
+            <td>${r.tlpcust}</td>
+        </tr> 
     </table>
     `;
     $.messager.alert("Customer Info",msg);
@@ -1331,7 +1335,7 @@ function populateCustomer() {
    $('#customer_code').combogrid({
         idField: 'customer_code',
         textField:'customer_code',
-        url:base_url+"customer/load_grid",
+        url:base_url+"customer/load_grid?golongan=Customer Online",
         required:true,
         labelPosition:'top',
         tipPosition:'bottom',

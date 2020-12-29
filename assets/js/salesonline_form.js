@@ -64,7 +64,7 @@ function initHeader() {
         $("#submit").hide();
         $("#posting").linkbutton({text:"Unposting"});
     }
-    if(pl_item.status==="CLOSE"){
+    if(pl_item.status==="CLOSED"){
         $("#submit").hide();
         $("#posting").hide();
     }
@@ -268,15 +268,32 @@ function submit(stt){
                             $.messager.show({title:'Error', msg:'Anda tidak memiliki otoritas Unposting'});
                             $('#status').textbox('setValue',pl_item.status);
                         }else {
-                            $.messager.prompt({
-                                title: 'Reason Unposting',
-                                msg: 'Input reason unposting picking list:',
-                                fn: function (r) {
-                                    if (r) {
-                                        submit_header(r)
+                             $.ajax({
+                                    type:"POST",
+                                    url:base_url+"Salesonline/cekrekapdaily",
+                                    dataType:"json",
+                                    data:{
+                                        tgl : pl_item.ak_tgl_so
+                                    },
+                                    success:function(result){
+                                        console.log(result);
+                                        if(result.status==1){
+                                            alert("Daily tidak bisa di Unposting\n"+result.msg)
+                                        }
+                                        else{
+                                            $.messager.prompt({
+                                                title: 'Reason Unposting',
+                                                msg: 'Input reason unposting picking list:',
+                                                fn: function (r) {
+                                                    if (r) {
+                                                        //alert('ok')
+                                                        submit_header(r)
+                                                    }
+                                                }
+                                            });
+                                        }
                                     }
-                                }
-                            });
+                                });
                         }
                     }else{
                         $.messager.show({title:'Error', msg:res});
@@ -288,17 +305,33 @@ function submit(stt){
                 if(x){
                     myConfirm("Confirm", "Anda yakin ingin mengubah status Sales Online ini?", "Yes", "No", function (r) {
                         if (r === "Yes") {
-                             $.ajax({
+                            $.ajax({
                                         type:"POST",
-                                        url:base_url+"Salesonline/edit_data_header",
+                                        url:base_url+"Salesonline/cekrekapdaily",
                                         dataType:"json",
                                         data:{
-                                            docno : pl_item.so_number,
-                                            status : "CLOSE"
+                                            tgl : pl_item.ak_tgl_so
                                         },
                                         success:function(result){
-                                            console.log(result.data)
-                                            submit_header("")
+                                            console.log(result.status);
+                                            if(result.status==1){
+                                                alert(result.msg)
+                                            }
+                                            else{
+                                                 $.ajax({
+                                                    type:"POST",
+                                                    url:base_url+"Salesonline/edit_data_header",
+                                                    dataType:"json",
+                                                    data:{
+                                                        docno : pl_item.so_number,
+                                                        status : "CLOSE"
+                                                    },
+                                                    success:function(result){
+                                                        console.log(result.data)
+                                                        submit_header("")
+                                                    }
+                                                });
+                                            }
                                         }
                                     });
                         }
@@ -388,7 +421,7 @@ function showCustomer() {
     }
     $.ajax({
         type:"POST",
-        url:base_url+"customer/read_data/"+code,
+        url:base_url+"Online/read_datacustomer/"+code+"/"+pl_item.so_no,
         dataType:"json",
         success:function(result){
             console.log(result.data)
@@ -408,6 +441,11 @@ function showCustomer() {
         }
     });
 }
+                  // , rs.nama_customer
+                  // , rs.no_telepon as tlpcust
+                  // , rs.alamat_kirim
+                  // , rs.kota as kotacust
+                  // , rs.provinsi as provcust
 function showCustomer2(r) {
     if(!r) return
     var msg = `
@@ -415,33 +453,23 @@ function showCustomer2(r) {
         <tr style="vertical-align: text-top">
             <td>Name</td>
             <td> : </td>
-            <td>${r.customer_name}</td>
+            <td>${r.customer_name}/${r.nama_customer}</td>
         </tr>
         <tr style="vertical-align: text-top">
             <td>Address</td>
             <td> : </td>
-            <td>${r.address1}<br />${r.address2}</td>
+            <td>${r.alamat_kirimcust}</td>
         </tr>
         <tr style="vertical-align: text-top">
             <td>Wilayah</td>
             <td> : </td>
-            <td>${r.kota} - ${r.provinsi}</td>
-        </tr>
-        <tr style="vertical-align: text-top">
-            <td>ZIP</td>
-            <td> : </td>
-            <td>${r.zip}</td>
-        </tr>
+            <td>${r.kotacust} - ${r.provcust}</td>
+        </tr> 
         <tr style="vertical-align: text-top">
             <td>Phone1</td>
             <td> : </td>
-            <td>${r.phone1}</td>
-        </tr>
-        <tr style="vertical-align: text-top">
-            <td>Fax</td>
-            <td> : </td>
-            <td>${r.fax}</td>
-        </tr>
+            <td>${r.tlpcust}</td>
+        </tr> 
     </table>
     `;
     $.messager.alert("Customer Info",msg);

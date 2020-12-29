@@ -251,7 +251,7 @@ class AP extends IO_Controller {
 		$total = array_sum(array_column($det,"payment_amt"));
 		$this->db->update($this->table,['payment_amount'=>$total],['id'=>$input['id_head']]);
 		$this->db->trans_complete();
-		redirect("Finance/ar/edit?id=".$input['id_head']);
+		redirect("Finance/AR/edit?id=".$input['id_head']);
 	}
 
 

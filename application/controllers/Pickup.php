@@ -160,9 +160,9 @@ class Pickup extends IO_Controller {
 
     function edit_data_header(){
         try {
-            $input =$this->input->post(); 
+            $input =$this->input->post();
             $read = $this->model->read_data($input['id']);
-            
+
             if ($read->num_rows() > 0) {
                 $bf = $read->row();
                 $data = array(
@@ -170,7 +170,7 @@ class Pickup extends IO_Controller {
                     'ekspedisi' => $input['pickupby'],
                     'fase_pickup' => $input['fase'],
                     'tgl_pickup' => $this->formatDate("Y-m-d",$input['tgl_pickup']), 
-                    'status' => $input['status'], 
+//                    'status' => $input['status'],
                     'user' => $input['pickup_by'], 
                     'ekspedisiname' => $input['customer_name'], 
                     'ekspedisiby' => $input['customer_code'],  
@@ -529,40 +529,40 @@ class Pickup extends IO_Controller {
         ));
     }
    function submitdetail(){
-        $input = $this->toUpper($this->input->post());
-        $pickupheader = $input['pickupheader'];
-        $barcode = $input['barcode'];
-        $tanggal = $input['tanggal'];   
-        $cekSO = $this->model->cekSO($barcode);
-        $read = $this->model->read_datapickdetail($barcode);
-        $readheader = $this->model->read_data($pickupheader)->row();
-        $readfase = $this->model->read_datadetail($pickupheader)->row();
-        $jumfase= $readfase->jumlah;
-            $data = array(
-                    'pickup_h_id' => $pickupheader,
-                    'tgl' => $tanggal,
-                    'barcode' => $barcode, 
-                    'ekspedisi'=>$readheader->ekspedisiby, 
-                    'status' => 'Open',
-                    'fase_pickup' => $jumfase+1
-                );
-       if($cekSO->num_rows()==0){
-                $stt =0;
-                $msg="Kode status masih Open/ Sudah Terposting";
-                $res="Kode status masih Open/ Sudah Terposting";
-       }else{
+		 $input = $this->toUpper($this->input->post());
+		 $pickupheader = $input['pickupheader'];
+		 $barcode = $input['barcode'];
+		 $tanggal = $input['tanggal'];
+		 $cekSO = $this->model->cekSO($barcode);
+		 $read = $this->model->read_datapickdetail($barcode);
+		 $readheader = $this->model->read_data($pickupheader)->row();
+		 $readfase = $this->model->read_datadetail($pickupheader)->row();
+		 $jumfase= $readfase->jumlah;
+		 $data = array(
+			 'pickup_h_id' => $pickupheader,
+			 'tgl' => $tanggal,
+			 'barcode' => $barcode,
+			 'ekspedisi'=>$readheader->ekspedisiby,
+			 'status' => 'Open',
+			 'fase_pickup' => $jumfase+1
+		 );
+		 if($cekSO->num_rows()==0){
+			 $stt =0;
+			 $msg="Kode status masih Open/ Sudah Terposting";
+			 $res="Kode status masih Open/ Sudah Terposting";
+		 }else{
 
-            if($read->num_rows()==0) {
-                $rf = $read->row(); 
-                 $res = $this->model->save_detail($data);
-                $stt = 1;
-            }else {$res = 'Data ini sudah ada'; $stt=0;}
-       }
-        echo json_encode(array(
-            "status" => $stt, "isError" => $res,
-            "msg" => "OK", "message" => $res
-        ));
-    }
+			 if($read->num_rows()==0) {
+				 $rf = $read->row();
+				 $res = $this->model->save_detail($data);
+				 $stt = 1;
+			 }else {$res = 'Data ini sudah ada'; $stt=0;}
+		 }
+		 echo json_encode(array(
+			 "status" => $stt, "isError" => $res,
+			 "msg" => "OK", "message" => $res
+		 ));
+	 }
 
     function copy_detail(){
         $input = $this->toUpper($this->input->post());

@@ -160,7 +160,7 @@ class Salesorder extends IO_Controller {
                 }
 
                 if($input['reason'] != ""){
-                    $this->insert_log("sales_order_header", $input['docno'], $input['status'].": ".$input['reason']);
+                    $this->insert_log("sales_order_header", $input['docno'], $input['status']." - SW.".$input['reason']);
                 }
 
                 $result = 0;
@@ -255,12 +255,30 @@ class Salesorder extends IO_Controller {
         $lokasi = $this->input->get('lokasi');
         $prd = $this->formatDate("Ym", $tgl);
         $special = " a.periode='$prd' and a.location_code='$lokasi' and c.jenis_barang='Barang Jadi' ";
-        $f = $this->getParamGrid($special,"nobar");
-        $data = $this->model->get_product($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+			$total1 = $this->getParamGrid_BuilderComplete(array(
+				"table"=>"stock a",
+				"sortir"=>"nobar",
+				"special"=>$special,
+				"group"=>["a.nobar"],
+				"select"=>"a.nobar, FLOOR(a.saldo_akhir/(ifnull((select convertion from product_uom_convertion where uom_from=c.satuan_jual and uom_to=c.satuan_stock limit 1),0))) stock
+                    , b.nmbar, b.product_id, c.product_code, c.article_code, a.periode, a.location_code
+                    , c.jenis_barang, c.satuan_stock, c.satuan_jual
+                    , d.description AS uom_stock, d.uom_id as id_stock, e.description AS uom_jual, e.uom_id as id_jual",
+				"join"=>[
+					"product_barang b"=>"a.nobar=b.nobar",
+					"product c"=>"b.product_id=c.id",
+					"product_uom d"=>"c.satuan_stock=d.uom_code",
+					"product_uom e"=>"c.satuan_jual=e.uom_code",
+				],
+				"posisi"=>["inner","inner","inner","inner"]
+			));
+			$total = $total1->total;
+			$data = $total1->data;
+
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
     }
@@ -287,12 +305,38 @@ class Salesorder extends IO_Controller {
     }
 
     function load_grid_detail($docno){
-        $f = $this->getParamGrid(" a.docno='$docno' ","seqno");
-        $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+			$total1 = $this->getParamGrid_BuilderComplete(array(
+				"table"=>"sales_order_detail a",
+				"sortir"=>"seqno",
+				"special"=>" a.docno='$docno' ",
+				"select"=>"a.id, a.docno, a.seqno, tipe, a.nobar, a.qty_order, a.unit_price
+                    , a.disc1_persen, a.disc2_persen, a.disc3_persen, a.disc1_amount, a.disc2_amount, a.disc3_amount
+                    , a.disc_total, a.bruto_before_tax, a.total_tax, a.net_unit_price, a.net_total_price
+                    , a.status_detail
+                    , b.nmbar, c.satuan_jual, d.description AS uom_jual, c.product_code, d.uom_id
+                    , c.product_name, b.product_id, st.saldo_akhir as stock
+                    , (select ifnull(sum(pl.qty_pl),0) from packing_detail pl inner join packing_header ph on ph.docno=pl.docno where pl.so_number=a.docno and pl.seqno=a.seqno and ph.status IN('POSTING','CLOSED')) AS qty_pl
+                    , COALESCE(a.updby, a.crtby) last_user
+                    , COALESCE(a.upddt, a.crtdt) last_time
+                    , b1.fullname, date_format(COALESCE(a.upddt, a.crtdt),'%T') last_jam",
+				"join"=>[
+					"sales_order_header sh"=>"sh.docno=a.docno",
+					"stock st"=>"st.location_code=sh.location_code and st.periode=date_format(sh.doc_date,'%Y%m') and st.nobar=a.nobar",
+					"product_barang b"=>"a.nobar=b.nobar",
+					"product c"=>"b.product_id=c.id",
+					"product_uom d"=>"c.satuan_jual=d.uom_code",
+					"users b1"=>"b1.user_id=COALESCE(a.updby, a.crtby)"
+				],
+				"posisi"=>["left","inner","inner","left"]
+			));
+			$total = $total1->total;
+			$data = $total1->data;
+//        $f = $this->getParamGrid(" a.docno='$docno' ","seqno");
+//        $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
     }
@@ -441,7 +485,8 @@ class Salesorder extends IO_Controller {
                     $result = 1;
                     $msg="Data tidak bisa dihapus, sudah ada transaksi";
                 }else{
-                    $this->model->delete_data_detail($read->row()->docno, $code);
+                    $this->model->delete_data_detail($rd->docno, $code);
+                    $this->model->updateheaderdata($rd->docno);
                     $result = 0;
                     $msg="OK";
                 }

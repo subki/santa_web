@@ -76,19 +76,19 @@
                     return data;
                 },
              onSelect:function (index, rw) {
-
                 var periode = $('#periode').datebox('getValue');
                 var status = $('#jenis_status').combogrid('getValue'); 
  
-                var date = new Date(periode);
+                var date = new Date();
 
-                var d = date.getDate();
+                var d = date.getDate(periode);
 
-                var m = date.getMonth()+1;
+                var m = date.getMonth(periode)+1;
 
-                var y = date.getFullYear();
+                var y = date.getFullYear(periode);
 
-                var prd =  y+""+(d<10?('0'+d):d)+""+(m<10?('0'+m):m); 
+                var prd =   y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
+
                 $('#customer_code').combogrid('setValue',rw.customer_code)
                 $('#customer_name').textbox('setValue',rw.customer_name) 
                 $('#customer_codeid').val(rw.customer_code) 

@@ -190,9 +190,33 @@
         padding: 20px;
         line-height: 20px;
     }
+    .table_log {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+    .td_log {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    .th_log {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    .th_log {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    .tr_log:nth-child(even) {
+      background-color: #dddddd;
+    }
 
 </style>
 <link id="dlink" rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/themes/ui-cupertino/easyui.css">
+<link id="dlink" rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/themes/ui-cupertino/linkbutton.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/themes/color.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/jquery-easyui-1.9.4/demo.css">
@@ -348,6 +372,7 @@
             </div>
             <div class="main-bar f-full">
                 <span class="main-toggle fa fa-bars" onclick="toggle()"></span>
+              <?php echo "Welcome, ".$this->session->userdata("fullname")." to ".$this->session->userdata("store_name")."-".$this->session->userdata("location_code") ?>
             </div>
             <div class="main-bar">
               <a href="<?php echo base_url(); ?>auth/logout_act"><span title="Logout" class="main-logout fa fa-key"></span></a>

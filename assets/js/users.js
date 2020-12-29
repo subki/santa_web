@@ -49,7 +49,7 @@ var options={
             let x = "00000000000"+value;
             return x.substr(x.length-6,x.length)
         }},
-        {field:"kode_otoritas",   title:"Kode Autorisasi",      width: '10%', sortable: true},
+        // {field:"kode_otoritas",   title:"Kode Autorisasi",      width: '10%', sortable: true},
         {field:"nik",   title:"NIK",      width: '15%', sortable: true},
         {field:"fullname",   title:"Fullname",      width: '25%', sortable: true},
         {field:"store_name",   title:"Store",      width: '20%', sortable: true},

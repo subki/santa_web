@@ -33,6 +33,7 @@
 </style>
 <div id="tt">
     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+        <a href="<?php echo base_url('Online')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
         <a href="javascript:void(0)" id="new" class="easyui-linkbutton" iconCls="icon-save" onclick="addform('')" style="width:90px; height: 20px;">NEW</a>
         <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
         <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Update</a>
@@ -89,11 +90,13 @@
                                    required="false" readonly="true" label="PKP:" style="width:100%">
                         </div> -->
 
-                        <div style="margin-bottom:1px">
-                            <input name="lokasi_stock" id="lokasi_stock" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Gudang:" style="width:100%">
-                        </div>
-                        <div style="margin-bottom:1px">
-                            <input name="salesman_id" id="salesman_id" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Salesman:" style="width:100%">
+                      <div style="margin-bottom:1px">
+                            <div style="float:left; width: 50%; padding-right: 5px;">
+                               <input name="lokasi_stock" id="lokasi_stock" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Gudang:" style="width:100%">
+                            </div>
+                            <div style="float:right; width: 50%; padding-left: 5px;">
+                                <input name="salesman_id" id="salesman_id" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" required="true" label="Salesman:" style="width:100%">
+                            </div>
                         </div>
                        <!--  <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                             <div style=" padding-right: 10px; width: 33%">
@@ -141,7 +144,7 @@
                     </div> 
                     <div style="margin-bottom:1px">
                         <input name="remark"  readonly="true" id="remark" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
-                               required="true" label="Keterangan:" style="width:100%; height: 100px;">
+                               required="true" label="Keterangan:" style="width:100%;">
                     </div>
 
                     <div style="margin:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
@@ -152,6 +155,9 @@
                         <div style=" padding-right: 10px; width: 25%">
                             <input name="qty_order" id="qty_order" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                                    readonly="true" label="QTY SALES:" style="width:100%">
+                        </div>
+                        <div style=" padding-right: 10px; width: 25%">
+                           <input name="customer_type" id="customer_type" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly="true" label="Type Harga:" style="width:100%">
                         </div>
                       <!--   <div style=" padding-right: 10px; width: 25%">
                             <input name="qty_deliver" id="qty_deliver" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
@@ -170,12 +176,6 @@
                             <input name="disc2_persen" id="disc2_persen" class="easyui-numberbox" data-options="min:0, precision:2, formatter:formatnumberbox" labelPosition="top" tipPosition="bottom" label="Disc 2:" style="width:100%">
                         </div> -->
                     </div>
-                    <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;"> 
-                        <div style="width: 45%">
-                            <input name="customer_type" id="customer_type" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly="true" label="Type Harga:" style="width:100%">
-                        </div>
-                    </div>
-
                     <div style="margin-bottom:1px; display: none">
                         <input name="reason" id="reason" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                                readonly="true" label="Reason:" style="width:100%">
@@ -226,7 +226,7 @@ $('#so_no').textbox({
         keyup:function(e){
 
           var input = $(this).val(); 
-        $("#remark").textbox('setValue','-'+input);
+        $("#remark").textbox('setValue','#'+input);
          if (e.keyCode == 13){
                 var cust = $('#customer_code').textbox('getValue'); 
                 if(cust==''){

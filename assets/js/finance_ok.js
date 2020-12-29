@@ -93,7 +93,7 @@ function initGrid(jenis, prd) {
     $('#dg').datagrid('addFilterRule', {field: 'doc_date',op: 'beginwith',value: prd});
     $('#dg').datagrid('addFilterRule', {field: 'statushd',op: 'equal',value: 'CLOSED'});
     $('#dg').datagrid('addFilterRule', {field: 'verifikasi_finance',op: 'equal',value: ''});
-    $('#dg').datagrid('addFilterRule', {field: 'sales_invoice_id',op: 'equal',value: 0});
+    // $('#dg').datagrid('addFilterRule', {field: 'sales_invoice_id',op: 'equal',value: 0});
     $('#dg').datagrid('doFilter');
 
     $('#dg2').datagrid(options2);

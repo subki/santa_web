@@ -129,10 +129,10 @@ class Wholesales_model extends CI_Model {
         else if($store_code=="003") $prefix="SBY";
 
         if($prefix=="") return "";
-        $sql = "SELECT IFNULL(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),LPAD(MAX(RIGHT(no_faktur,6))+1,6,'0')),
-                CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),LPAD(1,6,'0'))) AS nomor 
+        $sql = "SELECT IFNULL(CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(MAX(RIGHT(no_faktur,6))+1,6,'0')),
+                CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(1,6,'0'))) AS nomor 
                 FROM sales_trans_header 
-                WHERE LEFT(no_faktur,LENGTH(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y')))) = CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y')) ORDER BY no_faktur DESC";
+                WHERE LEFT(no_faktur,LENGTH(CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.'))) = CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.') ORDER BY no_faktur DESC";
         return $this->db->query($sql)->row()->nomor;
     }
 
@@ -140,10 +140,10 @@ class Wholesales_model extends CI_Model {
         $prefix="IVS";
 
         if($prefix=="") return "";
-        $sql = "SELECT IFNULL(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),LPAD(MAX(RIGHT(no_faktur,6))+1,6,'0')),
-                CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),LPAD(1,6,'0'))) AS nomor 
+        $sql = "SELECT IFNULL(CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(MAX(RIGHT(no_faktur,6))+1,6,'0')),
+                CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(1,6,'0'))) AS nomor 
                 FROM sales_trans_header 
-                WHERE LEFT(no_faktur,LENGTH(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y')))) = CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y')) ORDER BY no_faktur DESC";
+                WHERE LEFT(no_faktur,LENGTH(CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.'))) = CONCAT('$prefix','.',DATE_FORMAT(NOW(),'%Y'),'.') ORDER BY no_faktur DESC";
         return $this->db->query($sql)->row()->nomor;
     }
 

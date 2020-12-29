@@ -20,6 +20,7 @@ $(document).ready(function () {
             var prd =  y+""+(m<10?('0'+m):m)+""+(d<10?('0'+d):d);
             var status = $('#jenis_status').combogrid('getValue'); 
             var customer_code = $('#customer_code').val();  
+                console.log(prd)
             if(status!==""){
                 $('#dg').datagrid({url:base_url+"Online/load_grid/"+status+"/"+customer_code+"/"+prd});
                

@@ -33,7 +33,8 @@ class Stock extends IO_Controller {
 				"select"=>"a.id, a.nobar, a.location_code, a.periode, a.saldo_awal
                   , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir
                   , b.description as location_name, c.nmbar",
-				"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"]
+				"join"=>["location b"=>"a.location_code=b.location_code","product_barang c"=>"a.nobar=c.nobar"],
+				"posisi"=>["inner","inner"]
 			));
 			$total = $total1->total;
 			$data = $total1->data;

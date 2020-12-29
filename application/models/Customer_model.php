@@ -16,7 +16,6 @@ class Customer_model extends CI_Model {
                   , b.salesman_name, a.top_day
                   , a.pkp, a.npwp, a.nama_pkp, a.alamat_pkp
                   , g.description lokasi
-                  , a.payment_first
                   , a.credit_limit, a.outstanding, a.gl_account, a.cust_fk, a.info_cust
                   , (a.credit_limit-a.outstanding) credit_remain
                   , a.toc_day
@@ -28,7 +27,7 @@ class Customer_model extends CI_Model {
                   , a.salesman_id
                   , a.margin_persen
                   , a.beda_fp
-                  , c.diskon
+                  , c.diskon 
                   , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
                   , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
                   , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
@@ -39,7 +38,7 @@ class Customer_model extends CI_Model {
 				left join provinces e on a.provinsi_id=e.id
 				left join regencies f on a.regency_id=f.id and a.provinsi_id=f.province_id
 				left join location g on a.lokasi_stock=g.location_code 
-				left join customer h on a.parent_cust=h.customer_code
+				left join customer h on a.parent_cust=h.customer_code 
 	            left join users u1 on a.crtby=u1.user_id
 	            left join users u2 on a.updby=u2.user_id ";
     }

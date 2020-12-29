@@ -189,34 +189,21 @@ class IO_Controller extends CI_Controller {
 		$app="";
 		if($fltr!=""){
 			foreach ($fltr as $r){
-//                $oop = $r->op=="equal"?"=":"like";
-//                $vv = $r->op=="equal"?"'".$r->value."'":"'%".$r->value."%'";
-//                if($app==""){
-//                    $app .= " where ".$r->field." ".$oop." ".$vv." ";
-//                }else{
-//                    $app .= " AND ".$r->field." ".$oop." ".$vv." ";
-//                }
-
+				$oop = $r->op=="equal"?"=":"like";
+				$vv = $r->op=="equal"?"'".$r->value."'":"'%".$r->value."%'";
 				if($app==""){
-					$app .= " having ";
-				}else $app .= " AND ";
-				if($r->op=="equal") $app .= " ".$r->field." = '".$r->value."' ";
-				if($r->op=="notequal") $app .= " ".$r->field." != '".$r->value."' ";
-				if($r->op=="contains") $app .= " ".$r->field." like '%".$r->value."%' ";
-				if($r->op=="beginwith") $app .= " ".$r->field." like '".$r->value."%' ";
-				if($r->op=="endwith") $app .= " ".$r->field." like '%".$r->value."' ";
-				if($r->op=="less") $app .= " ".$r->field." < ".$r->value;
-				if($r->op=="lessorequal") $app .= " ".$r->field." <= ".$r->value;
-				if($r->op=="greater") $app .= " ".$r->field." > ".$r->value;
-				if($r->op=="greaterorequal") $app .= " ".$r->field." => ".$r->value;
+					$app .= " where ".$r->field." ".$oop." ".$vv." ";
+				}else{
+					$app .= " AND ".$r->field." ".$oop." ".$vv." ";
+				}
 			}
 			if($special!="") {
 				if (count($fltr) > 0) $app .= " AND ".$special;
-				else $app .= " having ".$special;
+				else $app .= " where ".$special;
 			}
 		}else{
 			if($special!=""){
-				$app .= " having ".$special;
+				$app .= " where ".$special;
 			}
 		}
 		$data['app']=$app;
@@ -241,13 +228,23 @@ class IO_Controller extends CI_Controller {
 			$this->db->select($data['select']);
 		}
 		if(isset($data['special'])) {
-			if(is_array($data['special'])) foreach ($data['special'] as $key => $row) $this->db->having($key,$row);
+			if(is_array($data['special'])) foreach ($data['special'] as $key => $row){
+				if(!is_numeric($key)){
+					$this->db->where($key,$row);
+				}else{
+					$this->db->where($row);
+				}
+			}
 			else {
 				if($data['special']!=="") $this->db->where($data['special']);
 			}
 		}
 		if(isset($data['join'])){
-			foreach ($data['join'] as $key => $row) $this->db->join($key, $row, isset($data['posisi'][$key])?$data['posisi'][$key]:"left");
+			$no=0;
+			foreach ($data['join'] as $key => $row) {
+				$this->db->join($key, $row, isset($data['posisi'][$no])?$data['posisi'][$no]:"left");
+				$no++;
+			}
 		}
 		if($fltr!=""){
 			foreach ($fltr as $r){
@@ -263,6 +260,11 @@ class IO_Controller extends CI_Controller {
 			}
 		}
 		$this->db->order_by("$sort $order");
+		if(isset($data['group'])){
+			foreach ($data['group'] as $row){
+				$this->db->group_by($row);
+			}
+		}
 		return $this->db->get($data['table'])->num_rows();
 	}
 	function getParamGrid_BuilderCompleteQuery($data){
@@ -280,13 +282,23 @@ class IO_Controller extends CI_Controller {
 			$this->db->select($data['select']);
 		}
 		if(isset($data['special'])) {
-			if(is_array($data['special'])) foreach ($data['special'] as $key => $row) $this->db->where($key,$row);
+			if(is_array($data['special'])) foreach ($data['special'] as $key => $row){
+				if(!is_numeric($key)){
+					$this->db->where($key,$row);
+				}else{
+					$this->db->where($row);
+				}
+			}
 			else {
 				if($data['special']!=="") $this->db->where($data['special']);
 			}
 		}
 		if(isset($data['join'])){
-			foreach ($data['join'] as $key => $row) $this->db->join($key, $row, isset($data['posisi'][$key])?$data['posisi'][$key]:"left");
+			$no=0;
+			foreach ($data['join'] as $key => $row) {
+				$this->db->join($key, $row, isset($data['posisi'][$no])?$data['posisi'][$no]:"left");
+				$no++;
+			}
 		}
 		if($fltr!=""){
 			foreach ($fltr as $r){
@@ -396,7 +408,9 @@ class IO_Controller extends CI_Controller {
 		$this->model_log->insert_data($dt);
 	}
 	function read_log($where,$order){
-		$sql = "select a.* from log_update a ".$where.$order;
+		$sql = "select a.*, u.fullname from log_update a 
+						LEFT JOIN users u on u.user_id=a.user_id ";
+		$sql .= $where.$order;
 		return $this->db->query($sql)->result();
 	}
 
@@ -582,9 +596,9 @@ class IO_Controller extends CI_Controller {
 	 * @return string =
 	 */
 	function updateStock($location_code, $periode, $nobarqty, $tipe_transaksi, $data){
-		if($location_code=="") return "Lokasi tidak ada";
+		if($location_code=="") return "Lokasi tidak ada ".$location_code;
 		if($periode=="") return "Periode invalid";
-		if(in_array($tipe_transaksi,array('do_masuk', 'do_keluar', 'penyesuaian', 'penjualan', 'pengembalian'))) return "Tipe Transaksi tidak dikenali";
+		if(!in_array($tipe_transaksi,array('do_masuk', 'do_keluar', 'penyesuaian', 'penjualan', 'pengembalian'))) return "Tipe Transaksi tidak dikenali";
 		if(!isset($data->docno)) return "Nomor dokumen harus di sertakan";
 		if(!isset($data->tanggal)) return "Tanggal dokumen harus di sertakan";
 		if(!isset($data->remark)) return "Keterangan dokumen harus di sertakan";

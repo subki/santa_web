@@ -77,6 +77,48 @@ class Salesorderonline_model extends CI_Model {
         $q = $this->query." where docno='$code'";
         return $this->db->query($q);
     }
+
+    function read_datacustomer($code,$so_no){
+    $q = "SELECT IFNULL(rs.nama_customer,'') nama_customer,IFNULL(rs.alamat_kirim,'') alamat_kirimcust
+                  , IFNULL(rs.kota,'') kotacust,IFNULL(rs.provinsi,'') provcust,IFNULL(rs.no_telepon,'') tlpcust
+                  , a.status, a.gol_customer, c.description customer_type_name
+                  , a.customer_class, a.customer_code
+                  , a.customer_name, d.nama_company head_customer_name
+                  , a.parent_cust, h.customer_name AS parent_name
+                  , a.address1, a.address2, e.name provinsi, f.name kota
+                  , a.zip, a.fax, a.contact_person, a.phone1, a.phone2, a.phone3
+                  , b.salesman_name, a.top_day
+                  , a.pkp, a.npwp, a.nama_pkp, a.alamat_pkp
+                  , g.description lokasi
+                  , a.credit_limit, a.outstanding, a.gl_account, a.cust_fk, a.info_cust
+                  , (a.credit_limit-a.outstanding) credit_remain
+                  , a.toc_day
+                  , a.provinsi_id
+                  , a.regency_id
+                  , a.customer_type
+                  , a.lokasi_stock, g.description AS lokasi_stock_name
+                  , a.head_customer_id
+                  , a.salesman_id
+                  , a.margin_persen
+                  , a.beda_fp
+                  , c.diskon 
+                  , IFNULL(u1.fullname,a.crtby) AS crtby, IFNULL(u2.fullname, a.updby) AS updby
+                  , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
+                FROM customer a 
+                LEFT JOIN salesman b ON a.salesman_id=b.salesman_id
+                LEFT JOIN customer_type c ON a.customer_type=c.code
+                LEFT JOIN head_company_customer d ON a.head_customer_id=d.head_customer_id
+                LEFT JOIN provinces e ON a.provinsi_id=e.id
+                LEFT JOIN regencies f ON a.regency_id=f.id AND a.provinsi_id=f.province_id
+                LEFT JOIN location g ON a.lokasi_stock=g.location_code 
+                LEFT JOIN customer h ON a.parent_cust=h.customer_code 
+                LEFT JOIN users u1 ON a.crtby=u1.user_id
+                LEFT JOIN users u2 ON a.updby=u2.user_id 
+                LEFT JOIN so_online_header so ON so.customer_code=a.customer_code
+                LEFT JOIN resi_marketplace rs ON rs.no_resi=so.so_no ";
+        return $this->db->query($q." WHERE a.customer_code='$code' AND so.so_no='$so_no'");
+    }
     function read_totaldetail($code){
         $q = "SELECT count(*) total from so_online_detail where docno='$code'";
         return $this->db->query($q);

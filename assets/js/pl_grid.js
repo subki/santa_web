@@ -20,21 +20,21 @@ var options={
         return data;
     },
     columns:[[
-        {field:"docno",   title:"Trx No",      width:200, sortable: true},
-        {field:"doc_date",   title:"Trx Date",      width: 100, sortable: true, formatter:function (index, row) {
+        {field:"docno",   title:"Trx No",      sortable: true},
+        {field:"doc_date",   title:"Trx Date",      sortable: true, formatter:function (index, row) {
             return row.ak_doc_date;
         }},
-        {field:"so_number",   title:"Base SO",      width: 100, sortable: true},
-        {field:"tgl_so",   title:"Tgl SO",      width: 100, sortable: true, formatter:function (index, row) {
+        {field:"so_number",   title:"Base SO",       sortable: true},
+        {field:"tgl_so",   title:"Tgl SO",       sortable: true, formatter:function (index, row) {
             return row.ak_tgl_so;
         }},
-        {field:"status",   title:"Status",      width: 100, sortable: true, formatter:function (index, row) {
+        {field:"status",   title:"Status",       sortable: true, formatter:function (index, row) {
             return (row.status==="POSTING")?"Ready to Post":row.status;
         }},
-        {field:"crtby",   title:"Create By",      width: 100, sortable: true},
-        {field:"crtdt",   title:"Create Date",      width: 160, sortable: true},
-        {field:"updby",   title:"Update By",      width: 100, sortable: true},
-        {field:"upddt",   title:"Update Date",      width: 160, sortable: true},
+        {field:"crtby",   title:"Create By",      sortable: true},
+        {field:"crtdt",   title:"Create Date",      sortable: true},
+        {field:"updby",   title:"Update By",      sortable: true},
+        {field:"upddt",   title:"Update Date",      sortable: true},
     ]],
     onLoadSuccess:function(){
         authbutton();

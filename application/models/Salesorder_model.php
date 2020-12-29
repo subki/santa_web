@@ -18,7 +18,7 @@ class Salesorder_model extends CI_Model {
                   , a.qty_item, a.qty_order, a.gross_sales, a.total_ppn, a.total_discount
                   , a.sales_before_tax, a.sales_after_tax, a.service_level, a.qty_deliver
                   , a.posting_date, DATE_FORMAT(a.posting_date, '%d/%m/%Y') ak_posting_date
-                  , a.status, a.sales_pada_toko, e.pkp
+                  , a.status, a.sales_pada_toko, e.pkp, ct.description customer_type_name
                   , ifnull(a.jumlah_print,0) jumlah_print, e.credit_limit, e.outstanding, (e.credit_limit-e.outstanding) credit_remain
                   , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
                   , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
@@ -30,7 +30,8 @@ class Salesorder_model extends CI_Model {
 	            LEFT JOIN (provinces c 
 	              INNER JOIN regencies d on c.id=d.province_id 
 	            ) ON c.id=a.provinsi_id AND d.id=a.regency_id
-	            LEFT JOIN customer e on a.customer_code=e.customer_code 
+	            LEFT JOIN customer e on a.customer_code=e.customer_code
+	            LEFT JOIN customer_type ct ON e.customer_type=ct.code
 	            LEFT JOIN salesman f on a.salesman_id=f.salesman_id
 	            LEFT JOIN location g ON a.location_code=g.location_code";
     }
@@ -83,19 +84,19 @@ class Salesorder_model extends CI_Model {
 //            }else if($store_code == $this->session->userdata('kode store surabaya')){
 //                $prefix="YOP";
 //            }
-                $prefix="SOP";
+                $prefix="SOP.";
         }else{
             if($store_code == $this->session->userdata('kode store pusat')){
-                $prefix="SOS";
+                $prefix="SOS.";
             }else if($store_code == $this->session->userdata('kode store bandung')){
-                $prefix="BOS";
+                $prefix="BOS.";
             }else if($store_code == $this->session->userdata('kode store surabaya')){
-                $prefix="YOS";
+                $prefix="YOS.";
             }
         }
         if($prefix=="") return "";
-        $sql = "SELECT IFNULL(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),LPAD(MAX(RIGHT(docno,6))+1,6,'0')),
-                CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),LPAD(1,6,'0'))) AS nomor 
+        $sql = "SELECT IFNULL(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(MAX(RIGHT(docno,6))+1,6,'0')),
+                CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(1,6,'0'))) AS nomor 
                 FROM sales_order_header WHERE LEFT(docno,7)= CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y')) ORDER BY docno DESC";
         return $this->db->query($sql)->row()->nomor;
     }
@@ -397,13 +398,39 @@ class Salesorder_model extends CI_Model {
         return $this->db->query($sql);
     }
     function updateheaderdata($docno){
+//    	$dt = $this->db->select("COUNT(nobar) qty_item
+//    										, ifnull(SUM(qty_order) ,0) qty_order
+//                        , ifnull(SUM(CEILING(sales_order_detail.unit_price*sales_order_detail.qty_order)),0)  gross_sales
+//                        , ifnull(SUM(CEILING(sales_order_detail.disc_total*sales_order_detail.qty_order)),0)  total_discount
+//                        , ifnull(SUM(CEILING(sales_order_detail.bruto_before_tax)),0)  sales_before_tax
+//                        , ifnull(SUM(CEILING(sales_order_detail.net_unit_price*sales_order_detail.qty_order)),0)  sales_after_tax
+//                        , ifnull(SUM(CEILING(sales_order_detail.total_tax)),0)  total_ppn
+//                        ")
+//				->from("sales_order_detail")
+//				->where("docno",$docno)->get()->row();
+//    	pre($dt);
+//    	if(!isset($dt)) {
+//    		pre("masuk");
+//    		$dt = array(
+//    			"qty_order"=>0,
+//					"gross_sales"=>0,
+//					"total_discount"=>0,
+//					"sales_before_tax"=>0,
+//					"sales_after_tax"=>0,
+//					"total_ppn"=>0
+//				);
+//			}
+//			$this->db->update("sales_order_header",$dt,["docno",$docno]);
+//			$this->db->where("docno", $docno)
+//				->update("sales_order_header", $dt);
         $sql = "UPDATE sales_order_header AS dest
-                , (SELECT COUNT(nobar) item, SUM(qty_order) qty
-                        , SUM(CEILING(sales_order_detail.unit_price*sales_order_detail.qty_order)) bruto
-                        , SUM(CEILING(sales_order_detail.disc_total*sales_order_detail.qty_order)) disc
-                        , SUM(CEILING(sales_order_detail.bruto_before_tax)) before_tax
-                        , SUM(CEILING(sales_order_detail.net_unit_price*sales_order_detail.qty_order)) after_tax
-                        , SUM(CEILING(sales_order_detail.total_tax)) ppn
+                , (SELECT COUNT(nobar) item
+                				, IFNULL(SUM(qty_order),0) qty
+                        , IFNULL(SUM(CEILING(sales_order_detail.unit_price*sales_order_detail.qty_order)),0) bruto
+                        , IFNULL(SUM(CEILING(sales_order_detail.disc_total*sales_order_detail.qty_order)),0) disc
+                        , IFNULL(SUM(CEILING(sales_order_detail.bruto_before_tax)),0) before_tax
+                        , IFNULL(SUM(CEILING(sales_order_detail.net_unit_price*sales_order_detail.qty_order)),0) after_tax
+                        , IFNULL(SUM(CEILING(sales_order_detail.total_tax)),0) ppn
                   FROM sales_order_detail WHERE docno='$docno') AS src
                 SET dest.qty_item = src.item
                     , dest.qty_order=src.qty

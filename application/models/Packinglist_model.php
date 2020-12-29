@@ -56,25 +56,29 @@ class Packinglist_model extends CI_Model {
     function update_data($code, $data){
         $this->db->where('docno',$code);
         $this->db->update($this->table,$data);
+        $this->updateheaderdata($code);
     }
     function insert_data($data){
         $this->db->insert($this->table, $data);
         $this->copySOtoPL($data);
     }
     function copySOtoPL($data){
+//    	pre($data);
         $docno = $data['docno'];
         $so_number = $data['so_number'];
         $crtby = $data['crtby'];
 
         $sql = "select sum(qty_pl) as tot from packing_detail where docno='$docno'";
         $rd = $this->db->query($sql)->row();
+//        pre($rd);
         if($rd->tot == 0) {
             $sql = "delete from packing_detail where docno='$docno'";
             if ($this->db->query($sql)) {
                 $sql = "insert into packing_detail (docno, so_number, seqno, nobar, qty_order, crtby, crtdt)
                 SELECT '$docno','$so_number', seqno, nobar
-                , qty_order-ifnull((select sum(qty_pl) from packing_detail where so_number='$so_number'),0), '$crtby', now()
-                FROM sales_order_detail WHERE docno='$so_number'";
+                , qty_order-ifnull((select sum(qty_pl) from packing_detail pl where so_number='$so_number' and pl.seqno=so.seqno),0), '$crtby', now()
+                FROM sales_order_detail so WHERE docno='$so_number'
+                AND qty_order-ifnull((select sum(qty_pl) from packing_detail pl where so_number='$so_number' and pl.seqno=so.seqno),0)>0";
                 $this->db->query($sql);
             }
         }
@@ -96,10 +100,10 @@ class Packinglist_model extends CI_Model {
             $prefix = $dt->row()->store_code;
         }
         if($prefix=="") return "";
-        $sql = "SELECT IFNULL(CONCAT('$prefix','PL',DATE_FORMAT(NOW(),'%Y'),LPAD(MAX(RIGHT(docno,6))+1,6,'0')),
-                CONCAT('$prefix','PL',DATE_FORMAT(NOW(),'%Y'),LPAD(1,6,'0'))) AS nomor 
+        $sql = "SELECT IFNULL(CONCAT('$prefix','PL.',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(MAX(RIGHT(docno,6))+1,6,'0')),
+                CONCAT('$prefix','PL.',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(1,6,'0'))) AS nomor 
                 FROM packing_header 
-                WHERE LEFT(docno,LENGTH(CONCAT('$prefix','PL',DATE_FORMAT(NOW(),'%Y')))) = CONCAT('$prefix','PL',DATE_FORMAT(NOW(),'%Y')) ORDER BY docno DESC";
+                WHERE LEFT(docno,LENGTH(CONCAT('$prefix','PL.',DATE_FORMAT(NOW(),'%Y'),'.'))) = CONCAT('$prefix','PL.',DATE_FORMAT(NOW(),'%Y'),'.') ORDER BY docno DESC";
         return $this->db->query($sql)->row()->nomor;
     }
 
@@ -154,8 +158,9 @@ class Packinglist_model extends CI_Model {
         $this->updateheaderdata($docno);
     }
     function read_transactions_detail($code){
-        $this->db->where('brand_code',$code);
-        return $this->db->get('product');
+        $this->db->where('docno',$code);
+        $this->db->where_in('status',["POSTING","CLOSED","CANCEL"]);
+        return $this->db->get('packing_header');
     }
     function updateheaderdata($docno){
         $sql = "UPDATE packing_header AS dest
@@ -169,21 +174,39 @@ class Packinglist_model extends CI_Model {
                 WHERE docno='$docno'";
         $rd = $this->db->query($sql);
         if($rd->num_rows()>0){
-            if($rd->row()->status=="POSTING"){
-                $sql = "UPDATE sales_order_header AS dest
-                        , (SELECT sum(qty_order) as orderan, sum(qty_pl) packing, so_number
-                          FROM packing_detail WHERE docno='$docno' GROUP BY docno) AS src
-                        SET dest.service_level = ifnull(src.packing,0)/ifnull(src.orderan,0)*100
-                        WHERE dest.docno=src.so_number";
-                $this->db->query($sql);
-                $sql = "UPDATE sales_order_header AS dest
-                        , (SELECT sum(qty_order) as orderan, sum(qty_pl) packing, so_number
-                          FROM packing_detail group by so_number) AS src
-                        SET dest.service_level = ifnull(src.packing,0)/ifnull(src.orderan,0)*100,
-                          dest.qty_deliver = src.packing
-                        WHERE dest.docno=src.so_number";
-                $this->db->query($sql);
-            }
+        	$r = $rd->row();
+        	$so_number = $r->so_number;
+					$itung = $this->db->select("SUM(ph.qty_pl) packing, (SELECT so.qty_order FROM sales_order_header so WHERE so.docno=ph.so_number) orderan")
+						->where("ph.so_number",$so_number)
+						->where("ph.status","POSTING")
+						->get("packing_header ph")->row();
+					if(isset($itung)){
+						$upd = ["service_level"=>is_nan(($itung->packing/$itung->orderan)*100)?0:($itung->packing/$itung->orderan)*100,
+							"qty_deliver"=>is_nan($itung->packing)?0:$itung->packing,
+							"updby"=>$this->session->userdata(sess_user_id),
+							"upddt"=>date("Y-m-d H:i:s")
+						];
+						if($upd['service_level']==100){
+							$upd['status']="CLOSE";
+						}
+						$this->db->update("sales_order_header",$upd,["docno"=>$so_number]);
+					}
+//            if($r->status=="POSTING"){
+
+//                $sql = "UPDATE sales_order_header AS dest
+//                        , (SELECT sum(qty_order) as orderan, sum(qty_pl) packing, so_number
+//                          FROM packing_detail WHERE docno='$docno' GROUP BY docno) AS src
+//                        SET dest.service_level = ifnull(src.packing,0)/ifnull(src.orderan,0)*100
+//                        WHERE dest.docno=src.so_number";
+//                $this->db->query($sql);
+//                $sql = "UPDATE sales_order_header AS dest
+//                        , (SELECT sum(qty_order) as orderan, sum(qty_pl) packing, so_number
+//                          FROM packing_detail group by so_number) AS src
+//                        SET dest.service_level = ifnull(src.packing,0)/ifnull(src.orderan,0)*100,
+//                          dest.qty_deliver = src.packing
+//                        WHERE dest.docno=src.so_number";
+//                $this->db->query($sql);
+//            }
         }
     }
     function unpostSO($docno){

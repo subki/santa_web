@@ -31,7 +31,7 @@ var options={
 			{field:"credit_limit",   title:"Credit Limit",      sortable: true, formatter:numberFormat},
 			{field:"outstanding",   title:"Credit Outstanding",      sortable: true, formatter:numberFormat},
 			{field:"credit_remain",   title:"Credit Remain",      sortable: true, formatter:numberFormat},
-        {field:"ket",   title:"Remark",      sortable: true},
+        // {field:"ket",   title:"Remark",      sortable: true},
         {field:"crtby",   title:"Create By",      sortable: true},
         {field:"crtdt",   title:"Create Date",      sortable: true},
         {field:"updby",   title:"Update By",      sortable: true},
@@ -56,6 +56,7 @@ function submit(status) {
     flag = "";
     var row = getRow();
     if(row===null) return
+  var so_item = row;
 
     if ((parseFloat(so_item.credit_limit) - parseFloat(so_item.outstanding))< parseFloat(so_item.sales_after_tax)
         && parseFloat(so_item.sales_after_tax) > parseFloat(max_transaksi)) {
@@ -65,14 +66,14 @@ function submit(status) {
                 return
             }
             flag = "wholesalesapp/edit_data_header_credit";
-            submit_confirm("APPROVED CR")
+            submit_confirm(so_item.id,"APPROVED CR")
         }else{
             if (parseInt(global_auth[global_auth.appId].allow_approve2) === 0) {
                 $.messager.show({title: 'Error', msg: 'Anda tidak memiliki otoritas Posting Maksimal Sales'});
                 return
             }
             flag = "wholesalesapp/edit_data_header_maximum";
-            submit_confirm("APPROVED MS")
+            submit_confirm(so_item.id,"APPROVED MS")
         }
     }else{
         if((parseFloat(so_item.credit_limit) - parseFloat(so_item.outstanding))< parseFloat(so_item.sales_after_tax)){
@@ -93,10 +94,11 @@ function submit(status) {
             $.messager.show({title: 'Error', msg: 'Flag kondisi tidak terpenuhi'});
             return
         }
-        submit_confirm("CLOSED")
+        submit_confirm(so_item.id,"CLOSED")
     }
 }
-function submit_confirm(status) {
+function submit_confirm(docno,status) {
+    console.log(docno,status);
     myConfirm("Confirmation", "Anda yakin ingin memposting transaksi ini?","Ya","Tidak", function (r) {
         if(r==="Ya"){
             $.ajax({
@@ -104,7 +106,7 @@ function submit_confirm(status) {
                 url:base_url+flag,
                 dataType:"json",
                 data:{
-                    docno:row.docno,
+                    id:docno,
                     status:status
                 },
                 success:function(result){
@@ -115,7 +117,7 @@ function submit_confirm(status) {
                     else {
                         $.messager.show({
                             title: 'Error',
-                            msg: e.message,
+                            msg: result.message,
                             handler:function () {
                                 $('#dg').datagrid('reload');
                             }

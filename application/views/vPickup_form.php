@@ -11,6 +11,7 @@
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/pickup_form.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/redirect.js"></script>
 
 <style>
     .panel-titleq .panel-tool{
@@ -42,9 +43,10 @@
 
                 <div style="width: 50%; padding: 10px;" class="border-kotak">  
                      <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+                        <a href="<?php echo base_url('Pickup')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
                         <a href="javascript:void(0)" id="new" class="easyui-linkbutton" iconCls="icon-save" onclick="addform('')" style="width:90px; height: 20px;">NEW</a>
                         <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
-                        <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Update</a>    
+                        <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('Open')" style="width:90px; height: 20px;">Update</a>
                     </div>
                     <div style="margin-bottom:1px">
 

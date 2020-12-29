@@ -227,11 +227,11 @@ body {
 /* =Links
 -----------------------------------------------------------------------------*/
 a {
-  color: #134da5;
+  color: #242222;
 }
 a:focus,
 a:hover {
-  color: #de2c3b;
+  color: #fff;
 }
 /* =Headings
 -----------------------------------------------------------------------------*/
@@ -1025,7 +1025,7 @@ input[type="submit"].btn {
   line-height: 1.65em;
   text-align: center;
   text-decoration: none;
-  color: #222222;
+  color: #242222;
   -webkit-appearance: none;
   outline: none;
   margin: 0;
@@ -1033,13 +1033,13 @@ input[type="submit"].btn {
   border-radius: 2px;
   box-shadow: none;
   cursor: pointer;
-  background: #e0e3e5;
+  background: #d84f4b;
   padding: 0.55em 2.5em;
 }
 .btn:hover,
 input[type="submit"].btn:hover {
-  color: rgba(0, 0, 0, 0.5);
-  background: #b3b6b7;
+  color: #242222;
+  background: #c9302c;
 }
 .btn::-moz-focus-inner {
   border: 0;
@@ -1069,7 +1069,7 @@ input[type="submit"].btn-outline {
 }
 .btn-outline:hover,
 input[type="submit"].btn-outline:hover {
-  border-color: #b3b6b7;
+  border-color: #c9302c;
 }
 .btn-outline.btn-active {
   padding: 0.55em 2.5em;

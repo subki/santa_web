@@ -47,38 +47,76 @@ class Online extends IO_Controller {
 
     function load_grid($status, $cust, $prd){  
 
-        $d= substr($prd,6); 
-        $y= substr($prd, 0, 4);
-        $m= substr($prd, 4, 2);
-        $tgl = $y."-".$m."-".$d;   
+//        $d= substr($prd,6);
+//        $y= substr($prd, 0, 4);
+//        $m= substr($prd, 4, 2);
+//        $tgl = $y."-".$m."-".$d;
+        $tgl = date("Y-m-d",strtotime($prd));
+//        pre($tgl);
         $kdcust = $cust; 
         $dtnow=date('Y-m-d');
-        //var_dump($kdcust); $f = $this->getParamGrid("","status");
         // $f = $this->getParamGrid(" CASE WHEN  status != '$status'  THEN doc_date <= '$tgl' ELSE  doc_date = '$tgl' END
         //     AND (status )
         //     AND CASE WHEN '$tgl' != '$dtnow' THEN status='OPEN' ELSE  status in('OPEN','BATAL','CLOSED','ON ORDER') END   
         //                      ","status");
         if($status=='ALL'){   
             if($cust=='~'){
-                $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END ","status");
+               $special = "a.doc_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN a.status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE a.status='OPEN'  END ";
+               // $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END ","status");
              }
              else{
-                 $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END  and customer_code like '%$cust%' ","status");
+              $special ="a.doc_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN a.status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE a.status='OPEN'  END  and a.customer_code like '%$cust%' ";
+                 //$f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END  and customer_code like '%$cust%' ","status");
              }
         }
         else{
             if($cust=='~'){  
-                $f = $this->getParamGrid(" doc_date <= '$tgl' AND status='$status'","status");
+               $special = "a.doc_date <= '$tgl' AND a.status='$status'";
+               // $f = $this->getParamGrid(" doc_date <= '$tgl' AND status='$status'","status");
             }
             else{ 
-                $f = $this->getParamGrid(" status='$status' and doc_date <='$tgl' and customer_code like '%$cust%' ","status");
+               $special = "a.status='$status' and a.doc_date <='$tgl' and a.customer_code like '%$cust%' ";
+               // $f = $this->getParamGrid(" status='$status' and doc_date <='$tgl' and customer_code like '%$cust%' ","status");
             }
         }
-        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+
+        $total1 = $this->getParamGrid_BuilderComplete(array(
+            "table"=>"so_online_header a",
+            "sortir"=>"a.status",
+            "special"=>$special,
+            "select"=>"a.docno,a.so_no
+                  , CONCAT(LEFT(a.docno,3),'.',RIGHT(LEFT(a.docno,7),4),'.',RIGHT(LEFT(a.docno,9),2),'.',RIGHT(a.docno,4)) AS ak_docno
+                  , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date
+                  , a.store_code, b.store_name, a.location_code , a.kode_kirim, a.provinsi_id, c.name as provinsi
+                  , a.regency_id, d.name as regency, a.jenis_so
+                  , a.remark, a.customer_code, e.customer_name, e.phone1, a.salesman_id, f.salesman_name
+                  , e.lokasi_stock, e.customer_type
+                  , a.tipe_komisi, a.komisi_persen,IFNULL(a.disc1_persen,0) ,IFNULL(a.disc2_persen ,0)
+                  , a.qty_item, a.qty_order, a.gross_sales, a.total_ppn, a.total_discount
+                  , a.sales_before_tax, a.sales_after_tax, a.service_level, a.qty_deliver
+                  , a.posting_date, DATE_FORMAT(a.posting_date, '%d/%m/%Y') ak_posting_date
+                  , a.status, a.sales_pada_toko, e.pkp
+                  , ifnull(a.jumlah_print,0) jumlah_print, e.credit_limit, e.outstanding, (e.credit_limit-e.outstanding) credit_remain
+                  , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
+                  , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
+                  , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt",
+             "join"=>[
+                "users u1"=>"a.crtby=u1.user_id",
+                "users u2"=>"a.updby=u2.user_id",
+                "profile_p b"=>"a.store_code=b.store_code",
+                "provinces c "=>"c.id=a.provinsi_id",
+                "regencies d"=>" c.id=d.province_id  AND d.id=a.regency_id",
+                "customer e"=>"a.customer_code=e.customer_code",
+                "salesman f"=>"a.salesman_id=f.salesman_id",
+            ],
+          "posisi"=>["left","left","left","left","inner","left","left"]
+        ));
+        $total = $total1->total;
+        $data = $total1->data;
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
         );
     }
@@ -558,7 +596,7 @@ class Online extends IO_Controller {
                     $result = 1;
                     $msg="Data tidak bisa dihapus, sudah ada transaksi";
                 }else{
-                    $this->model->delete_data_detail($read->row()->docno, $code);
+                    $this->model->delete_data_detail($rd->docno, $code);
                     $result = 0;
                     $msg="OK";
                 }
@@ -628,5 +666,27 @@ class Online extends IO_Controller {
     }
 
 
+    function read_datacustomer($code,$so_no){
+        try {
+            $read = $this->model->read_datacustomer($code,$so_no);
+            if ($read->num_rows() > 0) {
+                $result = 0;
+                $msg="OK";
+                $data = $read->result()[0];
+            } else {
+                $result = 1;
+                $msg="Kode tidak ditemukan";
+                $data = null;
+            }
+        }catch (Exception $e){
+            $result = 1;
+            $msg=$e->getMessage();
+        }
+        echo json_encode(array(
+            "status" => $result, "isError" => ($result==1),
+            "msg" => $msg, "message" => $msg,
+            "data" => $data
+        ));
+    }
 
 }

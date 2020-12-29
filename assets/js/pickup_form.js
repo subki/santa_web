@@ -35,7 +35,7 @@ $(document).ready(function () {
         });
  
         $("#line").textbox('setValue','1');  
-        $("#status").textbox('setValue','OPEN');
+        $("#status").textbox('setValue','Open');
         $("#jumlah_print").textbox('setValue','0');
         $("#update").hide();
         $("#posting").hide();
@@ -476,10 +476,15 @@ function submit_cancel() {
     }
 }
 function submit(stt){
-     // console.log(base_url+flag)
-    let status = (stt==="")?(pickup)?pickup.status:'OPEN':stt;
-    if(pickup!==undefined && pickup.status==="ON Waiting" && status==="Pickup") status = 'OPEN';
+     console.log(base_url+flag)
+    let status = (stt==="")?(pickup)?pickup.status:'Open':stt;
+    if(pickup!==undefined && pickup.status==="ON Waiting" && status==="Pickup") status = 'Open';
     $('#status').textbox('setValue',status);
+
+    // console.log(status)
+    // console.log(aksi)
+    // console.log(pickup.status)
+  // return;
 
     if(aksi==="add") {
         submit_reason("Open")
@@ -507,6 +512,8 @@ function submit(stt){
                     }
                 })
             }else if(pickup.status === status){
+                // console.log("Disini")
+              // return;
                 submit_reason("")
             }else{
                 myConfirm("Confirm", "Anda yakin ingin mengubah status sales ini?", "Yes", "No", function (r) {
@@ -538,7 +545,8 @@ function submit(stt){
 
 }
 function submit_reason(reason,id) {
-   // console.log(reason);
+   console.log("2 param");
+   return;
    //  console.log(base_url+flag);
     $("#reason").textbox('setValue', reason);
    $.ajax({
@@ -693,7 +701,9 @@ function submitCopy() {
 function cancelUpload() {
     $('#toolbar23').hide();
 }
-function submit_reason(reason) { 
+function submit_reason(reason) {
+    // console.log($("#status").textbox('getValue'));
+  // return;
     $("#reason").textbox('setValue', reason);
     $('#fm').form('submit',{
         url: base_url+flag,

@@ -17,6 +17,7 @@ class Faktur_model extends CI_Model {
 
     function read_available_faktur($prd){
         $sql = "select  id, periode, LPAD(seqno,13,'0') seqno from seri_pajak where inuse=0 and periode='$prd' order by seqno asc";
+//        pre($sql);
         return $this->db->query($sql);
     }
     function read_data($prd,$seq){
