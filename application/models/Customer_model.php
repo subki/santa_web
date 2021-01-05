@@ -8,7 +8,7 @@ class Customer_model extends CI_Model {
         parent::__construct();
         $this->query="select 
 				  a.status, a.gol_customer, c.description customer_type_name
-				  , a.customer_class, a.customer_code
+				  , a.customer_class, a.customer_code, a.payment_first
                   , a.customer_name, d.nama_company head_customer_name
                   , a.parent_cust, h.customer_name as parent_name
                   , a.address1, a.address2, e.name provinsi, f.name kota

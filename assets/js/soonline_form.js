@@ -101,7 +101,7 @@ function initHeader() {
         $("#posting").linkbutton({text:"UnSubmit"});
         $("#update").hide();
     }
-    if(so_item.status==="CLOSE" || so_item.status==="EXPIRED"|| so_item.status==="CANCEL"){
+    if(so_item.status==="CLOSED" || so_item.status==="EXPIRED"|| so_item.status==="CANCEL"){
         $("#posting").hide();
         $("#cancel").hide();
         $("#update").hide();
@@ -186,10 +186,10 @@ function initGrid() {
         sortOrder: "desc",
         singleSelect: true, nowrap:true,
         toolbar: [
-        // {
-        //     iconCls: 'icon-add', id:'add', text:'New',
-        //     handler: function(){$('#dg').edatagrid('addRow',0)}
-        // },
+        {
+            iconCls: 'icon-add', id:'add', text:'New',
+            handler: function(){$('#dg').edatagrid('addRow',0)}
+        },
         {
             id:'delete', iconCls: 'icon-remove', text:'Delete',
             handler: function(){
@@ -293,9 +293,6 @@ function initGrid() {
         },{
             id:'cancel', iconCls: 'icon-undo', text:'Cancel',
             handler: function(){$('#dg').edatagrid('cancelRow')}
-        },{
-            id:'kopi', iconCls: 'icon-copy', text:'Copy',
-            handler: function(){openCopy()}
         }],
         loadFilter: function (data) {
             data.rows = [];

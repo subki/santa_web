@@ -12,7 +12,7 @@ class Stockopname extends IO_Controller {
     }
 
     function index($aksi=""){
-        $data['title'] = 'Stockopname List';
+        $data['title'] = 'Stockopname Gondola List';
         $data['content'] = $this->load->view('vStockopname', $data, TRUE);
         $this->load->view('main',$data);
     }
@@ -20,13 +20,13 @@ class Stockopname extends IO_Controller {
     function form($aksi=""){
         $data['aksi']=$aksi;
         if($aksi=="add"){
-            $data['title'] = 'Add Stockopname';
+            $data['title'] = 'Add Stockopname Gondola';
             $docno = $this->model->generate_auto_number();
-            $data['title'] = 'Add Stockopname';
+            $data['title'] = 'Add Stockopname Gondola';
             $data['docno'] = $docno;
             $data['content'] = $this->load->view('vStockopname_form', $data, TRUE);
         }else{
-            $data['title'] = 'Edit Stockopname';
+            $data['title'] = 'Edit Stockopname Gondola';
             $data['docno'] = $this->input->get('id');
             $data['content'] = $this->load->view('vStockopname_form', $data, TRUE);
         }
@@ -440,14 +440,37 @@ class Stockopname extends IO_Controller {
     }
 
     function load_grid_detail($docno){
-        $f = $this->getParamGrid(" trx_no='$docno' ","item");  
-        $data = $this->model->get_list_data_detail($f['page'],$f['rows']," item ",$f['order'],$f['role'], $f['app']);
+        $special = "b.trx_no='$docno'";
+        $total1 = $this->getParamGrid_BuilderComplete(array(
+            "table"=>"dtl_gondola b",
+            "sortir"=>"b.crtdt",
+            "special"=>$special,
+            "select"=>" b.*,DATE_FORMAT(a.trx_date, '%d/%c/%Y') trx_daste1,ifnull(u1.fullname,b.crtby) as crtby1,ifnull(u2.fullname, b.updby) as updby1
+                          , a.crtdt tanggal_crt, DATE_FORMAT(b.crtdt, '%d/%b/%Y %T') crtdt1
+                          , DATE_FORMAT(b.upddt, '%d/%b/%Y %T') upddt1", 
+             "join"=>[
+                "hal_gondola a"=>"a.trx_no=b.trx_no ",
+                "users u1 "=>"a.crtby=u1.user_id",
+                "users u2"=>"a.updby=u2.user_id ",  
+            ],
+          "posisi"=>["inner","left","left"]
+        )); 
+        $total = $total1->total;
+        $data = $total1->data; 
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
+                "total"=>$total,
                 "data" =>$data)
-        );
+        ); 
+        // $f = $this->getParamGrid(" trx_no='$docno' ","crtdt");  
+        // $data = $this->model->get_list_data_detail($f['page'],$f['rows']," item ",$f['order'],$f['role'], $f['app']);
+        // echo json_encode(array(
+        //         "status" => 1,
+        //         "msg" => "OK",
+        //         "total"=>(count($data)>0)?$data[0]->total:0,
+        //         "data" =>$data)
+        // );
     }
 
     function save_data_adj(){
@@ -466,8 +489,8 @@ class Stockopname extends IO_Controller {
                  $this->updateStock($r->on_loc
                     ,date('Ym', strtotime($r->trx_date))
                     ,$nobarqty,'penyesuaian'
-                    , array("docno"=>$opn,"tanggal"=>$r->trx_date,"remark"=>$r->remark));
-
+                    , array("docno"=>$opn,"tanggal"=>$r->trx_date,"remark"=>$r->remark)); 
+                
                     $this->model->update_dataclose($docno, array("status"=>'Posted'));
                 // var_dump($r); var_dump($nobarqty);
                 // die();          
@@ -616,8 +639,8 @@ class Stockopname extends IO_Controller {
     function Updatestatus($docno){   
 
             $docno = $this->input->post("docno"); 
-
-            $status = $this->input->post("status");
+            
+            $status = $this->input->post("status"); 
             $data = array( 
                     'status' => $status,
                     'updby' => $this->session->userdata('user_id'),

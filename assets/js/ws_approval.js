@@ -82,19 +82,20 @@ function submit(status) {
                 return
             }
             flag = "wholesalesapp/edit_data_header_credit";
-        }
-        if(parseFloat(so_item.sales_after_tax) > parseFloat(max_transaksi)){
+					submit_confirm(so_item.id,"APPROVED CR")
+        }else if(parseFloat(so_item.sales_after_tax) > parseFloat(max_transaksi)){
             if (parseInt(global_auth[global_auth.appId].allow_approve2) === 0) {
                 $.messager.show({title: 'Error', msg: 'Anda tidak memiliki otoritas Posting Maksimal Sales'});
                 return
             }
             flag = "wholesalesapp/edit_data_header_maximum";
-        }
+					submit_confirm(so_item.id,"APPROVED MS")
+        }else flag = "";
         if(flag===""){
             $.messager.show({title: 'Error', msg: 'Flag kondisi tidak terpenuhi'});
-            return
+            // return
         }
-        submit_confirm(so_item.id,"CLOSED")
+        // submit_confirm(so_item.id,"CLOSED")
     }
 }
 function submit_confirm(docno,status) {

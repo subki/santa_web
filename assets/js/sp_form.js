@@ -1,8 +1,20 @@
 var Stockopname=undefined;
 var flag = "";
 $(document).ready(function () {
- 
+  
+    populateLocation();
+  $("#qtyscan").textbox('setValue',numberFormat(1));  
+  $('#qtyscan').textbox({
+    inputEvents:$.extend({},$.fn.textbox.defaults.inputEvents,{
+        keyup:function(e){
 
+          var input = $(this).val();  
+         if (e.keyCode == 13){  
+            $('#so_no').textbox('textbox').focus();   
+          }
+        }
+    })
+}); 
  $('#so_no').textbox('textbox').focus();   
     if(aksi==="add"){
         flag = "Stockopname/save_data_header";
@@ -14,9 +26,9 @@ $(document).ready(function () {
         var tglset =  y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d); 
         $("#trx_date").datebox('setValue', tgl);
         $("#trx_date").datebox('setText', tgl);  
-        $("#store_code").combogrid('setValue',store_code);
+        // $("#store_code").combogrid('setValue',store_code);
         $("#jenis_adjust").combogrid('setValue','Stock Taking'); 
-        $("#on_loc").combogrid('setValue',location_code);
+       //$("#on_loc").combogrid('setValue',location_code);
         $("#trx_no").textbox('setValue',docno);
         $("#status").textbox('setValue','OPEN');
         $("#print").textbox('setValue','0');
@@ -28,7 +40,7 @@ $(document).ready(function () {
         $("#cancel").hide(); 
         $("#new").hide(); 
  
-       $("#barcode") .css ("display", "none");
+       $("#barcode") .css ("display", "none"); 
         
 
     }else{
@@ -39,7 +51,7 @@ $(document).ready(function () {
             dataType:"json",
             success:function(result){
              console.log(result);
-                var total=(result.total)?(result.total.jumlah)?result.total.jumlah:0:0;
+                var total=result.total.jumlah;
                 $("#totalpick").textbox('setValue',total);
                 if(result.status===0) {
                     $('#fm').form('load',result.data);
@@ -53,7 +65,7 @@ $(document).ready(function () {
                 else {
                     $.messager.show({
                         title: 'Error',
-                        msg: result.message,
+                        msg: e.message,
                         handler:function () {
                             window.location.href = base_url+"Stockopname";
                         }
@@ -66,7 +78,7 @@ $(document).ready(function () {
 });
 
 function initHeader() {  
-
+console.log(Stockopname)
     var date = new Date(Stockopname.tgl);
     var y = date.getFullYear();
     var m = date.getMonth()+1;
@@ -86,8 +98,11 @@ function initHeader() {
         $("#tgl_Stockopname").datebox('setValue', tglpick);
         $("#tgl_Stockopname").datebox('setText', tglpick);
     }
-    $("#doc_date").datebox('setValue', tgl);
-    $("#doc_date").datebox('setText', tgl);
+
+    $('#on_loc').combogrid('setValue',Stockopname.on_loc)
+    $('#on_locname').textbox('setValue',Stockopname.location_name)
+    $("#trx_date").datebox('setValue', Stockopname.trx_date1);
+    $("#trx_date").datebox('setText', Stockopname.trx_date1);
     $("#id").textbox('setValue',Stockopname.id);    
     $('#gondola').combogrid({"readonly":true});   
     initGrid();
@@ -330,8 +345,8 @@ function initGrid() {
         rownumbers: false,
         pagination:true, striped:true, nowrap:true, 
         singleSelect:true,
-        sortName: "tgl",
-        sortOrder: "desc",  
+        // sortName: "crtdt",
+        // sortOrder: "DESC",  
 
         toolbar: [
         // {
@@ -382,12 +397,9 @@ function initGrid() {
             authbutton();
             var dt = $("#dg").edatagrid('getData'); 
             if(dt.rows.length>0){
-                // $('#customer_name').combogrid({"readonly":true});
-                // $('#customer_name').combogrid('setValue', Stockopname.customer_name);
-                $("#kopi").linkbutton({"disabled":true})
-                // $('#open_cust').show();
-            }else {
-                $("#kopi").linkbutton({"disabled":false})
+                console.log("ok") 
+            }else { 
+                $("#posting").hide();  
                 // $('#open_cust').hide();
             }
         },
@@ -425,7 +437,7 @@ function initGrid() {
             {
                 field: "barcode",
                 title: "Item#",
-                width: '200',
+                width: '150',
                 sortable: true,
                 formatter: function (value, row) {
                     //console.log(row)
@@ -451,14 +463,14 @@ function initGrid() {
                     }
                 }
             }, 
-            {field: "product_code", title: "Product code", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "uom", title: "Uom", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "taking_qty", title: "Qty", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "store", title: "Store",sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "crtby1", title: "Create by", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "crtdt1", title: "Create time", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "updby1", title: "Update by", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "upddt1", title: "Update time", sortable: true,editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "product_code", title: "Product code", width:130, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "uom", title: "Uom",width:70, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "taking_qty", title: "Qty", width:70, sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "store", title: "Store",width:100,sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "crtby1", title: "Create by",width:80, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "crtdt1", title: "Create time",width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "updby1", title: "Update by",width:80, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "upddt1", title: "Update time", width:150, sortable: true,editor: {type: 'textbox',options:{disabled:true}}}, 
         ]],
         onSuccess: function (index, row) {
             if (row.status === 1) {
@@ -761,5 +773,60 @@ function submit_reason(reason) {
             }
         }
     });
+} 
+function populateLocation() {
+   $('#on_loc').combogrid({
+        idField: 'on_loc',
+        textField:'on_locname',
+        url:base_url+"delivery/get_location/xxx",
+        required:true,
+        labelPosition:'top',
+        tipPosition:'bottom',
+        hasDownArrow: false,
+        remoteFilter:true,
+        panelWidth: 500,
+        multiple:false,
+        panelEvents: $.extend({}, $.fn.combogrid.defaults.panelEvents, {
+            mousedown: function(){}
+        }),
+        editable: false,
+        pagination: true,
+        fitColumns: true,
+        mode:'remote',
+        loadFilter: function (data) {
+          //   console.log(data)
+            data.rows = [];
+            if (data.data) data.rows = data.data;
+            return data;
+        },
+        onSelect:function (index, rw) {
+             console.log("select",rw);
+            if(rw.location_code==="") return
+            $('#on_loc').combogrid('setValue',rw.location_code)
+            $('#on_locname').textbox('setValue',rw.location_name)
+            $("#store_code").combogrid('setValue',rw.store_code);
+        },
+        onLoadSuccess:function(){
+                var gr =  $('#on_loc').combogrid('grid')
+
+                var data=gr.edatagrid('getData');
+                console.log(data)
+             for(var i =0;i < data.rows.length;i++){
+                var rw=data.rows[i];
+                //console.log('ds',rw)
+                if(rw.location_code==on_loc){ 
+                     
+                    $('#on_locname').textbox('setValue',rw.location_name)
+                }
+            } 
+        },
+        columns: [[
+            {field:'location_code', title:'', width:75},
+            {field:'location_name', title:'Gudang', width:175}, 
+        ]]
+    });
+    var gr =  $('#on_loc').combogrid('grid');
+    gr.datagrid('destroyFilter');
+    gr.datagrid('enableFilter'); 
+    gr.datagrid('doFilter');
 }
-   

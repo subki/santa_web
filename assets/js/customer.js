@@ -541,6 +541,7 @@ function editData(){
             $('#dlg2').dialog('open').dialog('center').dialog('setTitle',`Edit Customer : ${row.customer_name}`);
             disable_enable(false)
             var data = $.parseJSON(result);
+            console.log("data",data);
             $('#customer_code').textbox({disabled:false, readonly:true, width:'100%'});
             $('#info_status').textbox({disabled:true, readonly:true, width:'100%', label:''});
             $('#info_status').textbox('hide');

@@ -133,7 +133,7 @@ class Showroom extends IO_Controller {
 			->get($this->table_bayar." k")->result();
 
 		$data['promo_header'] = $this->db->get("promo_header")->result();
-		$data['promo_detail'] = $this->db->where_in("promoid", array_column($data['promo_header'],"id"))->get("promo_detail")->result();
+		$data['promo_detail'] = $this->db->where_in("promoid", array_merge(array_column($data['promo_header'],"id"),[""]))->get("promo_detail")->result();
 		$data['title'] = 'Add Sales Order Showroom';
 		$data['docno'] = $docno;
 		$data['header'] = $head;

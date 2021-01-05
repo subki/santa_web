@@ -10,10 +10,13 @@ class Stockopname_model extends CI_Model {
         $this->tabledetail = "adjustment_dtl";
         $this->table2 = "hal_gondola";
         $this->table3 = "dtl_gondola";
-        $this->queryheaderadj = "SELECT a.*,ifnull(u1.fullname,a.crtby) as useropname from $this->table a                
+        $this->queryheaderadj = "SELECT a.*,ifnull(u1.fullname,a.crtby) as useropname,DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt1
+                            ,DATE_FORMAT(a.trx_date, '%d/%b/%Y %T') trx_date1, DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt1  from $this->table a                
                             left join users u1 on a.crtby=u1.user_id
                             left join users u2 on a.updby=u2.user_id ";
-        $this->queryheader = "SELECT a.*,ifnull(u1.fullname,a.crtby) as useropname from $this->table2 a                
+        $this->queryheader = "SELECT a.*,ifnull(u1.fullname,a.crtby) as useropname,ifnull(u1.fullname,a.updby) as updopname,DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt1
+                            ,DATE_FORMAT(a.trx_date, '%d/%c/%Y') trx_date1, DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt1,l.description location_name from $this->table2 a  
+                            INNER JOIN location l on a.on_loc=l.location_code              
                             left join users u1 on a.crtby=u1.user_id
                             left join users u2 on a.updby=u2.user_id ";
         $this->querydetail = "SELECT b.* from $this->tabledetail b INNER JOIN $this->table a ON a.trx_no=b.trx_no ";
@@ -57,7 +60,22 @@ class Stockopname_model extends CI_Model {
         return $this->db->query($q);
     } 
     function cekOP($barcode,$tanggal,$gondola){
-        $q ="  SELECT a.nobar, c.product_code,d.uom_id AS uom,a.location_code,
+        // $q ="  SELECT a.nobar, c.product_code,d.uom_id AS uom,a.location_code,
+        //           FLOOR(a.saldo_akhir/(IFNULL((SELECT convertion FROM product_uom_convertion WHERE uom_from=c.satuan_jual AND uom_to=c.satuan_stock LIMIT 1),0))) stock
+        //           ,FLOOR(a.saldo_akhir/(IFNULL((SELECT convertion FROM product_uom_convertion WHERE uom_from=c.satuan_jual AND uom_to=c.satuan_stock LIMIT 1),0))) taking
+        //           ,p.price_pkp, 
+        //           FLOOR(a.saldo_akhir/(IFNULL((SELECT convertion FROM product_uom_convertion WHERE uom_from=c.satuan_jual AND uom_to=c.satuan_stock LIMIT 1),0)))
+        //           * p.price_pkp total_cost FROM stock a
+        //                         INNER JOIN (
+        //                             product_barang b 
+        //                             INNER JOIN product c ON b.product_id=c.id
+        //                             INNER JOIN product_uom d ON c.satuan_stock=d.uom_code
+        //                             INNER JOIN product_uom e ON c.satuan_jual=e.uom_code
+        //                             INNER JOIN product_price p ON p.product_id=b.product_id
+        //                         ) ON a.nobar=b.nobar
+        //                         WHERE a.periode='$tanggal' AND a.location_code='$gondola' AND a.nobar='$barcode'
+        //                         GROUP BY a.nobar ";
+         $q ="  SELECT a.nobar, c.product_code,d.uom_id AS uom,a.location_code,
                   FLOOR(a.saldo_akhir/(IFNULL((SELECT convertion FROM product_uom_convertion WHERE uom_from=c.satuan_jual AND uom_to=c.satuan_stock LIMIT 1),0))) stock
                   ,FLOOR(a.saldo_akhir/(IFNULL((SELECT convertion FROM product_uom_convertion WHERE uom_from=c.satuan_jual AND uom_to=c.satuan_stock LIMIT 1),0))) taking
                   ,p.price_pkp, 
@@ -70,7 +88,7 @@ class Stockopname_model extends CI_Model {
                                     INNER JOIN product_uom e ON c.satuan_jual=e.uom_code
                                     INNER JOIN product_price p ON p.product_id=b.product_id
                                 ) ON a.nobar=b.nobar
-                                WHERE a.periode='$tanggal' AND a.location_code='$gondola' AND a.nobar='$barcode'
+                                WHERE a.periode='$tanggal'  AND a.nobar='$barcode'
                                 GROUP BY a.nobar ";
         return $this->db->query($q);
     }
@@ -187,8 +205,7 @@ class Stockopname_model extends CI_Model {
                SELECT a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,
                 IFNULL(SUM(b.taking_qty),0) 'QTYScan',SUM(b.taking_qty)-a.qty Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan 
                 FROM adjustment_dtl a 
-                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no 
-                COLLATE utf8mb4_general_ci 
+                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no  
                 INNER JOIN dtl_gondola b ON b.item=a.item AND b.trx_no=g.trx_no  
                 GROUP BY a.item 
                 ORDER BY b.crtdt DESC,b.product_code ASC  ";
@@ -214,8 +231,7 @@ class Stockopname_model extends CI_Model {
                 SELECT a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,
                 IFNULL(SUM(b.taking_qty),0) 'QTYScan',SUM(b.taking_qty)-a.qty  Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan 
                 FROM adjustment_dtl a 
-                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no 
-                COLLATE utf8mb4_general_ci 
+                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no  
                 LEFT JOIN dtl_gondola b ON b.item=a.item AND b.trx_no=g.trx_no 
                 GROUP BY a.item 
                 ORDER BY b.crtdt DESC,b.product_code ASC  ";

@@ -14,7 +14,7 @@
 </style>
 <div id="tt">
     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-      <a href="<?php echo base_url('packinglist')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
+      <a href="javascript:void(0)" id="back" onclick="window.history.back();" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
         <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
         <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-posting" onclick="submit('POSTING')" style="width:90px; height: 20px;">Posting</a>
         <a href="javascript:void(0)" id="close" class="easyui-linkbutton" iconCls="icon-close" onclick="submit('CLOSE')" style="width:90px; height: 20px;">Close</a>

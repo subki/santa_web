@@ -60,6 +60,39 @@ class Stockadj_model extends CI_Model {
         return $this->db->query($sql)->result();
     }
 
+
+    function get_list_dataopname($page,$rows,$sort,$order,$role,$fltr){ 
+             $sql = "create temporary table tmp2 as 
+               SELECT g.on_loc,g.trx_date,a.uom,a.trx_no,a.item,a.product_code,a.qty 'QTYStock' ,
+                IFNULL(SUM(b.taking_qty),0) 'QTYScan',SUM(b.taking_qty)-a.qty+IFNULL(k.adjust,0) Selisih,a.crtdt,b.product_code productscan,b.crtdt crtdtscan 
+                FROM adjustment_dtl a 
+                INNER JOIN hal_gondola g ON a.trx_no=g.ref_no 
+                COLLATE utf8mb4_general_ci 
+                INNER JOIN dtl_gondola b ON b.item=a.item AND b.trx_no=g.trx_no 
+                LEFT JOIN stock_adj_detail k ON k.sku=a.item 
+                COLLATE utf8mb4_unicode_ci
+                AND k.so_number=a.trx_no  
+                COLLATE utf8mb4_unicode_ci  
+                GROUP BY a.item 
+                ORDER BY b.crtdt DESC,b.product_code ASC  ";
+        $this->db->query($sql);
+        $sql = "create temporary table tmp as select * from tmp2 ";
+        if($fltr!=''){
+            $sql .= $fltr;
+        }
+        $this->db->query($sql);
+        $sql = "select a.*,
+                (select count(a1.trx_no) from tmp a1 ) as total
+                 from tmp a ";
+        $sql .="HAVING Selisih <> 0 order by trx_no $order
+                limit ".($page-1)*$rows.",".$rows;
+        $data = $this->db->query($sql)->result();
+        $sql = "drop table tmp2";
+        $this->db->query($sql);
+
+        return $data;
+    }
+
     function get_list_data_detail($page,$rows,$sort,$order,$role,$fltr){
         $sql = "create temporary table tmp2 as
                  SELECT a.id, a.docno, a.sku, a.soh, a.adjust, a.keterangan , p.nobar, p.nmbar, p.product_id from stock_adj_detail a 
@@ -142,6 +175,21 @@ class Stockadj_model extends CI_Model {
         //nanti diubah
         $this->db->where('id',$code);
         return $this->db->get('stock_adj_detail');
+    }
+
+    function update_data_adjOpname($docno){
+        $sql = "UPDATE adjustment_dtl AS b
+                INNER JOIN stock_adj_detail AS g ON b.trx_no = g.so_number 
+                        COLLATE utf8mb4_general_ci 
+                AND g.sku=b.item
+                                COLLATE utf8mb4_general_ci 
+                INNER JOIN stock_adj AS f ON f.docno = g.docno
+                                COLLATE utf8mb4_general_ci 
+                SET b.qty = b.qty+g.adjust ,
+                b.taking = b.qty+g.adjust ,
+                b.total_cost = qty*unit_cost
+                WHERE  g.docno='$docno'";
+        return $this->db->query($sql);
     }
 
     function cek_stok($sku, $outlet, $periode){

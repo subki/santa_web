@@ -68,6 +68,13 @@ function initHeader() {
         $("#posting").hide();
     }
     $("#close").hide();
+    if(aksi=="view"){
+			$("#submit").hide();
+			$("#posting").hide();
+			$("#close").hide();
+			$("#print").hide();
+			$("#customer").hide();
+    }
 }
 function printSO() {
     window.open(base_url+'packinglist/print_pl/'+docno, '_blank');
@@ -217,6 +224,9 @@ function initGrid() {
         }
     })
   $("#dg").edatagrid('hideColumn','tipe');
+	if(aksi=="view"){
+		$('#dg').edatagrid({toolbar:null})
+	}
 }
 
 function submit(stt){

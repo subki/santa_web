@@ -37,10 +37,12 @@ class Wholesalesapp extends IO_Controller {
     }
 
     function load_grid(){
+    	$max = $this->session->userdata('maksimal transaksi');
+    	if($max==null || $max=="") $this->set_error("Maksimum transaksi belum di setting");
 			$total1 = $this->getParamGrid_BuilderComplete(array(
 				"table"=>"sales_trans_header a",
 				"sortir"=>"doc_date",
-				"special"=>["a.status"=>"OPEN","a.sales_after_tax>(c.credit_limit-c.outstanding)"],
+				"special"=>["a.status"=>"OPEN","a.sales_after_tax>(c.credit_limit-c.outstanding) OR (a.sales_after_tax > $max AND a.app_creditby != '')"],
 				"select"=>"a.id, a.no_faktur,a.no_faktur2, a.seri_pajak
                   , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date, a.jenis_faktur
                   , DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2

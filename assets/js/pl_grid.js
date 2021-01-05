@@ -31,6 +31,8 @@ var options={
         {field:"status",   title:"Status",       sortable: true, formatter:function (index, row) {
             return (row.status==="POSTING")?"Ready to Post":row.status;
         }},
+        // {field:"sales_total_pl",   title:"Total Packing List",      sortable: true, formatter:numberFormat},
+        // {field:"sales_after_tax",   title:"Total Sales Order",      sortable: true, formatter:numberFormat},
         {field:"crtby",   title:"Create By",      sortable: true},
         {field:"crtdt",   title:"Create Date",      sortable: true},
         {field:"updby",   title:"Update By",      sortable: true},

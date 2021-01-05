@@ -45,7 +45,7 @@ class Wholesales extends IO_Controller {
 			$total1 = $this->getParamGrid_BuilderComplete(array(
 				"table"=>"sales_trans_header a",
 				"sortir"=>"doc_date",
-				"special"=>[],
+				"special"=>["a.jenis_faktur"=>"WHOLESALES"],
 				"select"=>"a.id, a.no_faktur,a.no_faktur2, a.seri_pajak
                   , a.doc_date, DATE_FORMAT(a.doc_date, '%d/%b/%Y') ak_doc_date, a.jenis_faktur
                   , DATE_FORMAT(a.doc_date, '%d/%m/%Y') ak_doc_date2
@@ -102,6 +102,7 @@ class Wholesales extends IO_Controller {
         $docno=0;
         try {
             $input = $this->toUpper($this->input->post());
+//            pre($input);
 
             $pl = $this->model_packing->read_data($input['base_so']);
             if($pl->num_rows()>0){
@@ -177,7 +178,7 @@ class Wholesales extends IO_Controller {
 																->or_where("no_faktur2",$faktur)
 																->get('sales_trans_header')->row();
 															if(!isset($cfp)){
-																if(count($faktur)==13) {
+																if(strlen($faktur)==15) {
 																	$data['no_faktur'] = $faktur;
 																	$data['no_faktur2'] = $faktur;
 																	$docno = $this->model->insert_data($data);
@@ -185,7 +186,7 @@ class Wholesales extends IO_Controller {
 																	$msg = "OK";
 																}else{
 																	$result = 1;
-																	$msg = "Nomor Faktur tidak valid. harus 13 digit";
+																	$msg = "Nomor Faktur tidak valid. harus 13 digit (tanpa titik)";
 																}
 															}else{
 																$result = 1;
@@ -294,6 +295,7 @@ class Wholesales extends IO_Controller {
 											);
 											$this->model->update_data($input['id'], $data);
 											$this->model->copyPLtoWS($data, $input['id']);
+											$this->insert_log("sales_trans_header", $input['id'], $input['status']." - WS.Change Packing List");
 											$result = 0;
 											$msg="OK";
 										}else{
@@ -328,6 +330,7 @@ class Wholesales extends IO_Controller {
 											$lokasi = $this->db->get_where('customer',['customer_code'=>$input['customer_code']])->row();
 											if(isset($lokasi) && $lokasi->lokasi_stock!=""){
 												$this->model->update_data($input['id'], $data);
+												$this->insert_log("sales_trans_header", $input['id'], $input['status'].": Update data header");
 												$detail = $this->db->get_where('sales_trans_detail', ['sales_trans_header_id' => $input['id']])->result();
 												$nobarqty = [];
 												foreach ($detail as $row) {
@@ -338,6 +341,10 @@ class Wholesales extends IO_Controller {
 													array("docno" => $input['no_faktur'], "tanggal" => $this->formatDate("Y-m-d", $input['faktur_date']), "remark" => $input['remark']));
 
 												if ($msg != "ok") $result = 1;
+												if($result==0){
+													$this->db->update("packing_header",["status"=>"CLOSED"],["docno"=>$dt->base_so]);
+													$this->insert_log("packing_header", $dt->base_so, "CLOSED : PL.Close Packing List by Wholelases");
+												}
 											}else{
 												$result = 1;
 												$msg = "Customer tidak memiliki lokasi stok untuk potong stock.";
@@ -358,6 +365,9 @@ class Wholesales extends IO_Controller {
 											$this->db->update("seri_pajak",$data2,["refno"=>$input['no_faktur']]);
 										}
 										$this->model->update_data($input['id'], $data);
+										$this->insert_log("sales_trans_header", $input['id'], $input['status'].": Update data header");
+										$this->db->update("packing_header",["status"=>"POSTING","approvedby"=>"","approveddt"=>null],["docno"=>$dt->base_so]);
+										$this->insert_log("packing_header", $dt->base_so, "POSTING : PL.Wholesales Unposting");
 									}
 								}
             } else {
