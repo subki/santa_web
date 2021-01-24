@@ -13,7 +13,7 @@
     
 </script>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/po_form.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/receive_form.js"></script>
 
 <style>
     .panel-titleq .panel-tool{
@@ -33,11 +33,11 @@
 </style>
 <div id="tt">
     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-        <a href="<?php echo base_url('Purchaseorder')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
+        <a href="<?php echo base_url('Poreceiving')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
         <a href="javascript:void(0)" id="new" class="easyui-linkbutton" iconCls="icon-save" onclick="addform('')" style="width:90px; height: 20px;">NEW</a>
         <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('')" style="width:90px; height: 20px;">Save</a>
         <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-save" onclick="submit('Update')" style="width:90px; height: 20px;">Update</a>
-        <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-posting" onclick="submit('On Order')" style="width:90px; height: 20px;">Approve</a>
+      <!--   <a href="javascript:void(0)" id="posting" class="easyui-linkbutton" iconCls="icon-posting" onclick="submit('On Order')" style="width:90px; height: 20px;">Approve</a> -->
         <a href="javascript:void(0)" id="cancel" class="easyui-linkbutton" iconCls="icon-close" onclick="submit_cancel()" style="width:90px; height: 20px;">Cancel</a>
         <a href="javascript:void(0)" id="print" class="easyui-linkbutton" iconCls="icon-print" onclick="printSO()" style="width:90px; height: 20px;">Print</a>
        <!--  <a href="javascript:void(0)" id="customer" class="easyui-linkbutton" iconCls="icon-customer" onclick="showSupplier()" style="width:90px; height: 20px;">Supplier</a> 
@@ -60,27 +60,24 @@
                         <div style="margin-bottom:1px">
                             <div style="float:left; width: 90%;">
                                 <div style="margin-bottom:1px;">
-                                    <input name="supplier_code" id="supplier_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" label="Supplier:" label="" style="width:100%">
+                                    <input name="supplier_code" id="supplier_code" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" label="Supplier:" style="width:100%"> 
                                 </div>
                                 <input name="supplier_name" id="supplier_name" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly="true" label="" style="width:100%">
                             </div>
                         </div>
                         <div style="margin-bottom:1px">
-                            <div style="margin-bottom:1px; display: none">
+                            <div style="float:left; width: 90%;">
+                                <div style="margin-bottom:1px;">
+                                    <input name="po_no" id="po_no" class="easyui-combogrid" labelPosition="top" tipPosition="bottom" label="PO No:" label="" style="width:100%">
+                                </div> 
+                            </div>
+                          <!--   <div style="margin-bottom:1px; display: none">
                                 <input name="regency_id" id="regency_id" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
                                        readonly="true" label="" style="width:100%">
-                            </div>
-                            <div style="float:left; width: 50%; padding-right: 5px;">
+                            </div> -->
+                            <!-- <div style="float:left; width: 50%; padding-right: 5px;">
                                 <input name="regency_name" id="regency_name" class="easyui-combogrid" labelPosition="top" tipPosition="bottom"  label="Kabupaten:" style="width:100%">
-                            </div>
-                            <div style="margin-bottom:1px; display: none">
-                                <input name="provinsi_id" id="provinsi_id" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
-                                      readonly="true" label="" style="width:100%">
-                            </div>
-                            <div style="float:right; width: 50%; padding-left: 5px;">
-                                <input name="provinsi_name" id="provinsi_name" class="easyui-combogrid" labelPosition="top" tipPosition="bottom"
-                                      readonly="true" label="Provinsi:"style="width:100%">
-                            </div>
+                            </div> -->
                         </div>
 <!-- 
                         <div style="margin-bottom:1px;">
@@ -121,7 +118,7 @@
 
                         </div>
                         <div style="float:left; width: 50%; padding-right: 5px;">
-                             <input name="ref_no" id="ref_no" class="easyui-textbox" required="true" labelPosition="top" tipPosition="bottom" label="Refrensi No:" style="width:100%">
+                             <input name="do_no" id="do_no" class="easyui-textbox" required="true" labelPosition="top" tipPosition="bottom" label="DO No:" style="width:100%">
                         </div>  
                         <div style="float:left; width: 50%; padding-right: 5px;">
                            <input name="remark" id="remark" class="easyui-textbox" labelPosition="top" tipPosition="bottom"
@@ -135,7 +132,7 @@
                             <input name="docno" id="docno" value="<?php echo $docno; ?>" class="easyui-textbox" labelPosition="top" tipPosition="bottom" label="No. Po:" style="width:100%">
                         </div>  
                          <div style="float:left; width: 50%; padding-right: 5px;">
-                            <input name="po_date" id="po_date" value="<?php echo $tgl;?>"  class="easyui-datebox" required="true" labelPosition="top" tipPosition="bottom" label="Po Date:" style="width:100%">
+                            <input name="trx_date" id="trx_date" class="easyui-datebox"  value="<?php echo $tgl;?>"   required="true" labelPosition="top" tipPosition="bottom" label="Trx Date:" style="width:100%">
                         </div>
                     </div>
                     <div style="margin:5px;">  
@@ -157,20 +154,24 @@
                     </div>
                     <div style="margin:5px;">
                          <div style="float:left; width: 40%; padding-right: 5px;">
-                               <input name="eta" id="eta" class="easyui-datebox" required="true" labelPosition="top" tipPosition="bottom" label="Po Eta:" style="width:100%">
+                               <input name="po_date" id="po_date" class="easyui-datebox" required="true" labelPosition="top" tipPosition="bottom" label="Po Date:" style="width:100%">
                         </div>
                          <div style="float:left; width: 40%; padding-right: 5px;"> 
                             <input name="expired_date" id="expired_date" class="easyui-datebox" required="true" labelPosition="top" tipPosition="bottom" label="Expired Date:" style="width:100%">
                          </div>
                     </div> 
                     <div style="margin:5px;">
-                        <div style="float:left; width: 25%; padding-right: 5px;">
-                            <input name="tot_item" id="tot_item" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
-                               readonly="true" label="Total Item:" style="width:100%; text-align: right;">
-                        </div>
                         <div style="float:left; width: 35%; padding-right: 5px;">
                             <input name="tot_qty_order" id="tot_qty_order" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
                                readonly="true" label="Total Qty Order:" style="width:100%; text-align: right;">
+                        </div>
+                        <div style="float:left; width: 25%; padding-right: 5px;">
+                            <input name="tot_item" id="tot_item" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
+                               readonly="true" label="Total Order:" style="width:100%; text-align: right;">
+                        </div>
+                        <div style="float:left; width: 35%; padding-right: 5px;">
+                            <input name="tot_item_recv" id="tot_item_recv" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
+                               readonly="true" label="Total Item Receive:" style="width:100%; text-align: right;">
                         </div>
                         <div style="float:left; width: 35%; padding-right: 5px;">
                             <input name="tot_qty_recv" id="tot_qty_recv" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
@@ -189,21 +190,17 @@
                     </div>
                 <div style="width: 20%; padding: 10px;" class="border-kotak"> 
                     <div style="margin-bottom:1px">
-                        <input name="disc" id="disc" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
+                        <input name="tot_disc" id="tot_disc" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
                                readonly="true" label="Disc:" style="width:100%; text-align: right;">
                     </div>
                     <div style="margin-bottom:1px">
-                        <input name="ppn" id="ppn" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
+                        <input name="tot_ppn" id="tot_ppn" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
                                readonly="true" label="PPN:" style="width:100%; text-align: right;">
                     </div>
                     <div style="margin-bottom:1px">
-                        <input name="subtotal" id="subtotal" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
+                        <input name="total_recv" id="total_recv" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
                                readonly="true" label="Subtotal:" style="width:100%; text-align: right;">
-                    </div>
-                    <div style="margin-bottom:1px">
-                        <input name="total_purch" id="total_purch" class="easyui-textbox textbox-text-number" labelPosition="top" tipPosition="bottom"
-                               readonly="true" label="Net Purchase:" style="width:100%; text-align: right;">
-                    </div>
+                    </div> 
                 </div>
                 <span class="icon-transparent" style="display:inline-block;width:16px;height:16px;vertical-align:top"></span>
             </div>
@@ -222,14 +219,23 @@
         <div style="width: 100%; padding: 10px;">
             <div style="margin-bottom:1px">
                 <div id="docnoheader" style="float:left; width: 100%; padding-right: 5px;"> 
-                    <input name="po_no" id="po_no" class="easyui-textbox po_no" labelPosition="top" tipPosition="bottom"
-                           label="No. PO:" readonly style="width:100%">
+                    <input name="trx_no" id="trx_no" class="easyui-textbox trx_no" labelPosition="top" tipPosition="bottom"
+                           label="No. Trx:" readonly style="width:100%">
                 </div>
                 <div style="float:left; width: 100%; padding-right: 5px;display: none"> 
-                    <input name="datepo" id="datepo" class="easyui-textbox datepo" labelPosition="top" tipPosition="bottom" readonly style="width:100%">
+                    <input name="datetrx" id="datetrx" class="easyui-textbox datetrx" labelPosition="top" tipPosition="bottom" readonly style="width:100%">
                     <input name="store_code" id="store_code" value="<?php echo $this->session->userdata('store_code'); ?>" class="easyui-textbox store_code" labelPosition="top" tipPosition="bottom" readonly style="width:100%">
                     <input name="seqno" id="seqno" class="easyui-textbox seqno" labelPosition="top" tipPosition="bottom" readonly style="width:100%">
+                    <input name="po_nodetail" id="po_nodetail" class="easyui-textbox po_nodetail" labelPosition="top" tipPosition="bottom" readonly style="width:100%">
                     <input name="supplier_id" id="supplier_id" class="easyui-textbox supplier_id" labelPosition="top" tipPosition="bottom" readonly style="width:100%"> 
+                    <div style="float:left; width: 50%; padding-right: 5px;">
+                        <input name="discdetail" id="discdetail" class="easyui-textbox discdetail" labelPosition="top" tipPosition="bottom"
+                               label="Disc%:" style="width:100%"> 
+                    </div>
+                    <div style="float:left; width: 50%; padding-right: 5px;">
+                        <input name="ppndetail" id="ppndetail" class="easyui-textbox ppndetail" labelPosition="top" tipPosition="bottom"
+                               label="PPN%:" style="width:100%"> 
+                    </div>    
                 </div>
                 <div id="Product" style="float:left; width: 100%; padding-right: 5px;"> 
                     <input name="sku" id="sku" class="easyui-textbox sku" labelPosition="top" tipPosition="bottom"
@@ -245,17 +251,13 @@
                            label="Qty Order:" style="width:100%"> 
                 </div>
                 <div style="float:left; width: 50%; padding-right: 5px;">
+                    <input name="qty_receive" id="qty_receive" class="easyui-textbox qty_order" labelPosition="top" tipPosition="bottom"
+                           label="Qty Receive:" style="width:100%"> 
+                </div>
+                <div style="float:left; width: 50%; padding-right: 5px;">
                     <input name="unit_price" id="unit_price" class="easyui-textbox unit_price" labelPosition="top" tipPosition="bottom"
                            label="Unit Price:" style="width:100%"> 
                 </div>
-                <div style="float:left; width: 50%; padding-right: 5px;">
-                    <input name="discdetail" id="discdetail" class="easyui-textbox discdetail" labelPosition="top" tipPosition="bottom"
-                           label="Disc%:" style="width:100%"> 
-                </div>
-                <div style="float:left; width: 50%; padding-right: 5px;">
-                    <input name="ppndetail" id="ppndetail" class="easyui-textbox ppndetail" labelPosition="top" tipPosition="bottom"
-                           label="PPN%:" style="width:100%"> 
-                </div>    
             </div>      
         </div> 
         <span class="icon-transparent" style="display:inline-block;width:16px;height:16px;vertical-align:top"></span>
@@ -265,7 +267,7 @@
     </div>  
     </form> 
 </div>  
-<div id="modal_edit_detail_sku" class="easyui-dialog" data-options="iconCls:'icon-save',closed:true,modal:true,border:'thin',buttons:'#dlg-buttons'" style="width:50%;height:500px;padding:20px;"> 
+<div id="modal_edit_detail_sku" class="easyui-dialog" data-options="iconCls:'icon-save',closed:true,modal:true,border:'thin',buttons:'#dlg-buttons'" style="width:60%;height:500px;padding:20px;"> 
     <form class="form-horizontal" id="form_editing_detail_sku"> 
         <table id="tt_sku" title="List SKU" class="easyui-datagrid" style="width:100%;height:400px">
         </table>

@@ -5,8 +5,9 @@ $(document).ready(function () {
  
     populateSupplier();   
 
+
     if(aksi==="add"){
-        flag = "Purchaseorder/save_data_header";
+        flag = "Poreceiving/save_data_header";
         var date = new Date();
         var y = date.getFullYear();
         var m = date.getMonth()+1;
@@ -18,7 +19,7 @@ $(document).ready(function () {
         $("#new").hide(); 
         $("#store_code").combogrid('setValue',store_code);
         $("#location_code").combogrid('setValue',location_code);
-        $("#supplier_code").combogrid('setValue',supplier_code); 
+        $("#supplier_code").combogrid('setValue',supplier_code);   
         $("#status_po").textbox('setValue','Open');
         $("#jumlah_print").textbox('setValue','0');
         $("#update").hide();
@@ -26,10 +27,10 @@ $(document).ready(function () {
         $("#cancel").hide();
         $("#print").hide();
     }else{
-        flag = "Purchaseorder/edit_data_header";
+        flag = "Poreceiving/edit_data_header";
         $.ajax({
             type:"POST",
-            url:base_url+"Purchaseorder/read_data/"+docno,
+            url:base_url+"Poreceiving/read_data/"+docno,
             dataType:"json",
             success:function(result){ 
              if(result.total >=1){  
@@ -45,7 +46,7 @@ $(document).ready(function () {
                         title: 'Error',
                         msg: e.message,
                         handler:function () {
-                            window.location.href = base_url+"Purchaseorder";
+                            window.location.href = base_url+"Poreceiving";
                         }
                     });
                 }
@@ -57,18 +58,14 @@ $(document).ready(function () {
     $('#province_name').combogrid({"readonly":true});
     $('#regency_name').combogrid({"readonly":true});
 });
-function initHeader() {
-    $('#province_name').combogrid({"readonly":true});
+function initHeader() { 
     $('#regency_name').combogrid({"readonly":true});
     $('#regency_id').textbox('setValue',so_item.regency_id)
     $('#provinsi_id').textbox('setValue',so_item.provinsi_id)
-    $('#regency_name').combogrid('setValue',so_item.regency)
-    $('#provinsi_name').combogrid('setValue',so_item.provinsi)
+    $('#regency_name').combogrid('setValue',so_item.regency) 
     $('#supplier_code').combogrid('setValue',so_item.supplier_id) 
     $('#tot_item').textbox('setValue', numberFormat(so_item.tot_item)) 
     $('#tot_qty_order').textbox('setValue', numberFormat(so_item.tot_qty_order)) 
-    $('#subtotal').textbox('setValue', numberFormat(so_item.subtotal))
-    $('#total_purch').textbox('setValue', numberFormat(so_item.total_purch))
  
     initGrid();
  
@@ -76,7 +73,7 @@ function initHeader() {
     $("#submit").hide();
     $("#new").hide();
     if(so_item.status_po==="On Order"){
-        $("#posting").linkbutton({text:"Un Approve",width: '30%',align:"left"});
+        $("#posting").linkbutton({text:"Un Approve",width: '20%'});
         $("#update").hide();
     }
     if(so_item.status_po==="Closed" || so_item.status_po==="Cancel"){
@@ -89,14 +86,14 @@ function initHeader() {
 
 
 function addform() {
-         window.location.href = base_url+"Purchaseorder/form/add?supplier_code="+$('#supplier_code').combogrid('getValue')+"&supplier_name="+$('#supplier_name').textbox('getValue');
-   // window.Open(base_url+'Purchaseorder/print_so/'+docno, '_blank');
+         window.location.href = base_url+"Poreceiving/form/add?supplier_code="+$('#supplier_code').combogrid('getValue')+"&supplier_name="+$('#supplier_name').textbox('getValue');
+   // window.Open(base_url+'Poreceiving/print_so/'+docno, '_blank');
 }function printSO() {
-        // window.Open(base_url+'Purchaseorder/print_so/'+docno, '_blank', 'location=yes,height=400,width=500,scrollbars=yes,status=yes');
-   // window.Open(base_url+'Purchaseorder/print_so/'+docno, '_blank');
+        // window.Open(base_url+'Poreceiving/print_so/'+docno, '_blank', 'location=yes,height=400,width=500,scrollbars=yes,status=yes');
+   // window.Open(base_url+'Poreceiving/print_so/'+docno, '_blank');
     $.ajax({
         type:"get",
-        url:base_url+"Purchaseorder/print_so/"+docno,
+        url:base_url+"Poreceiving/print_so/"+docno,
         dataType:"json",
         success:function(result){
             //console.log(result.data)
@@ -113,7 +110,7 @@ function addform() {
 function reload_header() {
     $.ajax({
         type:"POST",
-        url:base_url+"Purchaseorder/read_data/"+docno,
+        url:base_url+"Poreceiving/read_data/"+docno,
         dataType:"json",
         success:function(result){
             //console.log(result.data)
@@ -127,7 +124,7 @@ function reload_header() {
                     title: 'Error',
                     msg: e.message,
                     handler:function () {
-                        window.location.href = base_url+"Purchaseorder";
+                        window.location.href = base_url+"Poreceiving";
                     }
                 });
             }
@@ -139,16 +136,16 @@ var timer=null;
 var product_selected=null;
 var sku_scanned='';
 function initGrid() { 
-    
+    console.log(so_item)
     if(!so_item) return
  
     $("#dg").edatagrid({ 
         fitColumns: false,
         width: "100%",
-        url: base_url + "Purchaseorder/load_grid_detail/"+so_item.po_no,
-        saveUrl: base_url + "Purchaseorder/save_data_detail/"+so_item.po_no+"/"+so_item.seqno,
-        updateUrl: base_url + "Purchaseorder/edit_data_detail/"+so_item.po_no+"/"+so_item.seqno,
-        destroyUrl: base_url + "Purchaseorder/delete_data_detail/"+so_item.po_no+"/"+so_item.seqno,
+        url: base_url + "Poreceiving/load_grid_detail/"+so_item.trx_no,
+        saveUrl: base_url + "Poreceiving/save_data_detail/"+so_item.trx_no+"/"+so_item.seqno,
+        updateUrl: base_url + "Poreceiving/edit_data_detail/"+so_item.trx_no+"/"+so_item.seqno,
+        destroyUrl: base_url + "Poreceiving/delete_data_detail/"+so_item.trx_no+"/"+so_item.seqno,
         idField: 'seqno',
         method: "POST",
         pagePosition: "top",
@@ -249,17 +246,18 @@ function initGrid() {
             }
         }, 
         columns: [[
-            {field: "sku", title: "Product_code#", width: '9%', sortable: true, editor: {type: 'textbox',options:{readonly:true}}}, 
-            {field: "nmbar", title: "Product Name", width: '20%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "seqno", title: "Seqno", width: '8%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "qty_order", title: "Qty Order", width: '8%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "unit_price", title: "Unit Price", width: '9%', sortable: true, formatter:function (index, row) {
+            {field: "sku", title: "Product_code#", sortable: true, editor: {type: 'textbox',options:{readonly:true}}}, 
+            {field: "nmbar", title: "Product Name",  sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "seqno", title: "Seqno", sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
+            {field: "qty_order", title: "Qty Order", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "qty_receive", title: "Qty Receive", sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "unit_price", title: "Unit Price", sortable: true, formatter:function (index, row) {
                 return numberFormat(row.unit_price);
             }, editor: {type: 'textbox',options:{readonly:true}}}, 
-            {field: "uom", title: "UOM", width: '6%', sortable: true, formatter:function(index, row){
+            {field: "uom", title: "UOM", sortable: true, formatter:function(index, row){
                 return row.uom_id;
                 },editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "disc", title: "Disc%", width: '6%', sortable: true,
+            {field: "disc", title: "Disc%",  sortable: true,
                 editor: {
                     type: 'numberbox',
                     options:{
@@ -273,7 +271,7 @@ function initGrid() {
                     }
                 }
             },     
-            {field: "ppn", title: "PPN%", width: '6%', sortable: true,
+            {field: "ppn", title: "PPN%",  sortable: true,
                 editor: {
                     type: 'numberbox',
                     options:{
@@ -287,10 +285,10 @@ function initGrid() {
                     }
                 }
             },     
-            {field: "net_unit_price", title: "Net Unit Price",align:"right",  width: '15%', sortable: true, formatter:function (index, row) {
+            {field: "net_unit_price", title: "Net Unit Price",align:"right", sortable: true, formatter:function (index, row) {
                 return numberFormat(row.net_unit_price);
             }, editor: {type: 'textbox',options:{readonly:true}}},  
-            {field: "net_purchase", title: "Net Aft PPN",align:"right",  width: '15%', sortable: true, formatter:function (index, row) {
+            {field: "net_purchase", title: "Net Aft PPN",align:"right",  sortable: true, formatter:function (index, row) {
                 return numberFormat(row.net_purchase);
             }, editor: {type: 'textbox',options:{readonly:true}}},   
         ]],
@@ -327,10 +325,12 @@ function initGrid() {
     }) 
 } 
 function addnew(){
+    console.log(so_item);
                 clearFormInput();
-    flag = "Purchaseorder/save_data_detail"; 
-                $("#po_no").textbox('setValue',so_item.po_no);
-                $("#datepo").textbox('setValue',so_item.datepo);
+    flag = "Poreceiving/save_data_detail"; 
+                $("#trx_no").textbox('setValue',so_item.trx_no);
+                $("#po_nodetail").textbox('setValue',so_item.po_no);
+                $("#datetrx").textbox('setValue',so_item.datetrx);
                 $("#supplier_id").textbox('setValue',so_item.supplier_id); 
                 $("#seqno").textbox('setValue',"");
                 $("#qty_order").textbox('setValue',0);
@@ -340,17 +340,18 @@ function addnew(){
         $('#modal_edit').dialog('open').dialog('center').dialog('setTitle','PO Detail'); 
     } 
 function editnew(seqno){
-        clearFormInput(); 
-        console.log(seqno) 
+        clearFormInput();  
              $.ajax({
                     type:"POST",
-                    url:base_url+"Purchaseorder/read_data_detail/"+so_item.po_no+"/"+seqno,
+                    url:base_url+"Poreceiving/read_data_detail/"+so_item.trx_no+"/"+seqno,
                     dataType:"json",
                     success:function(result){
                         console.log(result.data)
-                            flag ="Purchaseorder/edit_data_detail/"+so_item.po_no+"/"+seqno; 
-                                $("#po_no").textbox('setValue',result.data.po_no);
-                                $("#datepo").textbox('setValue',result.data.datepo);
+                            flag ="Poreceiving/edit_data_detail/"+so_item.po_no+"/"+seqno;  
+                                $("#trx_no").textbox('setValue',result.data.trx_no); 
+                                $("#qty_receive").textbox('setValue',result.data.qty_receive);
+                                $("#po_nodetail").textbox('setValue',result.data.po_no);
+                                $("#datetrx").textbox('setValue',result.data.trx_date);
                                 $("#sku").textbox('setValue',result.data.product_code); 
                                 $("#uom").textbox('setValue',result.data.uom); 
                                 $("#skucode").textbox('setValue',result.data.sku); 
@@ -368,6 +369,7 @@ function editnew(seqno){
 function clearFormInput() {
     $("#sku").textbox('setValue',"");
     $("#skucode").textbox('setValue',"");
+    $("#qty_receive").textbox('setValue',0);
     $("#uom").textbox('setValue',"");
     $("#qty_order").textbox('setValue',0);
     $("#unit_price").textbox('setValue',0);
@@ -382,7 +384,7 @@ function deletedetil(seqno){
           myConfirm("Confirmation", "Anda yakin akan menghapus data ini ?","Ya","Tidak", function (r) {
             if(r==="Ya"){
                    $.post(
-                        base_url+"Purchaseorder/delete_data_detail/"+so_item.po_no+"/"+seqno,function(result){
+                        base_url+"Poreceiving/delete_data_detail/"+so_item.trx_no+"/"+seqno,function(result){
                             var res = $.parseJSON(result);
                             if (res.status===1){
                                 alert(res.msg)
@@ -400,9 +402,7 @@ function deletedetil(seqno){
 function submit_detail() { 
      var sku = $("#sku").numberbox('getValue');
      var qty_order = $("#qty_order").numberbox('getValue');
-     var unit_price = $("#unit_price").numberbox('getValue');
-     var disc = $("#discdetail").numberbox('getValue');
-     var ppn = $("#ppn").numberbox('getValue'); 
+     var unit_price = $("#unit_price").numberbox('getValue'); 
     if(qty_order===""){
         alert('Please input Qty');
         return
@@ -443,7 +443,7 @@ function addnewsku() {
     $('#modal_edit_detail_sku').dialog('open').dialog('center').dialog('setTitle',' Form Data'); 
  
         $('#tt_sku').datagrid({ 
-            url:`${base_url}Purchaseorder/get_product?doc_date=${so_item.datepo}&lokasi=${so_item.store_name}`,
+            url:`${base_url}Poreceiving/get_product?po_no=${so_item.po_no}`,
             method:"POST",
             pagePosition:"top",
             resizeHandle:"right",
@@ -452,6 +452,7 @@ function addnewsku() {
             clientPaging: false,
             remoteFilter: true,
             rownumbers: false,
+            panelWidth: 700,
             pagination:true, striped:true, nowrap:false,
             sortName:"nobar",
             sortOrder:"asc",
@@ -464,10 +465,13 @@ function addnewsku() {
             },
             columns: [[
                         // {field: 'article_code', title: 'Article', width: 100},
-                        {field: 'nobar', title: 'SKU', width: 150},
+                        {field: 'nobar', title: 'SKU', width: 100},
                         {field: 'product_code', title: 'Product Code', width: 100},
-                        {field: 'nmbar', title: 'Product Name', width: 300}, 
-                        {field: 'uom_jual', title: 'UOM', width: 100},
+                        {field: 'nmbar', title: 'Product Name', width: 200}, 
+                        {field: 'uom_jual', title: 'UOM', width: 80},
+                        {field: 'seqno', title: 'Seqno', width: 80},
+                        {field: 'qty_order', title: 'Qty Order', width: 80},
+                        {field: 'qty_receive', title: 'Qty Receive', width: 80},
                     ]], 
             onLoadSuccess:function(){
                 authbutton();
@@ -478,6 +482,12 @@ function addnewsku() {
                 $("#sku").textbox('setValue',rr.nmbar);
                 $("#skucode").textbox('setValue',rr.nobar); 
                 $("#uom").textbox('setValue',rr.uom_stock); 
+                $("#qty_order").textbox('setValue',rr.qty_order); 
+                $("#qty_receive").textbox('setValue',rr.qty_receive); 
+                $("#unit_price").textbox('setValue',rr.unit_price); 
+                $("#seqno").textbox('setValue',rr.seqno); 
+                $("#discdetail").textbox('setValue',rr.disc); 
+                $("#ppndetail").textbox('setValue',rr.ppn);  
                 $('#modal_edit_detail_sku').dialog('close');
   
             }
@@ -496,7 +506,7 @@ function submit_cancel() {
                 console.log(so_item);
                 $.ajax({
                     type:"POST",
-                    url:base_url+"Purchaseorder/edit_data_header",
+                    url:base_url+"Poreceiving/edit_data_header",
                     dataType:"json",
                     data:{
                         docno:so_item.po_no,
@@ -524,14 +534,14 @@ function submit_cancel() {
                     success:function(result){
                         console.log(result.data)
                         if(result.status===0) {
-                            window.location.href = base_url + "Purchaseorder/form/edit?docno=" + so_item.po_no
+                            window.location.href = base_url + "Poreceiving/form/edit?docno=" + so_item.po_no
                         }
                         else {
                             $.messager.show({
                                 title: 'Error',
                                 msg: e.message,
                                 handler:function () {
-                                    window.location.href = base_url + "Purchaseorder/form/edit?docno=" + so_item.po_no
+                                    window.location.href = base_url + "Poreceiving/form/edit?docno=" + so_item.po_no
                                 }
                             });
                         }
@@ -560,7 +570,7 @@ function submit(stt){
                                         fn: function (r) {
                                             if (r) {
                                             $.ajax({  
-                                             url:base_url+"Purchaseorder/edit_data_header",
+                                             url:base_url+"Poreceiving/edit_data_header",
                                              method:"POST",  
                                              data:$('#fm').serialize(), 
                                              success: function(result){   
@@ -570,9 +580,9 @@ function submit(stt){
                                                     if (res.status === 0) {
                                                         var stt = $('#status_po').textbox('getValue');
                                                         if(stt=="On Order") { 
-                                                            window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                                                            window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                                                         }else{
-                                                            window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                                                            window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                                                         }
                                                     } else {
                                                         $.messager.show({
@@ -614,7 +624,7 @@ function OpenCopy() {
         disabled:false,
         required:true,
         readonly:false,
-        url:base_url+"Purchaseorder/load_grid",
+        url:base_url+"Poreceiving/load_grid",
         hasDownArrow: false,
         remoteFilter:true,
         panelWidth: 500,
@@ -650,7 +660,7 @@ function submitCopy() {
     var xx = $('#combo').combogrid('getValue');
     //console.log(xx)
     $.ajax({
-        url: base_url+"Purchaseorder/copy_detail",
+        url: base_url+"Poreceiving/copy_detail",
         type: 'post',
         data: {
             from:xx,
@@ -681,7 +691,7 @@ function submit_reason(reason,r) {
        $("#status_po").textbox('setValue', 'Open');
        $('#update').click(function(){  
            $.ajax({  
-                     url:base_url+"Purchaseorder/edit_data_header",
+                     url:base_url+"Poreceiving/edit_data_header",
                      method:"POST",  
                      data:$('#fm').serialize(), 
                      success: function(result){   
@@ -690,9 +700,9 @@ function submit_reason(reason,r) {
                             if (res.status === 0) {
                                 var stt = $('#status_po').textbox('getValue');
                                 if(stt=="On Order") { 
-                                    window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                                    window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                                 }else{
-                                    window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                                    window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                                 }
                             } else {
                                 $.messager.show({
@@ -714,7 +724,7 @@ function submit_reason(reason,r) {
         $("#status_po").textbox('setValue', reason);
        $('#posting').click(function(){  
            $.ajax({  
-                     url:base_url+"Purchaseorder/edit_data_header",
+                     url:base_url+"Poreceiving/edit_data_header",
                      method:"POST",  
                      data:$('#fm').serialize(), 
                      success: function(result){   
@@ -723,9 +733,9 @@ function submit_reason(reason,r) {
                             if (res.status === 0) {
                                 var stt = $('#status_po').textbox('getValue');
                                 if(stt=="On Order") { 
-                                    window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                                    window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                                 }else{
-                                    window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                                    window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                                 }
                             } else {
                                 $.messager.show({
@@ -754,9 +764,9 @@ function submit_reason(reason,r) {
                     if (res.status === 0) {
                         var stt = $('#status_po').textbox('getValue');
                         if(stt=="On Order") { 
-                            window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                            window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                         }else{
-                            window.location.href = base_url + "Purchaseorder/form/edit?docno=" + res.docno
+                            window.location.href = base_url + "Poreceiving/form/edit?docno=" + res.docno
                         }
                     } else {
                         $.messager.show({
@@ -781,7 +791,7 @@ function infoData() {
     if(aksi==="edit"){
         $.ajax({
             type:"POST",
-            url:base_url+"Purchaseorder/read_history/"+so_item.docno,
+            url:base_url+"Poreceiving/read_history/"+so_item.docno,
             dataType:"json",
             success:function(result){
                 //console.log(result.data)
@@ -815,7 +825,7 @@ function infoData() {
                         title: 'Error',
                         msg: result.message,
                         handler:function () {
-                            window.location.href = base_url+"Purchaseorder";
+                            window.location.href = base_url+"Poreceiving";
                         }
                     });
                 }
@@ -856,7 +866,7 @@ function populateSupplier() {
    $('#supplier_code').combogrid({
         idField: 'supplier_code',
         textField:'supplier_code',
-        url:base_url+"Purchaseorder/load_gridsupp",
+        url:base_url+"Poreceiving/load_gridsupp",
         required:true,
         labelPosition:'top',
         tipPosition:'bottom',
@@ -891,10 +901,9 @@ function populateSupplier() {
                     $('#rate').textbox('readonly',false);
                 }
                 
+                Posearch(rw.supplier_code);   
                 $('#supplier_name').textbox('setValue',rw.supplier_name)
-                $('#currency').textbox('setValue',curr) 
-                $('#provinsi_id').textbox('setValue',rw.provinsi_id)
-                $('#provinsi_name').combogrid('setValue',rw.provinsi)
+                $('#currency').textbox('setValue',curr)  
                 $('#regency_id').textbox('setValue',rw.regency_id)
                 $('#regency_name').combogrid('setValue',rw.regency)
                 if(rw.tipe_supplier=="Barang Jadi"){
@@ -905,61 +914,25 @@ function populateSupplier() {
                 }
                 
                 $('#po_typename').combogrid('setValue',rw.tipe_supplier)
-                $('#po_type').textbox('setValue',type_po)
-            // $('#outstanding').textbox('setValue',numberFormat(rw.outstanding))
-            // $('#credit_remain').textbox('setValue',numberFormat(rw.credit_remain))
-            // //$('#pkp').textbox('setValue',rw.pkp)
-
-            // $('#lokasi_stock').textbox('setValue',rw.lokasi_stock)
-            // $('#provinsi_id').textbox('setValue',rw.provinsi_id)
-            // $('#regency_id').textbox('setValue',rw.regency_id)
-            // $('#regency_name').combogrid('setValue',rw.kota)
-
-            // $('#customer_code').textbox('setValue',rw.customer_code)
-            // $('#customer_name').textbox('setValue',rw.customer_name)
-            // $("#customer").show(); 
-            // $('#so_no').textbox('textbox').focus(); 
-          
-            // var d = $("#dg").edatagrid('getData');
-            // if(d.data.length>0){
-            //     $("#customer_name").combogrid({'readonly':true})
-            // }
-
+                $('#po_type').textbox('setValue',type_po)  
         },
         onLoadSuccess:function(){
                 var gr =  $('#supplier_code').combogrid('grid')
 
                 var data=gr.edatagrid('getData');
-               // console.log(data)
+                //console.log(data)  
              for(var i =0;i < data.rows.length;i++){
-                var rw=data.rows[i];
-                 // console.log('ds',rw)
+                var rw=data.rows[i]; 
                 if(rw.supplier_code==supplier_code){
+                    Posearch(rw.supplier_code); 
                     $('#supplier_name').textbox('setValue',rw.supplier_name)
                     $('#currency').textbox('setValue',rw.currency) 
                     $('#provinsi_id').textbox('setValue',rw.provinsi_id)
                     $('#provinsi_name').combogrid('setValue',rw.provinsi)
                     $('#regency_id').textbox('setValue',rw.regency_id)
-                    $('#regency_name').combogrid('setValue',rw.regency) 
-                //     $('#credit_limit').textbox('setValue',numberFormat(rw.credit_limit))
-                //     $('#outstanding').textbox('setValue',numberFormat(rw.outstanding))
-                //     $('#credit_remain').textbox('setValue',numberFormat(rw.credit_remain))
-                //     //$('#pkp').textbox('setValue',rw.pkp)
-
-                //     $('#lokasi_stock').textbox('setValue',rw.lokasi_stock) 
-                //     $('#regency_id').textbox('setValue',rw.regency_id)
-                //     $('#regency_name').combogrid('setValue',rw.kota)
-
-                //     $('#customer_code').textbox('setValue',rw.customer_code)
-                //     $('#customer_name').textbox('setValue',rw.customer_name)
-                //     $("#customer").show(); 
-                //     $('#so_no').textbox('textbox').focus(); 
+                    $('#regency_name').combogrid('setValue',rw.regency)  
                  }
-            }
-          // if(customer_code!==''){
-          //        $('#customer_code').combogrid('setValue',customer_code);
-          //        $('#customer_name').textbox('setValue',customer_name);
-          //   }
+            } 
         },
         columns: [[
             {field:'supplier_code', title:'Kode', width:100},
@@ -968,7 +941,7 @@ function populateSupplier() {
     });
     var gr =  $('#supplier_code').combogrid('grid')
     gr.datagrid('destroyFilter');
-    gr.datagrid('enableFilter');   
+    gr.datagrid('enableFilter');  
      if(supplier_code!==''){
                 gr.datagrid('addFilterRule', {
                     field: 'supplier_code',
@@ -977,4 +950,88 @@ function populateSupplier() {
                 });  
             }
     gr.datagrid('doFilter');
+}   
+function Posearch(supp) { 
+   $('#po_no').combogrid({
+        idField: 'po_no',
+        textField:'po_no',  
+        url:base_url+"Poreceiving/load_gridpo?supp=" +supp, 
+        required:true,
+        labelPosition:'top',
+        tipPosition:'bottom',
+        hasDownArrow: false,
+        remoteFilter:true,
+        panelWidth: 500,
+        multiple:false,
+        panelEvents: $.extend({}, $.fn.combogrid.defaults.panelEvents, {
+            mousedown: function(){}
+        }),
+        editable: false,
+        pagination: true,
+        fitColumns: true,
+        mode:'remote',
+        loadFilter: function (data) {
+            //console.log(data)
+            data.rows = [];
+            if (data.data) data.rows = data.data; 
+            return data;
+        },
+        onSelect:function (index, rw) {
+             console.log("select",rw);
+            if(rw.supplier_id==="") return
+                if(rw.currency=="" || rw.currency==null || rw.currency=="IDR" ){
+                    var curr='IDR'; 
+                    $('#rate').textbox('setValue',1)  
+                    $('#rate').textbox('readonly',true);
+                }
+                else{
+                    var curr=rw.currency;
+                    $('#rate').textbox('setValue',0) 
+                    $('#rate').textbox('readonly',false);
+                } 
+                $('#currency').textbox('setValue',curr)   
+                if(rw.tipe_supplier=="Barang Jadi"){
+                    var type_po='PO BJ';
+                }
+                else{
+                    var type_po='PO BB';
+                }
+
+                var date = new Date(rw.expired_date);
+                var y = date.getFullYear();
+                var m = date.getMonth()+1;
+                var d = date.getDate();
+                var expired_date =  (d<10?('0'+d):d)+'/'+(m<10?('0'+m):m)+'/'+y;
+                var date2 = new Date(rw.po_date);
+                var y2= date2.getFullYear();
+                var m2 = date2.getMonth()+1;
+                var d2 = date2.getDate();
+                var po_date =  (d<10?('0'+d):d)+'/'+(m<10?('0'+m):m)+'/'+y;
+                
+                $('#expired_date').datebox('setValue',expired_date)
+                $('#po_date').datebox('setValue',po_date)
+                $('#tot_qty_order').textbox('setValue',rw.tot_qty_order)
+                $('#tot_item').textbox('setValue',rw.tot_item)
+                $('#tot_qty_recv').textbox('setValue',rw.tot_qty_recv) 
+                $('#po_typename').combogrid('setValue',rw.tipe_supplier)
+                $('#po_type').textbox('setValue',type_po)  
+        }, 
+        columns: [[
+            {field:'po_no', title:'Po No', width:200},
+            {field:'po_date', title:'Po Date', width:200},
+            {field:'tot_qty_order', title:'Qty Order', width:100},
+            {field:'tot_qty_recv', title:'Qty Receive', width:100},
+        ]]
+    });
+    var gr =  $('#po_no').combogrid('grid')
+    gr.datagrid('destroyFilter');
+    gr.datagrid('enableFilter');  
+    //  if(supplier_code!==''){
+    //             gr.datagrid('addFilterRule', {
+    //                 field: 'supplier_code',
+    //                 op: 'equal',
+    //                 value:supplier_code
+    //             });  
+    //         }
+    // gr.datagrid('doFilter');
 } 

@@ -22,9 +22,9 @@ $(document).ready(function () {
             var supplier_code = $('#supplier_code').val();  
                 console.log(prd)
             if(status!==""){
-                $('#dg').datagrid({url:base_url+"Purchaseorder/load_grid/"+status+"/"+supplier_code+"/"+prd});
+                $('#dg').datagrid({url:base_url+"Poreceiving/load_grid/"+status+"/"+supplier_code+"/"+prd});
                
-                // $('#dg').datagrid({url:base_url+"Purchaseorder/load_grid/", 
+                // $('#dg').datagrid({url:base_url+"Poreceiving/load_grid/", 
                 //    data: {
                 //        prd:prd,
                 //        status:status 
@@ -37,8 +37,8 @@ $(document).ready(function () {
         
    populateSupplier();
 var options={ 
-   // url: base_url+"Purchaseorder/load_grid/ALL/Customer/ALL1",
-    title:"Purchase Order",
+   // url: base_url+"Poreceiving/load_grid/ALL/Customer/ALL1",
+    title:"PO Receive",
     method:"POST",
     pagePosition:"top",
     resizeHandle:"right",
@@ -56,7 +56,7 @@ var options={
         iconCls: 'icon-add', id:'add',
         text:'New',
         handler: function(){
-            addPurchaseorder();
+            addPoreceiving();
         }
     },
     {
@@ -100,15 +100,15 @@ var options={
         return data;
     },
     columns:[[
-        {field:"po_no",   title:"No. Po",      width:130, sortable: true}, 
-        {field:"po_date",   title:"Po Date",      width: 100, sortable: true},
-        {field:"status_po",   title:"Status",      width: 90, sortable: true},
-        {field:"tipe_supplier",   title:"Type Supplier",      width: 100, sortable: true},
-        {field:"supplier_name",   title:"Supplier Name",      width: 200, sortable: true},
-        {field:"crtby",   title:"Create By",      width: 100, sortable: true},
-        {field:"crtdt",   title:"Create Date",      width: 160, sortable: true},
-        {field:"updby",   title:"Update By",      width: 100, sortable: true},
-        {field:"upddt",   title:"Update Date",      width: 160, sortable: true},
+        {field:"trx_no",   title:"No. Trx",      width:130, sortable: true}, 
+        {field:"trx_type",   title:"Type",      width:130, sortable: true}, 
+        {field:"trx_date",   title:"Receive Date",      width:130, sortable: true}, 
+        {field:"do_no",   title:"No. Do",      width:130, sortable: true}, 
+        {field:"po_no",   title:"No. Po",      width:130, sortable: true},  
+        {field:"status",   title:"Status",      width: 90, sortable: true}, 
+        {field:"supplier_name",   title:"Supplier Name",      width: 150, sortable: true},
+        {field:"crtby",   title:"Create By",      width: 90, sortable: true},
+        {field:"crtdt",   title:"Create Date",      width: 100, sortable: true}, 
     ]],
     rowStyler:function(index,row){
         if (row.status==="Open"){
@@ -131,7 +131,7 @@ function initGrid() {
 function editData(){
     let row = getRow();
     if(row==null) return
-    window.location.href = base_url+"Purchaseorder/form/edit?docno="+row.po_no
+    window.location.href = base_url+"Poreceiving/form/edit?docno="+row.trx_no
 }
 
 
@@ -142,7 +142,7 @@ function deleteData(){
     $.messager.confirm('Confirm','Are you sure you want to destroy this data?',function(r){
         if (r){
             $.post(
-                base_url+"Purchaseorder/delete_data/"+row.po_no,function(result){
+                base_url+"Poreceiving/delete_data/"+row.trx_no,function(result){
                     var res = $.parseJSON(result);
                     if (res.status===1){
                         $.messager.show({    // show error message
@@ -252,10 +252,10 @@ function showCustomer2(r) {
 }
 
 });   
-// function addPurchaseorder(){
+// function addPoreceiving(){
 //     var tglnow = $('#remarkd').datebox('getValue'); 
-//             $.redirect(base_url+"Purchaseorder/form/add", {'tglnow': tglnow});  
+//             $.redirect(base_url+"Poreceiving/form/add", {'tglnow': tglnow});  
 // }
 function Refresh(){ 
-    window.location.href = base_url+"Purchaseorder";
+    window.location.href = base_url+"Poreceiving";
 }

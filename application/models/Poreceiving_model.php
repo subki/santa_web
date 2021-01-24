@@ -1,24 +1,25 @@
 <?php
 
-class Po_model extends CI_Model {
+class Poreceiving_model extends CI_Model {
 
     private $table;
     private $query;
 	public function __construct(){
         parent::__construct();
-        $this->table = "po_hdr";
-        $this->query = "select a.po_no,a.po_date as datepo,a.eta ,DATE_FORMAT(a.po_date, '%d/%b/%Y') po_date
-                  , a.store_code, b.store_name, a.wilayah , a.currency, a.rate, c.name as provinsi
-                  , a.expired_date, d.name as regency, a.supplier_id
-                  , a.remark, a.ref_no, IFNULL(a.disc,0)disc ,IFNULL(a.ppn ,0)ppn,s.supplier_name,a.po_type ,s.tipe_supplier AS po_typename
-                  , a.tot_item, a.tot_qty_order, a.tot_qty_recv, a.subtotal, a.total_purch
-                  , a.status_po, a.po_type,ifnull(a.print,0) jumlah_print,ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
+        $this->table = "receiving_hdr";
+        $this->query = "select a.trx_no, a.po_no,p.po_date,p.expired_date,a.trx_date as datetrx,p.eta ,DATE_FORMAT(a.trx_date, '%d/%b/%Y') trx_date
+                  , a.store_code, b.store_name, a.wilayah , a.currency, p.rate, c.name as provinsi
+                  , d.name as regency, a.supplier_id
+                  , a.remark, a.do_no, IFNULL(a.tot_disc,0) tot_disc ,IFNULL(a.tot_ppn ,0)tot_ppn,s.supplier_name,a.trx_type ,s.tipe_supplier AS po_typename
+                  , a.tot_item tot_item_recv, p.tot_item tot_item, a.tot_qty_order , a.tot_qty_recv, a.total_recv 
+                  , a.status status_po, p.po_type,ifnull(a.print,0) jumlah_print,ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
                   , a.crtdt tanggal_crt, a.upddt tanggal_upd, DATE_FORMAT(a.crtdt, '%d/%b/%Y %T') crtdt
                   , DATE_FORMAT(a.upddt, '%d/%b/%Y %T') upddt
 	            from $this->table a 
 	            left join users u1 on a.crtby=u1.user_id
 	            left join users u2 on a.updby=u2.user_id 
 	            LEFT JOIN profile_p b on a.store_code=b.store_code
+                INNER JOIN po_hdr p ON p.po_no=a.po_no
                 INNER JOIN supplier s ON s.supplier_code=a.supplier_id
 	            LEFT JOIN (provinces c 
 	              INNER JOIN regencies d on c.id=d.province_id 
@@ -27,8 +28,26 @@ class Po_model extends CI_Model {
                     LEFT JOIN (provinces c 
                   INNER JOIN regencies d on c.id=d.province_id 
                 ) ON c.id=a.provinsi_id AND d.id=a.regency_id  ";
+        $this->querypo="select a.*,s.tipe_supplier from po_hdr a INNER JOIN supplier s ON s.supplier_code=a.supplier_id ";
     }
 
+    function get_list_datapo($page,$rows,$sort,$order,$role,$fltr, $opt=0, $golongan=""){
+        $sql = "create temporary table tmp2 as
+                $this->querypo ";
+        $this->db->query($sql);
+        $sql = "create temporary table tmp as select * from tmp2 ";
+        if($fltr!=''){
+            $sql .= $fltr;
+        }
+        $this->db->query($sql);
+
+        $sql = "select a.*,
+                (select count(a1.supplier_id) from tmp a1 ) as total
+                 from tmp a ";
+        $sql .="group by po_no,po_date order by " .$sort." $order
+                limit ".($page-1)*$rows.",".$rows;
+        return $this->db->query($sql)->result();
+    }
     function get_list_datasupp($page,$rows,$sort,$order,$role,$fltr, $opt=0, $golongan=""){
         $sql = "create temporary table tmp2 as
                 $this->querysupp ";
@@ -65,7 +84,7 @@ class Po_model extends CI_Model {
     }
 
     function read_data($code){
-        $q = $this->query." where po_no='$code'";
+        $q = $this->query." where trx_no='$code'";
         return $this->db->query($q);
     }
 
@@ -130,57 +149,38 @@ class Po_model extends CI_Model {
     //     return $this->db->query($q);
     // }
     function update_data($code, $data){
-        $this->db->where('po_no',$code);
+        $this->db->where('trx_no',$code);
         $this->db->update($this->table,$data);
-        $this->updateheaderdata($code);
+        //$this->updateheaderdata($code);
     }
     function insert_data($data){
       
         $this->db->insert($this->table, $data);
     }
     function delete_data($id){
-        $this->db->where('po_no',$id);
+        $this->db->where('docno',$id);
         $this->db->delete($this->table);
     }
     function read_transactions($code){
         $this->db->where('docno',$code);
         return $this->db->get('product');
     }
-    function generate_auto_number(){
-//         $prefix = "";
-//         if($pkp=="YES"){
-// //            if($store_code == $this->session->userdata('kode store pusat')){
-// //                $prefix="SOP";
-// //            }else if($store_code == $this->session->userdata('kode store bandung')){
-// //                $prefix="BOP";
-// //            }else if($store_code == $this->session->userdata('kode store surabaya')){
-// //                $prefix="YOP";
-// //            }
-//                 $prefix="SOP";
-//         }else{
-//             if($store_code == $this->session->userdata('kode store pusat')){
-//                 $prefix="SOS";
-//             }else if($store_code == $this->session->userdata('kode store bandung')){
-//                 $prefix="BOS";
-//             }else if($store_code == $this->session->userdata('kode store surabaya')){
-//                 $prefix="YOS";
-//             }
-//         }
-//         if($prefix=="") return "";
-        $sql = "SELECT IFNULL(CONCAT(DATE_FORMAT(NOW(),'PB%y'),LPAD(MAX(RIGHT(po_no,6))+1,6,'0')),
-                CONCAT(DATE_FORMAT(NOW(),'PB%y'),LPAD(1,6,'0'))) AS nomor 
-                FROM po_hdr ORDER BY po_no DESC";
+    function generate_auto_number(){ 
+        $sql = "SELECT IFNULL(CONCAT(DATE_FORMAT(NOW(),'RB%y'),LPAD(MAX(RIGHT(trx_no,6))+1,6,'0')),
+                CONCAT(DATE_FORMAT(NOW(),'RB%y'),LPAD(1,6,'0'))) AS nomor 
+                FROM receiving_hdr ORDER BY trx_no DESC";
         return $this->db->query($sql)->row()->nomor;
     }
 
 
     function get_product($page,$rows,$sort,$order,$role,$fltr){
         $sql = "create temporary table tmp as
-                SELECT b.nobar,b.nmbar, b.product_id, c.product_code, c.article_code
+                SELECT b.nobar,b.nmbar, b.product_id, c.product_code, c.article_code,p.qty_receive,p.qty_order,p.seqno,p.unit_price,p.disc,p.ppn
                     , c.jenis_barang, c.satuan_stock, c.satuan_jual
                     , d.description AS uom_stock, d.uom_id as id_stock, e.description AS uom_jual, e.uom_id as id_jual
-                FROM product_barang b 
+                FROM product_barang b
                     INNER JOIN product c ON b.product_id=c.id
+                    INNER JOIN po_dtl p ON p.sku=c.sku
                     INNER JOIN product_uom d ON c.satuan_stock=d.uom_code
                     INNER JOIN product_uom e ON c.satuan_jual=e.uom_code  ";
         if($fltr!=''){
@@ -222,133 +222,7 @@ class Po_model extends CI_Model {
                 limit ".($page-1)*$rows.",".$rows;
         return $this->db->query($sql)->result();
     }
-    function get_discount($product_id,$tgl,$lokasi,$customer_code){
-        $sql = "SELECT * FROM customer where customer_code='$customer_code'";
-        $dtx = $this->db->query($sql);
-        if($dtx->num_rows()>0){
-            $sql = "SELECT a.* FROM discount a
-                    INNER JOIN discount_for b ON a.discount_id=b.discount_id
-                    WHERE a.start_date<='$tgl' AND a.end_date>='$tgl'
-                    AND b.customer_code='$customer_code'
-                    ORDER BY a.start_date DESC";
-            $dt = $this->db->query($sql);
-            if($dt->num_rows()>0){
-                $disc_id = $dt->row()->discount_id;
-                $sql = "SELECT a.article_code, b.id product_id
-                    FROM discount_item a
-                    LEFT JOIN product b ON a.article_code=b.article_code
-                    WHERE a.discount_id='$disc_id'";
-                $dt2 = $this->db->query($sql);
-                if($dt2->num_rows()>0){
-                    $lup = $dt2->result();
-                    $prd_id="";
-                    foreach ($lup as $row){
-                        if($row->product_id==$product_id){
-                            $prd_id=$row->product_id;
-                            break;
-                        }
-                    }
-                    if($prd_id==""){
-                        //cek customer article
-                        $sql = "SELECT b.id,a.*
-                            FROM category_article a
-                            INNER JOIN product b ON a.article_code=b.article_code
-                            INNER JOIN customer c ON a.customer_code=a.customer_code AND a.customer_type=c.customer_type
-                            WHERE a.customer_code='$customer_code'
-                            AND b.id='$product_id'
-                            GROUP BY a.id;";
-                        $cs1 = $this->db->query($sql);
-                        if($cs1->num_rows()>0){
-                            return $cs1->row()->discount;
-                        }else return 1000;
-                    }else{
-                        $sql="select * from discount_for where discount_id='$disc_id'";
-                        $dt3 = $this->db->query($sql);
-                        if($dt3->num_rows()>0){
-                            $lup2 = $dt3->result();
-                            $lksi ="";
-                            foreach ($lup2 as $row2){
-                                if($row2->location_code==$lokasi){
-                                    $lksi=$row2->location_code;
-                                    break;
-                                }
-                            }
-                            if($lksi==""){
-                                //cek customer article
-                                $sql = "SELECT b.id,a.*
-                            FROM category_article a
-                            INNER JOIN product b ON a.article_code=b.article_code
-                            INNER JOIN customer c ON a.customer_code=a.customer_code AND a.customer_type=c.customer_type
-                            WHERE a.customer_code='$customer_code'
-                            AND b.id='$product_id'
-                            GROUP BY a.id;";
-                                $cs1 = $this->db->query($sql);
-                                if($cs1->num_rows()>0){
-                                    return $cs1->row()->discount;
-                                }else return 1000;
-                            }else{
-                                return $dt->row()->discount1;
-                            }
-                        }else{
-                            //cek customer article
-                            $sql = "SELECT b.id,a.*
-                            FROM category_article a
-                            INNER JOIN product b ON a.article_code=b.article_code
-                            INNER JOIN customer c ON a.customer_code=a.customer_code AND a.customer_type=c.customer_type
-                            WHERE a.customer_code='$customer_code'
-                            AND b.id='$product_id'
-                            GROUP BY a.id;";
-                            $cs1 = $this->db->query($sql);
-                            if($cs1->num_rows()>0){
-                                return $cs1->row()->discount;
-                            }else return 1000;
-                        }
-                    }
-                }else{
-                    //cek customer article
-                    $sql = "SELECT b.id,a.*
-                            FROM category_article a
-                            INNER JOIN product b ON a.article_code=b.article_code
-                            INNER JOIN customer c ON a.customer_code=a.customer_code AND a.customer_type=c.customer_type
-                            WHERE a.customer_code='$customer_code'
-                            AND b.id='$product_id'
-                            GROUP BY a.id;";
-                    $cs1 = $this->db->query($sql);
-                    if($cs1->num_rows()>0){
-                        return $cs1->row()->discount;
-                    }else return 1000;
-                }
-            }else{
-                //cek customer article
-                $sql = "SELECT b.id,a.*
-                            FROM category_article a
-                            INNER JOIN product b ON a.article_code=b.article_code
-                            INNER JOIN customer c ON a.customer_code=a.customer_code AND a.customer_type=c.customer_type
-                            WHERE a.customer_code='$customer_code'
-                            AND b.id='$product_id'
-                            GROUP BY a.id;";
-                $cs1 = $this->db->query($sql);
-                if($cs1->num_rows()>0){
-                    return $cs1->row()->discount;
-                }else return 1000;
-            }
-        }else{
-            //cek customer article
-            $sql = "SELECT b.id,a.*
-                            FROM category_article a
-                            INNER JOIN product b ON a.article_code=b.article_code
-                            INNER JOIN customer c ON a.customer_code=a.customer_code AND a.customer_type=c.customer_type
-                            WHERE a.customer_code='$customer_code'
-                            AND b.id='$product_id'
-                            GROUP BY a.id;";
-            $cs1 = $this->db->query($sql);
-            if($cs1->num_rows()>0){
-                return $cs1->row()->discount;
-            }else return 1000;
-        }
-
-    }
-
+ 
     function get_unit_price($product_id,$customer_code,$tgl){
      
         $sql = "SELECT * FROM customer WHERE customer_code='$customer_code'";
@@ -377,7 +251,7 @@ class Po_model extends CI_Model {
                     , c.product_name, b.product_id 
                     , COALESCE(a.updby, a.crtby) last_user
                     , COALESCE(a.upddt, a.crtdt) last_time
-                FROM po_dtl a
+                FROM receiving_dtl a 
                 LEFT JOIN (
                     product_barang b 
                     INNER JOIN product c ON b.product_id=c.id
@@ -388,9 +262,9 @@ class Po_model extends CI_Model {
         }
         $this->db->query($sql);
         $sql = "select a.*,
-                (select count(a1.po_no) from tmp a1 ) as total
+                (select count(a1.trx_no) from tmp a1 ) as total
                  from tmp a ";
-        $sql .="order by po_no"." $order
+        $sql .="order by trx_no"." $order
                 limit ".($page-1)*$rows.",".$rows; 
         return $this->db->query($sql)->result();
     }
@@ -421,72 +295,61 @@ class Po_model extends CI_Model {
 
     function generate_seqno($docno){
         $sql = "SELECT IFNULL(LPAD(MAX(seqno)+1,3,'0'), LPAD(1,3,'0')) AS seqno
-                FROM po_dtl
-                WHERE po_no='$docno'";
+                FROM receiving_dtl
+                WHERE trx_no='$docno'";
         return $this->db->query($sql)->row()->seqno;
     }
  
     function read_data_detailID($docno,$seqno){
-        $this->db->where('po_no',$docno);
+        $this->db->where('trx_no',$docno);
         $this->db->where('seqno',$seqno);
-        return $this->db->get('po_dtl');
+        return $this->db->get('receiving_dtl');
     }
-    function update_data_detail($docno,$seqno, $data){
-        $this->db->where('po_no',$docno);
+    function update_data_detail($docno,$po_no,$seqno,$qty_receive,$data){
+        $this->db->where('trx_no',$docno);
         $this->db->where('seqno',$seqno);
-        $this->db->update("po_dtl",$data);
-        $this->updateheaderdata($docno);
+        $this->db->update("receiving_dtl",$data); 
+
+        $sql = "SELECT p.seqno
+                FROM receiving_dtl r
+                INNER JOIN po_dtl p ON p.po_no=r.po_no and p.sku=r.sku
+                WHERE r.trx_no='$docno' and r.seqno='$seqno'";
+        $seqnopo=$this->db->query($sql);
+        $getseqno=$seqnopo->row()->seqno;
+        $this->updateheaderdataPo($docno,$po_no,$getseqno,$qty_receive);
+        $this->updateheaderdata($po_no);
+    } 
+    function insert_data_detail($docno,$po_no,$seqno,$qty_receive,$data){ 
+        $this->db->insert("receiving_dtl", $data);
+        $this->updateheaderdataPo($docno,$po_no,$seqno,$qty_receive);
+        $this->updateheaderdata($po_no);
     }
-    function update_data_detail_disc($docno, $disc, $nomor, $pkp){
-//            'disc_total' => $input['disc_total'],
-//                    'bruto_before_tax' => $input['bruto_before_tax'],
-//                    'total_tax' => $input['total_tax'],
-//                    'net_unit_price' => $input['net_unit_price'],
-//                    'net_total_price' => $input['net_total_price'],
-	    if($nomor==1){
-            $this->db->query("update so_online_detail set disc1_persen=$disc where docno='$docno'");
-        }else if($nomor==2){
-            $this->db->query("update so_online_detail set disc2_persen=$disc where docno='$docno'");
-        } 
-//        $sql = "update so_online_detail set
-//	               disc1_amount=unit_price-(unit_price-(unit_price*(disc1_persen/100)))
-//	              , disc2_amount=disc1_amount+(disc1_amount*(disc2_persen/100))
-//	              , disc3_amount=disc2_amount+(disc2_amount*(disc3_persen/100))
-//	              , disc_total=disc1_amount+disc2_amount+disc3_amount
-//	              , bruto_before_tax=unit_price-disc_total
-//	              , total_tax=(case when '$pkp'='YES' then bruto_before_tax*(10/100) else 0 end)
-//	              , net_unit_price=bruto_before_tax+total_tax
-//	              , net_total_price=net_unit_price*qty_order  (gross*n[0]/1.1) * 10/100
-//	              where docno='$docno'";
-//        $this->db->query($sql);
-        $sql = "update so_online_detail set disc1_amount=unit_price * (disc1_persen/100) where docno='$docno'";
-        if($this->db->query($sql)) {
-            $sql = "update so_online_detail set disc2_amount=(unit_price-disc1_amount) * (disc2_persen/100) where docno='$docno'";
-             if($this->db->query($sql)){
-                        $sql = "update so_online_detail set bruto_before_tax=unit_price-disc_total where docno='$docno'";
-                        if($this->db->query($sql)){
-                            $sql = "update so_online_detail set total_tax=(case when '$pkp'='YES' then (bruto_before_tax*qty_order/1.1)*10/100 else 0 end) where docno='$docno'";
-                            if($this->db->query($sql)){
-                                $sql = "update so_online_detail set net_unit_price=unit_price-disc_total where docno='$docno'";
-                                if($this->db->query($sql)){
-                                    $sql = "update so_online_detail set net_total_price=(unit_price-disc_total)*qty_order where docno='$docno'";
-                                    if($this->db->query($sql)){
-                                        $this->updateheaderdata($docno);
-                                    }
-                                }
-                            }
-                        } 
-            }
-        }
-    }
-    function insert_data_detail($docno,$data){ 
-        $this->db->insert("po_dtl", $data);
-        $this->updateheaderdata($docno);
-    }
-    function delete_data_detail($po_no, $seqno){
-        $this->db->where('po_no',$po_no);
+    function delete_data_detail($trx_no, $seqno,$po_no){
+        $sqlpo="UPDATE po_dtl AS dest ,(SELECT receiving_dtl.qty_receive,receiving_dtl.sku
+                              FROM receiving_dtl WHERE trx_no='$trx_no' AND seqno='$seqno') AS src
+                              SET dest.qty_receive=dest.qty_receive-src.qty_receive WHERE po_no='$po_no' AND dest.sku=src.sku"; 
+                              $this->db->query($sqlpo);
+        $this->db->where('trx_no',$trx_no);
         $this->db->where('seqno',$seqno);
-        $this->db->delete("po_dtl");
+        $this->db->delete("receiving_dtl");
+        $sql = "UPDATE receiving_hdr AS dest
+                            , (SELECT ( SELECT IFNULL(COUNT(sku), 0) FROM
+                            ( SELECT DISTINCT IFNULL(sku, 0)sku FROM receiving_dtl WHERE trx_no = '$trx_no'
+                            ) AS item) item, IFNULL(SUM(qty_order), 0) qty,IFNULL(SUM(qty_receive), 0) qtyreceive
+                            , IFNULL(SUM(CEILING(receiving_dtl.net_unit_price)), 0) total_purch
+                            , IFNULL(SUM(CEILING(receiving_dtl.disc*receiving_dtl.qty_receive)), 0)disc 
+                            , IFNULL(SUM(CEILING(receiving_dtl.subtotal_price)), 0) subtotal
+                            , IFNULL(SUM(CEILING(receiving_dtl.ppn)), 0) ppn
+                              FROM receiving_dtl WHERE trx_no='$trx_no') AS src
+                            SET dest.tot_item = src.item
+                            , dest.tot_qty_order=src.qty
+                            , dest.tot_qty_recv=src.qtyreceive
+                            , dest.tot_bruto = src.subtotal
+                            , dest.tot_disc = src.disc
+                            , dest.tot_ppn = src.ppn
+                            , dest.total_recv = src.total_purch 
+                            WHERE dest.trx_no='$trx_no'";
+                        $this->db->query($sql);
         $this->updateheaderdata($po_no);
     }
     function read_transactions_detail($so, $seqno){
@@ -497,11 +360,34 @@ class Po_model extends CI_Model {
                 WHERE so_number='$so' and seqno='$seqno'";
         return $this->db->query($sql);
     }
+    function updateheaderdataPo($docno,$po_no,$seqno,$qty_receive){  
+        $sqlpo="UPDATE po_dtl set qty_receive=qty_receive+'$qty_receive' where po_no='$po_no' and seqno='$seqno'";
+        if($this->db->query($sqlpo)){
+                 $sql = "UPDATE receiving_hdr AS dest
+                            , (SELECT ( SELECT COUNT(sku) FROM
+                            ( SELECT DISTINCT sku FROM receiving_dtl WHERE trx_no = '$docno'
+                            ) AS item) item, SUM(qty_order) qty, SUM(qty_receive) qtyreceive
+                            , SUM(CEILING(receiving_dtl.net_unit_price)) total_purch
+                            , SUM(CEILING(receiving_dtl.disc*receiving_dtl.qty_receive)) disc 
+                            , SUM(CEILING(receiving_dtl.subtotal_price)) subtotal
+                            , SUM(CEILING(receiving_dtl.ppn)) ppn
+                              FROM receiving_dtl WHERE trx_no='$docno') AS src
+                            SET dest.tot_item = src.item
+                            , dest.tot_qty_order=src.qty
+                            , dest.tot_qty_recv=src.qtyreceive
+                            , dest.tot_bruto = src.subtotal
+                            , dest.tot_disc = src.disc
+                            , dest.tot_ppn = src.ppn
+                            , dest.total_recv = src.total_purch 
+                            WHERE dest.trx_no='$docno'";
+                        $this->db->query($sql);
+        }else return false; 
+    }
     function updateheaderdata($docno){
         $sql = "UPDATE po_hdr AS dest
                     , (SELECT (  SELECT COUNT(sku) FROM
                         ( SELECT DISTINCT sku FROM po_dtl WHERE po_no = '$docno'
-                        ) AS item) item, SUM(qty_order) qty
+                        ) AS item) item, SUM(qty_order) qty, SUM(qty_receive) qty_receive
                         , SUM(CEILING(po_dtl.net_unit_price)) subtotal
                         , SUM(CEILING(po_dtl.disc*po_dtl.qty_order)) disc 
                         , SUM(CEILING(po_dtl.net_purchase)) total_purch
@@ -509,6 +395,7 @@ class Po_model extends CI_Model {
                       FROM po_dtl WHERE po_no='$docno') AS src
                     SET dest.tot_item = src.item
                         , dest.tot_qty_order=src.qty
+                        , dest.tot_qty_recv = src.qty_receive
                         , dest.subtotal = src.subtotal
                         , dest.disc = src.disc
                         , dest.ppn = src.ppn

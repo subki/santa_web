@@ -1,29 +1,31 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Purchaseorder extends IO_Controller {
+class Poreceiving extends IO_Controller {
 
     function __construct(){
 
         parent::__construct();
-        $this->load->model('Po_model','model');
+        $this->load->model('Poreceiving_model','model');
         $this->load->library('form_validation');
         $this->load->helper('file');
     }
 
     function index($aksi=""){
-        $data['title'] = 'Purchase Order';
+        $data['title'] = 'PO Receive';
         $data['datenow'] = date("d/m/Y"); 
-        $data['content'] = $this->load->view('vPo', $data, TRUE);
+        $data['content'] = $this->load->view('vReceive', $data, TRUE);
         $this->load->view('main',$data);
-    } 
+    }
+
     function form($aksi=""){
         $data['aksi']=$aksi;
-       $get = $this->toUpper($this->input->post());  
+       $get = $this->toUpper($this->input->post()); 
+        
         if($aksi=="add"){
-            $data['title'] = 'Add Purchase Order';
+            $data['title'] = 'Add PO Receive';
             $docno = $this->model->generate_auto_number();
-            $data['title'] = 'Add Purchase Order';
+            $data['title'] = 'Add PO Receive';
             $data['docno'] = $docno;
             $data['tgl'] = $get['tglnow'];  
             if($get['supp']){
@@ -35,11 +37,11 @@ class Purchaseorder extends IO_Controller {
             $supplier_name=$this->input->get('supplier_name');
             $data['supplier_name'] = $supplier_name;
 
-            $data['content'] = $this->load->view('vPo_form', $data, TRUE);
+            $data['content'] = $this->load->view('vReceive_form', $data, TRUE);
         }else{
-            $data['title'] = 'Edit Purchase Order';
+            $data['title'] = 'Edit PO Receive';
             $data['docno'] = $this->input->get('docno');
-            $data['content'] = $this->load->view('vPo_form', $data, TRUE);
+            $data['content'] = $this->load->view('vReceive_form', $data, TRUE);
         }
         $this->load->view('main',$data);
     }
@@ -58,34 +60,35 @@ class Purchaseorder extends IO_Controller {
         //                      ","status");
         if($status=='ALL'){   
             if($cust=='~'){ 
-               $special = "p.po_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN p.status_po in('Open','Cancel','Closed','On Order') ELSE p.status_po='Open'  END ";
+               $special = "p.trx_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN p.status in('Open',Close','Invoice','Paid') ELSE p.status='Open'  END ";
                // $f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END ","status");
              }
              else{
-              $special ="p.po_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN p.status_po in('Open','Cancel','Closed','On Order') ELSE p.status_po='Open'  END  and s.supplier_code like '%$supp%' ";
+              $special ="p.trx_date <= '$tgl' AND CASE WHEN '$tgl' = '$dtnow' THEN p.status in('Open','Close','Invoice','Paid') ELSE p.status='Open'  END  and s.supplier_code like '%$supp%' ";
                  //$f = $this->getParamGrid(" doc_date <= '$tgl' AND CASE WHEN '$tgl' != '$dtnow' THEN status in('OPEN','BATAL','CLOSED','ON ORDER') ELSE status='OPEN'  END  and customer_code like '%$cust%' ","status");
              }
         }
         else{
             if($cust=='~'){  
-               $special = "p.po_date <= '$tgl' AND p.status_po='$status'";
+               $special = "p.trx_date <= '$tgl' AND p.status='$status'";
                // $f = $this->getParamGrid(" doc_date <= '$tgl' AND status='$status'","status");
             }
             else{ 
-               $special = "p.status_po='$status' and p.po_date <='$tgl' and s.supplier_code like '%$supp%' ";
+               $special = "p.status='$status' and p.trx_date <='$tgl' and s.supplier_code like '%$supp%' ";
                // $f = $this->getParamGrid(" status='$status' and doc_date <='$tgl' and customer_code like '%$cust%' ","status");
             }
         }
  
         $total1 = $this->getParamGrid_BuilderComplete(array(
-            "table"=>"po_hdr p",
-            "sortir"=>"p.status_po",
+            "table"=>"receiving_hdr p",
+            "sortir"=>"p.status",
             "special"=>$special,
-            "select"=>"p.*,s.supplier_name,s.tipe_supplier", 
+            "select"=>"p.*,s.supplier_name", 
              "join"=>[
+                "po_hdr ph"=>"ph.po_no=p.po_no",
                 "supplier s"=>"s.supplier_code=p.supplier_id" 
             ],
-          "posisi"=>["INNER"]
+          "posisi"=>["INNER","INNER"]
         )); 
         $total = $total1->total;
         $data = $total1->data; 
@@ -109,37 +112,44 @@ class Purchaseorder extends IO_Controller {
         );
 
     }
+    function load_gridpo(){  
+      $get = $this->input->get('supp'); 
+        $f = $this->getParamGrid(" supplier_id='$get' and status_po='On Order' ","po_no");
+        $data = $this->model->get_list_datapo($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],0);
+
+        echo json_encode(array(
+                "status" => 1,
+                "msg" => "OK",
+                "total"=>(count($data)>0)?$data[0]->total:0,
+                "data" =>$data)
+        );
+
+    }
     function save_data_header(){
        $input = $this->toUpper($this->input->post()); 
- 
+   
           $data = array(
-                    'po_no' => $input['docno'],
-                    'po_date' => $this->formatDate("Y-m-d",$input['po_date']),
-                    'wilayah' => $input['regency_id'],
                     'store_code' => $input['store_code'],
-                    'supplier_id' => $input['supplier_code'],
+                    'trx_no' => $input['docno'],
+                    'po_no' => $input['po_no'],
+                    'trx_date' => $this->formatDate("Y-m-d",$input['trx_date']), 
+                    'trx_type' => 'Receiving',
                     'currency' => $input['currency'],
                     'rate' => $input['rate'],
-                    'eta' => $this->formatDate("Y-m-d",$input['eta']),
-                    'expired_date' => $this->formatDate("Y-m-d",$input['expired_date']), 
-                    'ref_no' => $input['ref_no'],
-                    'remark' => $input['remark'],
-                    'tot_item' => $input['tot_item'],
+                    'supplier_id' => $input['supplier_code'],
+                    'wilayah' => $input['regency_id'],
+                    'do_no' => $input['do_no'],
+                    'remark' => $input['remark'], 
+                    'tot_item' => $input['tot_item_recv'],
                     'tot_qty_order' => $input['tot_qty_order'],
-                    'tot_qty_recv' => $input['tot_qty_recv'],
-                    'subtotal' => $input['subtotal'],
-                    'disc' => $input['disc'],
-                    'ppn' => $input['ppn'],
-                    'total_purch' => $input['subtotal'],
-                    'status_po' => $input['status_po'],
-                    'po_type' => $input['po_type'],
-                    'print' => $input['jumlah_print'], 
+                    'status' => $input['status_po'],
                     'crtby' => $this->session->userdata('user_id'),
-                    'crtdt' => date('Y-m-d H:i:s'),
+                    'crtdt' => date('Y-m-d H:i:s'), 
+                    'print' => $input['jumlah_print'], 
                 );
  
                 $this->model->insert_data($data);
-                $this->insert_log("po_hdr", $input['docno'], "Add Header Data");
+                $this->insert_log("receiving_hdr", $input['docno'], "Add Header Data");
                 $result = 0;
                 $msg = "OK";
                 $docno = $input['docno'];
@@ -158,33 +168,27 @@ class Purchaseorder extends IO_Controller {
             // pre($input);
             if ($read->num_rows() > 0) {
                 $bf = $read->row();
-                 $data = array(
-                    'po_no' => $input['docno'],
-                    'po_date' => $this->formatDate("Y-m-d",$input['po_date']),
-                    'wilayah' => $input['regency_id'],
+                $data = array(
                     'store_code' => $input['store_code'],
-                    'supplier_id' => $input['supplier_code'],
+                    'trx_no' => $input['docno'],
+                    'po_no' => $input['po_no'],
+                    'trx_date' => $this->formatDate("Y-m-d",$input['trx_date']), 
+                    'trx_type' => 'Receiving',
                     'currency' => $input['currency'],
                     'rate' => $input['rate'],
-                    'eta' => $this->formatDate("Y-m-d",$input['eta']),
-                    'expired_date' => $this->formatDate("Y-m-d",$input['expired_date']), 
-                    'ref_no' => $input['ref_no'],
-                    'remark' => $input['remark'],
-                    'tot_item' => $input['tot_item'],
+                    'supplier_id' => $input['supplier_code'],
+                    'wilayah' => $input['regency_id'],
+                    'do_no' => $input['do_no'],
+                    'remark' => $input['remark'], 
+                    'tot_item' => $input['tot_item_recv'],
                     'tot_qty_order' => $input['tot_qty_order'],
-                    'tot_qty_recv' => $input['tot_qty_recv'],
-                    'subtotal' => $input['subtotal'],
-                    'disc' => $input['disc'],
-                    'ppn' => $input['ppn'],
-                    'total_purch' => $input['subtotal'],
-                    'status_po' => $input['status_po'],
-                    'po_type' => $input['po_type'],
-                    'print' => $input['jumlah_print'], 
+                    'status' => $input['status_po'],
                     'crtby' => $this->session->userdata('user_id'),
-                    'crtdt' => date('Y-m-d H:i:s'),
+                    'crtdt' => date('Y-m-d H:i:s'), 
+                    'print' => $input['jumlah_print'], 
                     'updby' => $this->session->userdata('user_id'),
                     'upddt' => date('Y-m-d H:i:s'),
-                );
+                ); 
                 // var_dump($input['disc1_persen']);
                 // var_dump($bf->disc2_persen);
                 if($input['status']=="On Order"){
@@ -245,12 +249,9 @@ class Purchaseorder extends IO_Controller {
             $read = $this->model->read_data($code);
             if ($read->num_rows() > 0) {
  
-                $readstatus = $read->row()->status_po; 
+                $readstatus = $read->row()->status; 
 
-                if ($readstatus=='Closed') {
-                    $result = 1;
-                    $msg="Data tidak bisa dihapus";
-                }elseif ($readstatus=='On Order') {
+                if ($readstatus=='CLOSED') {
                     $result = 1;
                     $msg="Data tidak bisa dihapus";
                 }else{
@@ -343,10 +344,8 @@ class Purchaseorder extends IO_Controller {
 
      
     function get_product(){
-        $tgl = $this->input->get('doc_date');
-        $lokasi = $this->input->get('lokasi');
-        $prd = $this->formatDate("Ym", $tgl); 
-        $f = $this->getParamGrid("","nobar");
+        $po_no = $this->input->get('po_no');  
+        $f = $this->getParamGrid(" p.po_no='$po_no' and p.status='Open'","sku");
         $data = $this->model->get_product($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
@@ -394,7 +393,7 @@ class Purchaseorder extends IO_Controller {
     }
 
     function load_grid_detail($docno){
-        $f = $this->getParamGrid(" a.po_no='$docno' ","seqno");
+        $f = $this->getParamGrid(" a.trx_no='$docno' ","seqno");
         $data = $this->model->get_list_data_detail($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
@@ -407,37 +406,41 @@ class Purchaseorder extends IO_Controller {
 
     function save_data_detail(){
         try {
-            $input =  $this->input->post();  
-            $seqno = $this->model->generate_seqno($input['po_no']); 
+            $input =  $this->input->post();
+            $seqno = $this->model->generate_seqno($input['trx_no']); 
             $disc=$input['discdetail']/100;
             $ppn=$input['ppndetail']/100;
             $net_unit_price=$input['qty_order']*$input['unit_price'];
             $net= $net_unit_price-(($input['qty_order']*$input['unit_price'])*$disc);
             $net_purchase= $net-($net*$ppn);
-                $data = array(
-                    'po_no' =>  $input['po_no'],
-                    'po_date' =>  $input['datepo'], 
-                    'store_code' =>  $input['store_code'],
-                    'seqno' => $seqno,
+             $data = array(
+                    'store_code' => $input['store_code'],
+                    'trx_no' => $input['trx_no'],
+                    'po_no' => $input['po_nodetail'],
+                    'trx_date' => $this->formatDate("Y-m-d",$input['datetrx']), 
+                    'type' => 'Receiving',
                     'product_code' => $input['sku'],
-                    'uom' => $input['uom'],
                     'sku' => $input['skucode'],
-                    'supplier_id' => $input['supplier_id'],
-                    'net_unit_price' => $net_unit_price,
-                    'net_purchase' =>$net_purchase ,
+                    'seqno' => $seqno,
+                    'uom' => $input['uom'],
                     'qty_order' => $input['qty_order'],
-                    'unit_price' => $input['unit_price'],
+                    'qty_receive' => $input['qty_receive'],
                     'disc' => $input['discdetail'],
-                    'ppn' => $input['ppndetail'], 
+                    'ppn' => $input['ppndetail'],
+                    'net_unit_price' => $net_unit_price,
+                    'subtotal_price' => $net_purchase,
+                    'unit_price' => $input['unit_price'],
                     'status' => 'Open',
+                    'supplier_id' => $input['supplier_id'], 
                     'crtby' => $this->session->userdata('user_id'),
-                    'crtdt' => date('Y-m-d H:i:s'),
-                );
-
-                // pre($data);
+                    'crtdt' => date('Y-m-d H:i:s'),  
+                    'updby' => $this->session->userdata('user_id'),
+                    'upddt' => date('Y-m-d H:i:s'),
+                );  
+                //pre($data);
                 // die();
-                $this->insert_log("po_detail", $docno, "Add detail Data ".$input['po_no'].$input['sku']);
-                $this->model->insert_data_detail($input['po_no'],$data);
+                $this->insert_log("receive_detail",$input['trx_no'], "Add detail Data ".$input['trx_no'].$input['sku']);
+                $this->model->insert_data_detail($input['trx_no'],$input['po_nodetail'],$input['seqno'],$input['qty_receive'],$data);
                 $result = 0;
                 $msg = "OK"; 
         }catch (Exception $e){
@@ -446,40 +449,45 @@ class Purchaseorder extends IO_Controller {
         }
         echo json_encode(array(
             "status" => $result, "isError" => ($result==1),
-            "msg" => $msg, "message" => $msg, "docno"=>$docno
+            "msg" => $msg, "message" => $msg, "docno"=>$input['trx_no']
         ));
     }
 
     function edit_data_detail(){
         try {
             $input = $this->toUpper($this->input->post());
- 
-            $disc=$input['discdetail']/100;
+ //pre($input);
+           $disc=$input['discdetail']/100;
             $ppn=$input['ppndetail']/100;
             $net_unit_price=$input['qty_order']*$input['unit_price'];
             $net= $net_unit_price-(($input['qty_order']*$input['unit_price'])*$disc);
             $net_purchase= $net-($net*$ppn);
-                $data = array(
-                    'po_no' =>  $input['po_no'],
-                    'po_date' =>  $input['datepo'], 
-                    'store_code' =>  $input['store_code'],
-                    'seqno' => $input['seqno'],
+             $data = array(
+                    'store_code' => $input['store_code'],
+                    'trx_no' => $input['trx_no'],
+                    'po_no' => $input['po_nodetail'],
+                    'trx_date' => $this->formatDate("Y-m-d",$input['datetrx']), 
+                    'type' => 'Receiving',
                     'product_code' => $input['sku'],
-                    'uom' => $input['uom'],
                     'sku' => $input['skucode'],
-                    'supplier_id' => $input['supplier_id'],
-                    'net_unit_price' => $net_unit_price,
-                    'net_purchase' =>$net_purchase ,
+                    'seqno' =>  $input['seqno'],
+                    'uom' => $input['uom'],
                     'qty_order' => $input['qty_order'],
-                    'unit_price' => $input['unit_price'],
+                    'qty_receive' => $input['qty_receive'],
                     'disc' => $input['discdetail'],
-                    'ppn' => $input['ppndetail'], 
+                    'ppn' => $input['ppndetail'],
+                    'net_unit_price' => $net_unit_price,
+                    'subtotal_price' => $net_purchase,
+                    'unit_price' => $input['unit_price'],
                     'status' => 'Open',
+                    'supplier_id' => $input['supplier_id'], 
+                    'crtby' => $this->session->userdata('user_id'),
+                    'crtdt' => date('Y-m-d H:i:s'),  
                     'updby' => $this->session->userdata('user_id'),
                     'upddt' => date('Y-m-d H:i:s'),
-                );  
-                $this->insert_log("edit_po_detail", $input['po_no'], "Update PO Data ".$input['sku']);
-                $this->model->update_data_detail($input['po_no'], $input['seqno'], $data);
+                );   
+                $this->insert_log("edit_receive_detail", $input['trx_no'], "Update ReceivePo Data ".$input['sku']);
+                $this->model->update_data_detail($input['trx_no'],$input['po_nodetail'],$input['seqno'], $input['qty_receive'], $data);
                 $result = 0;
                 $msg="OK"; 
         }catch (Exception $e){
@@ -531,13 +539,14 @@ class Purchaseorder extends IO_Controller {
         ));
     }
 
-    function delete_data_detail($po_no,$seqno){
+    function delete_data_detail($trx_no,$seqno){
         try { 
-            $read = $this->model->read_data_detailID($po_no,$seqno);
+            $read = $this->model->read_data_detailID($trx_no,$seqno);
+               
             if ($read->num_rows() > 0) {
                 $rd = $read->row(); 
-               // / pre($rd);
-               $this->model->delete_data_detail($rd->po_no, $seqno);
+               // pre($rd);
+               $this->model->delete_data_detail($rd->trx_no, $seqno,$rd->po_no);
                     $result = 0;
                     $msg="OK";
             } else {
