@@ -172,6 +172,40 @@ class Somerge_model extends CI_Model {
                 WHERE LEFT(trx_no,LENGTH(CONCAT('OPN',DATE_FORMAT(NOW(),'%Y')))) = CONCAT('OPN',DATE_FORMAT(NOW(),'%Y')) ORDER BY trx_no DESC";
         return $this->db->query($sql)->row()->nomor;
     }
+
+  function get_list_data_variance($docno,$page,$rows,$sort,$order,$role,$fltr){
+        $sql = "create temporary table tmp2 as
+                SELECT h.trx_no,h.on_loc,'Plus' AS variant_type, COUNT(d1.`item`) AS total_item, SUM(d1.`qty`) AS total_qty, 
+                    SUM(d1.`qty`*d1.unit_retail) AS total_retail, SUM(d1.`disc`) AS diskon,SUM(total_cost) AS nett, SUM(d1.`qty`*d1.unit_retail) - SUM(d1.`disc`) AS nett2
+                FROM adjustment_hdr h
+                LEFT JOIN adjustment_dtl d1 ON d1.trx_no=h.trx_no AND d1.`varience` < 0
+                WHERE h.trx_no='$docno'
+                UNION
+                SELECT h.trx_no,h.on_loc,'Minus' AS variant_type, COUNT(d1.`item`) AS total_item, SUM(d1.`qty`) AS total_qty, 
+                    SUM(d1.`qty`*d1.unit_retail) AS total_retail, SUM(d1.`disc`) AS diskon,SUM(total_cost) AS nett, SUM(d1.`qty`*d1.unit_retail) - SUM(d1.`disc`) AS nett2
+                FROM adjustment_hdr h
+                LEFT JOIN adjustment_dtl d1 ON d1.trx_no=h.trx_no AND d1.`varience` > 0
+                WHERE h.trx_no='$docno'
+                UNION
+                SELECT h.trx_no,h.on_loc,'ALL' AS variant_type, COUNT(d1.`item`) AS total_item, SUM(d1.`qty`) AS total_qty, 
+                    SUM(d1.`qty`*d1.unit_retail) AS total_retail, SUM(d1.`disc`) AS diskon,SUM(total_cost) AS nett, SUM(d1.`qty`*d1.unit_retail) - SUM(d1.`disc`) AS nett2
+                FROM adjustment_hdr h
+                LEFT JOIN adjustment_dtl d1 ON d1.trx_no=h.trx_no
+                WHERE h.trx_no='$docno' ";
+        $this->db->query($sql);
+        $sql = "create temporary table tmp as select * from tmp2 ";
+        if($fltr!=''){
+            $sql .= $fltr;
+        }
+        $this->db->query($sql);
+
+        $sql = "select a.*,
+                (select count(a1.trx_no) from tmp a1 ) as total
+                 from tmp a ";
+        $sql .=" limit ".($page-1)*$rows.",".$rows;
+        return $this->db->query($sql)->result();
+    }
+ 
   function get_list_data_detail($page,$rows,$sort,$order,$role,$fltr){
         $sql = "create temporary table tmp2 as
                 $this->querydetailOp ";
@@ -272,8 +306,13 @@ class Somerge_model extends CI_Model {
         return $data;
     }
     function gettotalvariance($trxno){
-        $sql = "SELECT  CONCAT(FORMAT(SUM(total_net), 2)) total_net FROM generate_opndetail WHERE trx_no='$trxno'
-                GROUP BY trx_no";
+         $sql = "SELECT h.trx_no,h.on_loc,'Minus' AS variant_type, COUNT(d1.`item`) AS total_item, SUM(d1.`qty`) AS total_qty, 
+                        SUM(d1.`qty`*d1.unit_retail) AS total_qty, SUM(d1.`disc`) AS diskon, CONCAT(FORMAT( SUM(d1.`qty`*d1.unit_retail) - SUM(d1.`disc`), 2))  AS total_net
+                    FROM adjustment_hdr h
+                    LEFT JOIN adjustment_dtl d1 ON d1.trx_no=h.trx_no
+                    WHERE h.trx_no='$trxno'";
+        // $sql = "SELECT  CONCAT(FORMAT(SUM(total_net), 2)) total_net FROM generate_opndetail WHERE trx_no='$trxno'
+        //         GROUP BY trx_no";
         return $this->db->query($sql);
     }
     function opnametotal($docno){
@@ -302,49 +341,69 @@ class Somerge_model extends CI_Model {
         return $this->db->get('dtl_gondola');
     }
     function update_data_detail($trx_no,$item, $disc, $margin,$type){
-        $sql = "UPDATE generate_opn_varience set disc='$disc',margin='$margin',disc_amaount=($disc*retail_price)/100 where trx_no='$trx_no' and item='$item'";
+        $sql = "UPDATE adjustment_dtl set disc='$disc',margin='$margin',disc_amaount=($disc*unit_retail)/100 where trx_no='$trx_no' and item='$item'";
         if($this->db->query($sql)){
-             $sql2 = "UPDATE generate_opn_varience set margin_amaount=($margin*disc_amaount)/100 where trx_no='$trx_no' and item='$item'";
+             $sql2 = "UPDATE adjustment_dtl set margin_amaount=($margin*disc_amaount)/100 where trx_no='$trx_no' and item='$item'";
                  if($this->db->query($sql2)){ 
-                    $sql3 = "UPDATE generate_opn_varience set subtotal_retail=(qty*retail_price)-(qty*disc_amaount)-(qty*margin_amaount) where trx_no='$trx_no' and item='$item'";
+                    $sql3 = "UPDATE adjustment_dtl set total_cost=(qty*unit_retail)-(qty*disc_amaount)-(qty*margin_amaount) where trx_no='$trx_no' and item='$item'";
                     if($this->db->query($sql3)){ 
-                         $this->updateheaderdata($trx_no,$type);
+                         $this->updateheaderdata($trx_no);
                      }else return false;
              }else return false;
         }else return false;
     }
+    // function update_data_detail($trx_no,$item, $disc, $margin,$type){
+    //     $sql = "UPDATE generate_opn_varience set disc='$disc',margin='$margin',disc_amaount=($disc*retail_price)/100 where trx_no='$trx_no' and item='$item'";
+    //     if($this->db->query($sql)){
+    //          $sql2 = "UPDATE generate_opn_varience set margin_amaount=($margin*disc_amaount)/100 where trx_no='$trx_no' and item='$item'";
+    //              if($this->db->query($sql2)){ 
+    //                 $sql3 = "UPDATE generate_opn_varience set subtotal_retail=(qty*retail_price)-(qty*disc_amaount)-(qty*margin_amaount) where trx_no='$trx_no' and item='$item'";
+    //                 if($this->db->query($sql3)){ 
+    //                      $this->updateheaderdata($trx_no,$type);
+    //                  }else return false;
+    //          }else return false;
+    //     }else return false;
+    // }
   
-    function updateheaderdata($trx_no,$type){  
-        if($type=='PLUS'){ 
-             $qplus = "UPDATE generate_opndetail AS dest
-                , (SELECT SUM(IF(qty >= 0,TRUE,FALSE)) total_item,SUM(IF(qty>= 0,qty,0)) total_qty ,  
-            SUM(IF(qty>= 0,CEILING(generate_opn_varience.qty*retail_price),0)) total_gross , 
-            SUM(IF(qty>= 0,CEILING(generate_opn_varience.disc),0)) total_disc , 
-            SUM(IF(qty>= 0,CEILING(generate_opn_varience.subtotal_retail),0)) total_net  
-            FROM generate_opn_varience 
+    function updateheaderdata($trx_no ){  
+         $qplus = "UPDATE adjustment_hdr AS dest
+                , (SELECT count(qty) total_item,SUM(qty) total_qty  
+            FROM adjustment_dtl 
             WHERE trx_no='$trx_no') AS src
-                SET dest.total_qty = src.total_qty
-                    , dest.total_gross=src.total_gross
-                    , dest.total_disc = src.total_disc
-                    , dest.total_net = src.total_net 
-             WHERE dest.trx_no='$trx_no' AND dest.varian_type='Plus'"; 
+                SET dest.tot_item = src.total_item 
+                , dest.tot_qty = src.total_qty 
+             WHERE dest.trx_no='$trx_no'"; 
                 $this->db->query($qplus);
-            }else{
+        // if($type=='PLUS'){ 
+        //      $qplus = "UPDATE generate_opndetail AS dest
+        //         , (SELECT SUM(IF(qty >= 0,TRUE,FALSE)) total_item,SUM(IF(qty>= 0,qty,0)) total_qty ,  
+        //     SUM(IF(qty>= 0,CEILING(generate_opn_varience.qty*retail_price),0)) total_gross , 
+        //     SUM(IF(qty>= 0,CEILING(generate_opn_varience.disc),0)) total_disc , 
+        //     SUM(IF(qty>= 0,CEILING(generate_opn_varience.subtotal_retail),0)) total_net  
+        //     FROM generate_opn_varience 
+        //     WHERE trx_no='$trx_no') AS src
+        //         SET dest.total_qty = src.total_qty
+        //             , dest.total_gross=src.total_gross
+        //             , dest.total_disc = src.total_disc
+        //             , dest.total_net = src.total_net 
+        //      WHERE dest.trx_no='$trx_no' AND dest.varian_type='Plus'"; 
+        //         $this->db->query($qplus);
+        //     }else{
  
-            $qminus= "UPDATE generate_opndetail AS dest
-                 ,(SELECT SUM(IF(qty < 0,TRUE,FALSE)) total_item,SUM(IF(qty < 0,qty,0)) total_qty ,  
-                    SUM(IF(qty <0,CEILING(generate_opn_varience.qty*retail_price),0)) total_gross , 
-                    SUM(IF(qty < 0,CEILING(generate_opn_varience.disc),0)) total_disc , 
-                    SUM(IF(qty <0,CEILING(generate_opn_varience.subtotal_retail),0)) total_net  
-                    FROM generate_opn_varience 
-                    WHERE trx_no='$trx_no') AS src
-                        SET dest.total_qty = src.total_qty
-                        , dest.total_gross=src.total_gross
-                        , dest.total_disc = src.total_disc
-                        , dest.total_net = src.total_net 
-                    WHERE dest.trx_no='$trx_no' AND dest.varian_type='Minus'"; 
-                $this->db->query($qminus); 
-            }
+        //     $qminus= "UPDATE generate_opndetail AS dest
+        //          ,(SELECT SUM(IF(qty < 0,TRUE,FALSE)) total_item,SUM(IF(qty < 0,qty,0)) total_qty ,  
+        //             SUM(IF(qty <0,CEILING(generate_opn_varience.qty*retail_price),0)) total_gross , 
+        //             SUM(IF(qty < 0,CEILING(generate_opn_varience.disc),0)) total_disc , 
+        //             SUM(IF(qty <0,CEILING(generate_opn_varience.subtotal_retail),0)) total_net  
+        //             FROM generate_opn_varience 
+        //             WHERE trx_no='$trx_no') AS src
+        //                 SET dest.total_qty = src.total_qty
+        //                 , dest.total_gross=src.total_gross
+        //                 , dest.total_disc = src.total_disc
+        //                 , dest.total_net = src.total_net 
+        //             WHERE dest.trx_no='$trx_no' AND dest.varian_type='Minus'"; 
+        //         $this->db->query($qminus); 
+        //     }
         
     }
     function save_detail($data){
@@ -373,18 +432,15 @@ class Somerge_model extends CI_Model {
         $delete_b="DELETE FROM generate_opn_varience where trx_no='$trxno'";
         $delete_c="DELETE FROM generate_opndetail where trx_no='$trxno'";
         $sql="UPDATE adjustment_hdr set status='Open' where trx_no='$trxno'";
+        $sql="UPDATE adjustment_dtl set disc_amaount='',margin_amaount='' where trx_no='$trxno'";
                 $this->db->query($delete_a);
                 $this->db->query($delete_b);
-                $this->db->query($delete_c);
-                return $this->db->query($sql);
+                $this->db->query($delete_c); 
+                return $this->db->query($sql); 
     }
     function generateopn($trxno,$id){ 
-        $delete_a="DELETE FROM generate_opn where trx_no='$trxno'";
-        $delete_b="DELETE FROM generate_opn_varience where trx_no='$trxno'";
-        $delete_c="DELETE FROM generate_opndetail where trx_no='$trxno'";
-                $this->db->query($delete_a);
-                $this->db->query($delete_b);
-                $this->db->query($delete_c);
+        $delete_a="DELETE FROM generate_opn where trx_no='$trxno'"; 
+                $this->db->query($delete_a); 
         $q = "INSERT INTO generate_opn(trx_no,trx_date,STATUS,periode,location_code,store_code)
                 SELECT trx_no,trx_date,1,DATE_FORMAT(trx_date, '%Y%c'),on_loc,store_code
                   FROM adjustment_hdr
@@ -418,35 +474,14 @@ class Somerge_model extends CI_Model {
                                                 LEFT JOIN product_price pr ON pr.product_id=p.id 
                                                 SET dest.unit_retail = pr.price_pkp 
                                                 WHERE dest.trx_no='$trxno'"; 
-                                                 if($this->db->query($q4)){
-                                                      $q5 = "INSERT INTO generate_opn_varience (retail_price,trx_no,item,product_code,qty,uom,disc,disc_amaount,subtotal_retail)
-                                                            SELECT unit_retail,trx_no,item,product_code,varience,uom,disc,unit_retail*disc disc_amaount,(varience*unit_retail)-((unit_retail*disc)*varience)subtotal_retail
-                                                            FROM adjustment_dtl
-                                                            WHERE trx_no='$trxno'"; 
-                                                            if($this->db->query($q5)){
-                                                                $qplus = "INSERT INTO generate_opndetail(trx_no,varian_type,total_item,total_qty,total_gross,total_disc,total_net)
-                                                                     SELECT '$trxno','Plus',SUM(IF(qty >= 0,TRUE,FALSE)) total_item,SUM(IF(qty>= 0,qty,0)) total_qty ,  
-                                                                                        SUM(IF(qty>= 0,CEILING(generate_opn_varience.qty*retail_price),0)) total_gross , 
-                                                                                        SUM(IF(qty>= 0,CEILING(generate_opn_varience.disc),0)) total_disc , 
-                                                                                        SUM(IF(qty>= 0,CEILING(generate_opn_varience.subtotal_retail),0)) total_net  
-                                                                                        FROM generate_opn_varience 
-                                                                                        WHERE trx_no='$trxno'"; 
-                                                                    $this->db->query($qplus);
-                                                                $qminus= "INSERT INTO generate_opndetail(trx_no,varian_type,total_item,total_qty,total_gross,total_disc,total_net)
-                                                                     SELECT '$trxno','Minus',SUM(IF(qty < 0,TRUE,FALSE)) total_item,SUM(IF(qty < 0,qty,0)) total_qty ,  
-                                                                        SUM(IF(qty <0,CEILING(generate_opn_varience.qty*retail_price),0)) total_gross , 
-                                                                        SUM(IF(qty < 0,CEILING(generate_opn_varience.disc),0)) total_disc , 
-                                                                        SUM(IF(qty <0,CEILING(generate_opn_varience.subtotal_retail),0)) total_net  
-                                                                        FROM generate_opn_varience 
-                                                                        WHERE trx_no='$trxno'"; 
-                                                                    $this->db->query($qminus); 
-                                                                return true;
-                                                            }  else return false; 
-                                                        }else return false; 
+                                                 $this->db->query($q4); 
+                                                  $this->updateheaderdata($trxno);
                                     }else return false;
                         }else return false;  
     }  
     function insert_datadetail($periode,$location_code,$store_code,$trx_no){ 
+        $sql1 = " DELETE FROM adjustment_dtl WHERE trx_no='$trx_no'";
+            $this->db->query($sql1);
         $sql = "INSERT INTO adjustment_dtl(store_code,trx_no,item,product_code,UOM,location,qty,taking,unit_cost,total_cost)
                   SELECT '$store_code','$trx_no',a.nobar, c.product_code,d.uom_id AS id_stock,a.location_code,
                   FLOOR(a.saldo_akhir/(IFNULL((SELECT convertion FROM product_uom_convertion WHERE uom_from=c.satuan_jual AND uom_to=c.satuan_stock LIMIT 1),0))) stock

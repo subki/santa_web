@@ -41,7 +41,7 @@
 
 <div id="tt">
     <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-        <a href="<?php echo base_url('Somerge')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
+        <a href="<?php echo base_url('Somerge')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a> 
     </div>
 </div>
 <div class="easyui-layout" style="width:100%;height:100%">
@@ -53,7 +53,7 @@
         <form id="fm" method="post" novalidate style="margin:0;padding:5px 5px">
             <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
                 <div data-options="region:'west'" style="width:100%;">
-                    <table id="dg" class="easyui-edatagrid" style="width:100%;height: 120px">
+                    <table id="dg" class="easyui-edatagrid" style="width:100%;height: 150px">
                     </table>
                 </div>
             </div>
