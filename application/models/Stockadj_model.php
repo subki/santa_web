@@ -118,7 +118,7 @@ class Stockadj_model extends CI_Model {
 
 
     function getAutoNumber(){
-        $year=date("Ym");
+        $year=date("Ym"); 
         $sql = "SELECT IFNULL(
                        CONCAT('ADJ',DATE_FORMAT(NOW(),'%y%m'),LPAD(MAX(RIGHT(docno,4))+1,4,'0')),
                        CONCAT('ADJ',DATE_FORMAT(NOW(),'%y%m'),LPAD(1,4,'0'))
