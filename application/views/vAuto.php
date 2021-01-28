@@ -1,30 +1,82 @@
 <script type="text/javascript">
-    var base_url="<?php echo base_url();?>";
-    var role = "<?php echo $this->session->userdata('role'); ?>";
+	var base_url="<?php echo base_url();?>";
+	var role = "<?php echo $this->session->userdata('role'); ?>";
 </script>
+<style type="text/css">
+  .textbox-editable true{
+    background: blue;
+  }
+  .textbox-editable false{
+    background: yellow;
+  }
+</style>
+<?php
+$sesi = $this->session->userdata('auto_config');
+?>
 <script src="<?php echo base_url(); ?>assets/js/util.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/auto.js"></script>
 <div class="easyui-layout" style="width:100%;height:100%">
-    <div id="p" data-options="region:'west'" style="width:70%;">
-        <table id="dg" title="<?php echo $title ?>" class="easyui-datagrid" style="width:100%;height:100%">
-        </table>
+  <div class="easyui-layout" fit="true" style="width:100%;height:100%;">
+    <div data-options="region:'west'" style="width:100%;padding:0px">
+      <div class="easyui-panel" title="Configuration Static">
+        <div style="margin-bottom:1px;display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+          <div style="width: 100%; padding: 10px;">
+            <?php foreach ($sesi as $row) { ?>
+              <div style="margin-bottom:1px">
+                <input name="<?php echo $row->id?>" id="<?php echo $row->id?>" class="easyui-textbox" multiline="true" labelPosition="top" tipPosition="bottom"
+                       label="<?php echo ucwords($row->kunci)?> :" style="width:100%" value="<?php echo $row->nilai;?>">
+              </div>
+            <?php } ?>
+          </div>
+        </div>
+      </div>
     </div>
-    <div data-options="region:'east'" style="width:30%;">
-        <form id="fm" method="post" novalidate style="margin:0;padding:5px 5px">
-            <h3>Auto Config</h3>
-            <div style="margin-bottom:10px">
-                <input name="id" id="id" class="easyui-textbox" labelPosition="top" tipPosition="bottom" required="true" label="ID:" style="width:100%">
-            </div>
-            <div style="margin-bottom:10px">
-                <input name="kunci" id="kunci" class="easyui-textbox" labelPosition="top" tipPosition="bottom" required="true" label="Key:" style="width:100%">
-            </div>
-            <div style="margin-bottom:10px">
-                <input name="nilai" id="nilai" class="easyui-textbox" labelPosition="top" tipPosition="bottom" required="true" label="Value:" style="width:100%">
-            </div>
-            <div id="dlg-buttons" style="float: right">
-                <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-ok" onclick="submit()" style="width:90px">Save</a>
-                <a href="javascript:void(0)" id="cancel" class="easyui-linkbutton" iconCls="icon-cancel" onclick="clearInput();" style="width:90px">Cancel</a>
-            </div>
-        </form>
-    </div>
+  </div>
 </div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		<?php foreach ($sesi as $row) {?>
+      init('<?php echo $row->id ?>');
+    <?php } ?>
+	});
+	function init(id) {
+		$(`#${id}`).textbox({icons:[{iconCls:'icon-edit', handler: function () {editData(id)}}]});
+		$(`#${id}`).textbox({editable:false});
+	}
+	function editData(id) {
+		$(`#${id}`).textbox({icons:[{iconCls:'icon-ok', handler: function () {
+			saveData(id)
+		}}]});
+		$(`#${id}`).textbox({editable:true});
+	}
+	function saveData(id) {
+		$.ajax({
+			type:"POST",
+			url:base_url+"Autoconfig/edit_data",
+			data:{
+				id:id,
+				nilai:$(`#${id}`).textbox('getValue')
+			},
+			dataType:"json",
+			success:function(result){
+				console.log(result.data)
+				if(result.status===0) {
+					$(`#${id}`).textbox({icons:[{iconCls:'icon-edit', handler: function () {
+						editData(id)
+					}}]});
+					$(`#${id}`).textbox({editable:false});
+				}
+				else {
+					$.messager.show({
+						title: 'Error',
+						msg: e.message,
+						handler:function () {
+							window.location.href = base_url+"merchant";
+						}
+					});
+				}
+
+			}
+		});
+	}
+</script>

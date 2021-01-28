@@ -105,7 +105,7 @@ $(document).ready(function () {
                         <label style="cursor:pointer">Merge</label>
                         </a> 
                         `; 
-               var b = `<a href="#" onclick="printData();" title="Print" class="easyui-tooltip l-btn l-btn-small l-btn-plain" group="" id="">
+               var b = `<a href="#" onclick="printData('`+row.trx_no+`');" title="Print" class="easyui-tooltip l-btn l-btn-small l-btn-plain" group="" id="">
                         <span class="l-btn-left l-btn-icon-left" style="margin-top: -5px;">
                         <span class="l-btn-text l-btn-empty">&nbsp;</span>
                         <span class="l-btn-icon icon-print">&nbsp;</span></span>
@@ -131,7 +131,14 @@ $(document).ready(function () {
                         <span class="l-btn-icon icon-save">&nbsp;</span></span>
                         <label style="cursor:pointer">Generate Variance</label>
                         </a>                
-                        `;   
+                        `;  
+               var e = `<a href="#" onclick="viewsummary('`+row.trx_no+`');" title="Edit" class="easyui-tooltip l-btn l-btn-small l-btn-plain" group="" id="viewsummary">
+                        <span class="l-btn-left l-btn-icon-left" style="margin-top: -5px;">
+                        <span class="l-btn-text l-btn-empty">&nbsp;</span>
+                        <span class="l-btn-icon icon-eye">&nbsp;</span></span>
+                        <label style="cursor:pointer">View Variance Summary</label>
+                        </a>                
+                        `;    
                     if(row.status==="Open"){  
                         if(row.generate==1){ 
                             return a+b+c;
@@ -141,7 +148,7 @@ $(document).ready(function () {
                         }
                     }
                     else{ 
-                        return b+c;
+                        return b+c+e;
                     }
             }
         }
@@ -237,6 +244,17 @@ function variance(){
     if(row==null) return
     window.location.href = base_url+"Somerge/form/edit?id="+row.trx_no
 }
+function viewsummary(){
+    let row = getRow();
+    if(row==null) return
+    window.location.href = base_url+"Somerge/form/editsummary?id="+row.trx_no
+}
+function printData(){
+    let row = getRow();
+    if(row==null) return
+         window.open(base_url+'Somerge/print_opfull/'+row.trx_no, '_blank'); 
+}
+ 
 function mergeOpname(){
     let row = getRow();
     // console.log(row.store_code)

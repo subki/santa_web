@@ -33,40 +33,40 @@ class Stockopname extends IO_Controller {
         $this->load->view('main',$data);
     }
 
-    function read_data_by_so($code){
-        try {
-            $read = $this->model->read_data_by_so($code);
-            if ($read->num_rows() > 0) { 
-                $statuspick=$read->row()->status; 
-                if($statuspick=='Open'){
-                    $result = 0;
-                    $status = 'Unpost';
-                    $msg="OK";
-                    $data = $read->result()[0];
-                }
-                else{
-                    $result = 1;
-                    $status = 'Pick Up';
-                    $msg="SO ini sudah di Stockopname";
-                    $data = $read->result()[0];
-                }
+    // function read_data_by_so($code){
+    //     try {
+    //         $read = $this->model->read_data_by_so($code);
+    //         if ($read->num_rows() > 0) { 
+    //             $statuspick=$read->row()->status; 
+    //             if($statuspick=='Open'){
+    //                 $result = 0;
+    //                 $status = 'Unpost';
+    //                 $msg="OK";
+    //                 $data = $read->result()[0];
+    //             }
+    //             else{
+    //                 $result = 1;
+    //                 $status = 'Pick Up';
+    //                 $msg="SO ini sudah di Stockopname";
+    //                 $data = $read->result()[0];
+    //             }
                 
-            } else {
-                $result = 0;
-                $status = 'Unpost';
-                $msg="OK";
-                $data =null;
-            }
-        }catch (Exception $e){
-            $result = 1;
-            $msg=$e->getMessage();
-        }
-        echo json_encode(array(
-            "status" => $status, "isError" => ($result==1),
-            "msg" => $msg, "message" => $msg, "result" => $result,
-            "data" => $data
-        ));
-    }
+    //         } else {
+    //             $result = 0;
+    //             $status = 'Unpost';
+    //             $msg="OK";
+    //             $data =null;
+    //         }
+    //     }catch (Exception $e){
+    //         $result = 1;
+    //         $msg=$e->getMessage();
+    //     }
+    //     echo json_encode(array(
+    //         "status" => $status, "isError" => ($result==1),
+    //         "msg" => $msg, "message" => $msg, "result" => $result,
+    //         "data" => $data
+    //     ));
+    // }
     function load_grid(){
         $f = $this->getParamGrid("","status");   
         $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
@@ -473,39 +473,39 @@ class Stockopname extends IO_Controller {
         // );
     }
 
-    function save_data_adj(){
-        try {
-            $input = $this->input->post();  
-            $opn = $input['opn'];  
-            $read = $this->model->read_dataadj($opn);
-            $f = $this->getParamGrid(" trx_no='$opn'","trx_no");
-            $data = $this->model->get_list_dataopname($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+    // function save_data_adj(){
+    //     try {
+    //         $input = $this->input->post();  
+    //         $opn = $input['opn'];  
+    //         $read = $this->model->read_dataadj($opn);
+    //         $f = $this->getParamGrid(" trx_no='$opn'","trx_no");
+    //         $data = $this->model->get_list_dataopname($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
 
-            $r = $read->row();
-            $nobarqty = [];
-           foreach ($data as $row){
-                $nobarqty[$row->item] = $row->Selisih; 
-                    //update 
-                 $this->updateStock($r->on_loc
-                    ,date('Ym', strtotime($r->trx_date))
-                    ,$nobarqty,'penyesuaian'
-                    , array("docno"=>$opn,"tanggal"=>$r->trx_date,"remark"=>$r->remark)); 
+    //         $r = $read->row();
+    //         $nobarqty = [];
+    //        foreach ($data as $row){
+    //             $nobarqty[$row->item] = $row->Selisih; 
+    //                 //update 
+    //              $this->updateStock($r->on_loc
+    //                 ,date('Ym', strtotime($r->trx_date))
+    //                 ,$nobarqty,'penyesuaian'
+    //                 , array("docno"=>$opn,"tanggal"=>$r->trx_date,"remark"=>$r->remark)); 
                 
-                    $this->model->update_dataclose($docno, array("status"=>'Posted'));
-                // var_dump($r); var_dump($nobarqty);
-                // die();          
-                 } 
-            $result = 0;
-            $msg="OK";
-        }catch (Exception $e){
-            $result = 1;
-            $msg=$e->getMessage();
-        }
-        echo json_encode(array(
-            "status" => $result,
-            "msg" => $msg,
-        ));
-    }
+    //                 $this->model->update_dataclose($docno, array("status"=>'Posted'));
+    //             // var_dump($r); var_dump($nobarqty);
+    //             // die();          
+    //              } 
+    //         $result = 0;
+    //         $msg="OK";
+    //     }catch (Exception $e){
+    //         $result = 1;
+    //         $msg=$e->getMessage();
+    //     }
+    //     echo json_encode(array(
+    //         "status" => $result,
+    //         "msg" => $msg,
+    //     ));
+    // }
 
     function save_data_detail($docno){
         try {
@@ -807,17 +807,17 @@ class Stockopname extends IO_Controller {
         );
     }
 
-    function load_gridlocation(){ 
-        $f = $this->getParamGrid("","location_code");
-        $data = $this->model->get_list_dataloc($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],0,$gol);
+    // function load_gridlocation(){ 
+    //     $f = $this->getParamGrid("","location_code");
+    //     $data = $this->model->get_list_dataloc($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],0,$gol);
 
-        echo json_encode(array(
-                "status" => 1,
-                "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
-                "data" =>$data)
-        );
+    //     echo json_encode(array(
+    //             "status" => 1,
+    //             "msg" => "OK",
+    //             "total"=>(count($data)>0)?$data[0]->total:0,
+    //             "data" =>$data)
+    //     );
 
-    }
+    // }
 
 }

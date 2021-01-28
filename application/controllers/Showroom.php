@@ -39,10 +39,21 @@ class Showroom extends IO_Controller {
 		$location_code = $this->session->userdata(sess_location_code);
 		if(isset($param['tanggal'])) $tgl = $param['tanggal'];
 		if(isset($param['location_code'])) $location_code = $param['location_code'];
+
+
+		$lokasi = $this->db->select("l.location_code, l.description, c.customer_code, cb.store_code, p.store_name")
+			->from("customer c")
+			->join("location l","l.location_code=c.lokasi_stock")
+			->join("cabang cb","cb.location_code=l.location_code")
+			->join("profile_p p","cb.store_code=p.store_code")
+			->where("c.gol_customer",'showroom')
+			->where("c.customer_class",'showroom')
+			->get()->result();
+
 		$data['title'] = 'Sales Order Showroom';
-		$data['tanggal'] = $tgl;
-		$data['lokasi'] = $this->db->get('location')->result();
 		$data['location_code'] = $location_code;
+		$data['tanggal'] = $tgl;
+		$data['lokasi'] = $lokasi;
 		$data['content'] = $this->load->view('showroom/index', $data, TRUE);
 		$this->load->view('main', $data);
 	}
@@ -58,9 +69,17 @@ class Showroom extends IO_Controller {
 		foreach ($pt as $r){
 			$paymenttype .= '<option value="'.$r->id.'">'.$r->descripiton.'</option>';
 		}
+		$lokasi = $this->db->select("l.location_code, l.description, c.customer_code, cb.store_code, p.store_name")
+			->from("customer c")
+			->join("location l","l.location_code=c.lokasi_stock")
+			->join("cabang cb","cb.location_code=l.location_code")
+			->join("profile_p p","cb.store_code=p.store_code")
+			->where("c.gol_customer",'showroom')
+			->where("c.customer_class",'showroom')
+			->get()->result();
 		$data['title'] = 'Sales Order Showroom';
 		$data['tanggal'] = $tgl;
-		$data['lokasi'] = $this->db->get('location')->result();
+		$data['lokasi'] = $lokasi;
 		$data['location_code'] = $location_code;
 		$data['paymenttype_json'] = $pt;
 		$data['paymenttype'] = $paymenttype;
@@ -72,10 +91,15 @@ class Showroom extends IO_Controller {
 		$param = $this->input->get();
 //		pre($param);
 		$tgl = date("ymd");
+		$tanggal = date("Y-m-d");
 		$lokasi = $this->session->userdata(sess_location_code);
 		if(isset($param['location_code'])) $lokasi=$param['location_code'];
-		if (isset($param['tanggal'])) $tgl = $this->formatDate("ymd", $param['tanggal']);
+		if (isset($param['tanggal'])) {
+			$tgl = $this->formatDate("ymd", $param['tanggal']);
+			$tanggal = $this->formatDate("Y-m-d", $param['tanggal']);
+		}
 		$customer = $this->db->get_where("customer",["lokasi_stock"=>$lokasi])->row();
+//		pre($docno);
 		if($docno=="") {
 			$cek = $this->db->order_by("docno asc")->limit(1)
 				->get_where($this->table,["location_code"=>$lokasi,"doc_date"=>$tgl,"status"=>"OPEN"])
@@ -111,17 +135,23 @@ class Showroom extends IO_Controller {
 		}
 		$head = $this->db->select("a.*, b.store_code, b.store_name, (select sum(nilai_bayar) from kasir_payment where trx_no=a.docno) payment_sum")
 			->where('docno',$docno)
-			->join("profile_p b","b.default_stock_l=a.location_code")
+			->join("location l","l.location_code=a.location_code")
+			->join("cabang cb","cb.location_code=l.location_code")
+			->join("profile_p b","cb.store_code=b.store_code")
 			->get($this->table." a")->row();
+//		pre($head);
 		$uom_stk = $this->session->userdata("uom stock");
+//		pre($this->session->userdata());
 		$product = $this->db->select("p.id as product_id, p.satuan_jual, u.uom_id, p.sku, p.product_code, p.product_name
 				, (select ifnull(convertion,1) from product_uom_convertion where uom_from=u.uom_code and uom_to=$uom_stk) as convertion
 				, p.article_code, s.saldo_akhir, ifnull(ah.hpp1,0) hpp1, ifnull(ah.hpp2,0) hpp2, ifnull(ah.hpp_ekspedisi,0) hppe")
-			->join("stock s","s.nobar=p.sku and s.periode='".$this->formatDate('Ym',$head->doc_date)."' and location_code='$lokasi'")
+			->from("product p")
+			->join("stock s","s.nobar=p.sku and s.periode='".$this->formatDate('Ym',$head->doc_date)."' and s.location_code='$lokasi'")
 			->join("article_hpp ah", "ah.article_code=p.article_code and ah.effdate<='".$this->formatDate('Y-m-d',$head->doc_date)."'","left")
 			->join('product_uom u','u.uom_code=p.satuan_jual')
 			->group_by("p.sku, p.product_code, p.article_code")
-			->get("product p")->result();
+			->get()->result();
+//		pre($product);
 		$detail = $this->db->select("d.*, p.satuan_jual, p.product_code, u.uom_id")
 			->where("docno",$docno)
 			->join("product p","p.sku=d.nobar")
@@ -132,6 +162,19 @@ class Showroom extends IO_Controller {
 			->join("payment_type p","p.id=k.paymenttypeid")
 			->get($this->table_bayar." k")->result();
 
+		$lokasis = $this->db->select("l.location_code, l.description, c.customer_code, cb.store_code, p.store_name")
+			->from("customer c")
+			->join("location l","l.location_code=c.lokasi_stock")
+			->join("cabang cb","cb.location_code=l.location_code")
+			->join("profile_p p","cb.store_code=p.store_code")
+			->where("c.gol_customer",'showroom')
+			->where("c.customer_class",'showroom')
+			->get()->result();
+//		pre($product);
+		$data['location_code'] = $lokasi;
+		$data['tanggal'] = $tanggal;
+//		pre($data);
+		$data['locations'] = $lokasis;
 		$data['promo_header'] = $this->db->get("promo_header")->result();
 		$data['promo_detail'] = $this->db->where_in("promoid", array_merge(array_column($data['promo_header'],"id"),[""]))->get("promo_detail")->result();
 		$data['title'] = 'Add Sales Order Showroom';

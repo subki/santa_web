@@ -38,6 +38,12 @@
         </table> 
     </div>
 </div>  --> 
+
+<div id="tt">
+    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
+        <a href="<?php echo base_url('Somerge')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
+    </div>
+</div>
 <div class="easyui-layout" style="width:100%;height:100%">
     <div id="p" class="easyui-panel" title="<?php echo $title; ?>"
          style="width:100%;height:100%;background:#fafafa;"

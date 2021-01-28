@@ -14,7 +14,7 @@
           <input name="periode" id="periode" value="<?php echo isset($tanggal)?$tanggal:''?>" class="easyui-datebox" labelPosition="left" label="Tanggal:" style="width:100%;">
           </input>
         </div>
-        <div style="float:left; width: 40%; padding-right: 5px; display: none">
+        <div style="float:left; width: 40%; padding-right: 5px; display: block">
           <input name="location_code" id="location_code" labelPosition="left" tipPosition="bottom" label="Lokasi:" style="width:100%">
         </div>
       </div>
@@ -30,7 +30,7 @@
 <div id="toolbar" style="display: none">
     <a href="javascript:void(0)" class="easyui-linkbutton" id="add" onclick="addData()" iconCls="icon-add" plain="true">Add</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="editData()" iconCls="icon-edit" plain="true">Edit</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="rekap()" iconCls="icon-posting" plain="true">End of Day</a>
+<!--    <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="rekap()" iconCls="icon-posting" plain="true">End of Day</a>-->
     <a href="javascript:void(0)" class="easyui-linkbutton" id="edit" onclick="summary()" iconCls="icon-posting" plain="true">Summary</a>
 </div>
 
@@ -69,6 +69,7 @@
 		console.log('lokasi',lokasi)
 		$('#periode').datebox({
 			onSelect: function(date){
+//				filterData();
 				var y = date.getFullYear();
 				var m = date.getMonth()+1;
 				var d = date.getDate();
@@ -99,6 +100,7 @@
 				var d = date.getDate();
 				var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
 				$('#dg').datagrid({url:base_url+"showroom/grid?location_code="+rec.location_code+"&tanggal="+prd});
+//				filterData();
 				$('#dg').datagrid('destroyFilter');
 				$('#dg').datagrid('enableFilter');
 				$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
@@ -108,21 +110,75 @@
 		});
 		$("#location_code").combobox('setValue','<?php echo $location_code?>')
 
-		var dt = new Date();
-		var y = dt.getFullYear();
-		var m = dt.getMonth()+1;
-		var d = dt.getDate();
-		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
-		$("#periode").datebox('setValue',prd);
+//		var dt = $("#periode").datebox('getDate');
+//		var y = dt.getFullYear();
+//		var m = dt.getMonth()+1;
+//		var d = dt.getDate();
+//		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
+    var prd = '<?php echo $tanggal ?>';
+    var prd2 = prd.split("-");
+    console.log(prd);
+		$("#periode").datebox('setValue',prd2[2]+"/"+prd2[1]+"/"+prd2[0]);
+
 		var location_code = $("#location_code").val()
 		$('#dg').datagrid({url:base_url+"showroom/grid?location_code="+location_code+"&tanggal="+prd});
 		$('#dg').datagrid(options);
+//		filterData();
 		$('#dg').datagrid('destroyFilter');
 		$('#dg').datagrid('enableFilter');
 		$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
 		$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
 		$('#dg').datagrid('doFilter');
 	});
+
+	var boleh = true;
+	function filterData(){
+		var date = $("#periode").datebox('getDate');
+		var y = date.getFullYear();
+		var m = date.getMonth()+1;
+		var d = date.getDate();
+		var prd =  y+"-"+(m<10?('0'+m):m)+"-"+(d<10?('0'+d):d);
+		var location_code = $("#location_code").combobox('getValue')
+    if(boleh){
+			boleh = false;
+			$('#dg').datagrid({
+				title:"List Data",
+				method:"POST",
+		    url : base_url+"showroom/grid?location_code="+location_code+"&tanggal="+prd,
+				pagePosition:"top",
+				resizeHandle:"right",
+				resizeEdge:10,
+				pageSize:20,
+				clientPaging: false,
+				remoteFilter: true,
+				rownumbers: false,
+				pagination:true, striped:true, nowrap:false,
+				sortName:"doc_date",
+				sortOrder:"desc",
+				toolbar:"#toolbar",
+				singleSelect:true,
+				columns:[[
+					{field:"docno",   title:"Trx. No",  sortable: true},
+					{field:"doc_date",   title:"Trx Date",  sortable: true},
+					{field:"location_code",   title:"Lokasi",  sortable: true},
+					{field:"store_name",   title:"Store Name",  sortable: true},
+//			{field:"remark",   title:"Remark",  sortable: true},
+					{field:"status",   title:"Status",  sortable: true},
+					{field:"sales_after_tax",   title:"Sls Aft Tax",  sortable: true},
+				]],
+				onLoadSuccess:function(){
+					authbutton();
+				},
+			});
+    }else {
+			$('#dg').datagrid({url: base_url + "showroom/grid?location_code=" + location_code + "&tanggal=" + prd});
+		}
+		$('#dg').datagrid('destroyFilter');
+		$('#dg').datagrid('enableFilter');
+		$('#dg').datagrid('addFilterRule', {field: 'doc_date', op: 'equal', value: prd });
+		$('#dg').datagrid('addFilterRule', {field: 'location_code', op: 'equal', value: location_code });
+		$('#dg').datagrid('doFilter');
+  }
 
 	function getRow() {
 		var row = $('#dg').datagrid('getSelected');

@@ -51,10 +51,10 @@ class Stockopname_model extends CI_Model {
         return $this->db->query($sql)->result();
     }
 
-    function read_data_by_so($code){
-        $q = $this->query3." where barcode='$code' AND s.status IN('OPEN','ON ORDER')";
-        return $this->db->query($q);
-    } 
+    // function read_data_by_so($code){
+    //     $q = $this->query3." where barcode='$code' AND s.status IN('OPEN','ON ORDER')";
+    //     return $this->db->query($q);
+    // }
     function cekOPadjust($barcode,$trx_no,$gondola){
         $q =" SELECT * FROM dtl_gondola WHERE trx_no='$trx_no' AND gondola='$gondola' AND barcode='$barcode' ";
         return $this->db->query($q);

@@ -51,6 +51,7 @@ class IO_Controller extends CI_Controller {
 		$this->SERVER_KEY = "AAAATz6kz4U:APA91bFAORTAspGiYlHlTPYk94YRKUKVawNpWxE7WFNim-LvliGh5Pfv8XdVBeCAL5XjyWwSXJyW2LqJXCihsr6wGR0TBBij53IN-C_x4HRelZ6HYPV9_PVg-zLxygEzG0H8jqZ3u5sa";
 
 		$data = $this->model_autoconfig->get_list_data(1,1000,"kunci","asc","", "");
+		$this->session->set_userdata("auto_config",$data);
 		foreach ($data as $row){
 			$this->data['auto'][$row->kunci] = $row->nilai;
 			$this->session->set_userdata(array($row->kunci => $row->nilai));
@@ -270,7 +271,7 @@ class IO_Controller extends CI_Controller {
 	function getParamGrid_BuilderCompleteQuery($data){
 //		pre($data->table);
 		$page = ($this->input->post('page')) ? $this->input->post('page'):1;
-		$rows = ($this->input->post('rows')) ? $this->input->post('rows'):20;
+		$rows = ($this->input->post('rows')) ? $this->input->post('rows'): isset($data['rows'])?$data['rows']:20;
 		$sort = ($this->input->post('sort')) ? $this->input->post('sort'):$data['sortir'];
 		$order = ($this->input->post('order')) ? $this->input->post('order'):'desc';
 		$fltr= ($this->input->post('filterRules')) ? json_decode($this->input->post('filterRules')):"";
@@ -314,6 +315,11 @@ class IO_Controller extends CI_Controller {
 			}
 		}
 		$this->db->order_by("$sort $order");
+		if(isset($data['group'])){
+			foreach ($data['group'] as $row){
+				$this->db->group_by($row);
+			}
+		}
 		return $this->db->limit($rows,($page-1)*$rows)->get($data['table'])->result();
 	}
 
@@ -752,5 +758,20 @@ class IO_Controller extends CI_Controller {
 //			'notice'=>'this is just a notice'
 //		);
 //		$this->message->set($data);
+	}
+	public function getLocations($golongan="", $cust_class="", $location="", $customer_code=""){
+		$this->db->select("l.location_code, l.description, c.customer_code, c.customer_name, cb.store_code, p.store_name
+						, c.regency_id, c.provinsi_id, c.beda_fp, c.pkp")
+			->from("customer c")
+			->join("location l","l.location_code=c.lokasi_stock")
+			->join("cabang cb","cb.location_code=l.location_code")
+			->join("profile_p p","cb.store_code=p.store_code");
+		if($golongan!="") $this->db->where("c.gol_customer",$golongan);
+		if($cust_class!="") $this->db->where("c.customer_class",$cust_class);
+		if($location!="") {
+			return $this->db->where("l.location_code",$location)->get()->row();
+		}
+		else if($customer_code!="") return $this->db->where("c.customer_code",$customer_code)->get()->row();
+		else return $this->db->get()->result();
 	}
 }

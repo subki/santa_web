@@ -27,7 +27,7 @@
 </style>
 <div id="tt">
   <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between;">
-    <a href="<?php echo base_url('showroom/index')?>" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
+    <a href="#" onclick="backIndex()" id="back" class="easyui-linkbutton" iconCls="icon-undo" style="width:90px; height: 20px;">Back</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-cancel" onclick="batalForm()" style="width:90px; height: 20px;">Batal</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-save" onclick="submitForm()" style="width:90px; height: 20px;">Submit</a>
     <a href="javascript:void(0)" id="submit" class="easyui-linkbutton" iconCls="icon-print" onclick="printForm()" style="width:90px; height: 20px;">Print</a>
@@ -58,28 +58,25 @@
                   </div>
                 </div>
                 <div style="margin-bottom:1px">
-                  <div style="float:left; width: 15%; padding-right: 5px;">
-                    <input name="location_code" id="location_code" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly label="Loc.:" style="width:100%">
-                  </div>
-                  <div style="float:left; width: 15%; padding-right: 5px;">
-                    <input name="customer_code" id="customer_code" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly label="Cust:" style="width:100%">
-                  </div>
-                  <div style="float:left; width: 15%; padding-right: 5px;">
-                    <input name="store_code" id="store_code" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly label="Store:" style="width:100%">
-                  </div>
-                  <div style="float:right; width:55%;">
-                    <input name="store_name" id="store_name" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly label=" " style="width:100%">
-                  </div>
+                    <input name="location_code" id="location_code" labelPosition="top" tipPosition="bottom" label="Location:" style="width:100%">
                 </div>
                 <div style="margin-bottom:1px">
-                  <input name="promoid" id="promoid" labelPosition="top" tipPosition="bottom" label="Nomor Promo:" style="width:100%">
+                  <div style="float:left; width: 20%; padding-right: 5px;">
+                    <input name="customer_code" id="customer_code" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly label="Cust:" style="width:100%">
+                  </div>
+                  <div style="float:left; width: 20%; padding-right: 5px;">
+                    <input name="store_code" id="store_code" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly label="Store:" style="width:100%">
+                  </div>
+                  <div style="float:right; width:60%;">
+                    <input name="store_name" id="store_name" class="easyui-textbox" labelPosition="top" tipPosition="bottom" readonly label=" " style="width:100%">
+                  </div>
                 </div>
               </div>
               <div style="width: 50%; padding: 10px;">
 
                 <div style="margin-bottom:1px">
                   <div style="float:left; width: 50%; padding-right: 5px;">
-                    <input name="gross_sales" id="gross_sales" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Bruto:" style="width:100%">
+                    <input name="promoid" id="promoid" labelPosition="top" tipPosition="bottom" label="Nomor Promo:" style="width:100%">
                   </div>
                   <div style="float:right; width:50%;">
                     <input name="total_discount" id="total_discount" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Discount:" style="width:100%">
@@ -88,7 +85,7 @@
 
                 <div style="margin-bottom:1px">
                   <div style="float:left; width: 50%; padding-right: 5px;">
-                    <input name="sales_after_tax" id="sales_after_tax" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Net Sales:" style="width:100%">
+                    <input name="gross_sales" id="gross_sales" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Bruto:" style="width:100%">
                   </div>
                   <div style="float:right; width:50%;">
                     <input name="payment_sum" id="payment_sum" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Payment:" style="width:100%">
@@ -96,7 +93,7 @@
                 </div>
                 <div style="margin-bottom:1px">
                   <div style="float:left; width: 50%; padding-right: 5px;">
-<!--                    <input name="sales_after_tax" id="sales_after_tax" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Net Sales:" style="width:100%">-->
+                    <input name="sales_after_tax" id="sales_after_tax" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Net Sales:" style="width:100%">
                   </div>
                   <div style="float:right; width:50%;">
                     <input name="payment_ret" id="payment_ret" readonly class="easyui-numberbox" data-options="groupSeparator:',', decimalSeparator:'.'" labelPosition="top" tipPosition="bottom" required="false" label="Kembalian:" style="width:100%">
@@ -293,6 +290,7 @@
 		var header = <?php echo json_encode($header);?>;
 		var product = <?php echo json_encode($products);?>;
 		var promo_header = <?php echo json_encode($promo_header);?>;
+		var lokasi = <?php echo json_encode($locations);?>;
 		var det = <?php echo json_encode($detail);?>;
 		var bayar = <?php echo json_encode($bayar);?>;
 		var promo_detail = <?php echo json_encode($promo_detail);?>;
@@ -385,19 +383,20 @@
 									hitungHeader();
 									ctr++;
 								}else{
-									$.messager.alert("Error","Unit Price Belum tersedia")
+									$.messager.show({title:"Error",msg:"Unit Price Belum tersedia"})
 								}
 							})
 							gakada = false;
 							break;
 						}
 					}
-					if(gakada) $.messager.alert("Error","Product not available")
+					if(gakada) $.messager.show({title:"Error",msg:"Product not available"})
 					tb_scan.textbox('setValue', "");
 					$('#qty').numberbox('setValue',1)
 				}
 			});
 			populatePromo();
+			populateLocation();
 
 			detail_item = det;
 			$('#dg').datagrid('loadData',detail_item);
@@ -415,6 +414,47 @@
 				return false;
 			});
 		});
+		function backIndex() {
+			var v = {};
+			v['location_code'] = '<?php echo $location_code ?>';
+			v['tanggal'] = '<?php echo $tanggal ?>';
+			$.redirect("<?php echo base_url('showroom/index')?>",v,"post","");
+		}
+		function populateLocation() {
+			console.log("lokasi",lokasi);
+			$('#location_code').combobox({
+				valueField:'location_code',
+				textField:'location_code',
+				data:lokasi,
+				prompt:'-Please Select-',
+				validType:'inList["#location_code"]',
+				formatter:function (row) {
+					return '<table width="100%">' +
+            '<tr>' +
+            ' <td width="70%" align="left">'+row.description+'</td>' +
+            ' <td width="30%" align="right">'+row.location_code+'|'+row.customer_code+'|'+row.store_code+'</td>' +
+            '</tr>' +
+            '</table>'
+				},
+				filter: function(q, row){
+					var opts = $(this).combobox('options');
+//					console.log(row.location_code.toLowerCase().indexOf(q.toLowerCase()));
+					return row.description.toLowerCase().indexOf(q.toLowerCase())  >= 0;
+				},
+				onChange:function(newValue, oldValue){
+					if(newValue==="") return
+					for(var p=0;p<lokasi.length;p++){
+						if(lokasi[p].location_code===newValue){
+							$("#customer_code").textbox("setValue",lokasi[p].customer_code)
+							$("#store_code").textbox("setValue",lokasi[p].store_code)
+							$("#store_name").textbox("setValue",lokasi[p].store_name)
+							break;
+						}
+					}
+				}
+			});
+		}
+
 		function populatePromo() {
 			$('#promoid').combobox({
 				valueField:'id',

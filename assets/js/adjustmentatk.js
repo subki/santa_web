@@ -2,7 +2,7 @@ $(document).ready(function () {
     populateLocation(); 
 });
 var options={
-    url: base_url+"Stockadjustment/load_grid", 
+    url: base_url+"Stockatk/load_grid", 
     method:"POST",
     pagePosition:"top",
     resizeHandle:"right",
@@ -74,7 +74,7 @@ var options={
     onExpandRow:function (index, row) {
         var ddv = $(this).datagrid('getRowDetail',index).find('table.ddv');
         ddv.datagrid({
-            url:base_url+"Stockadjustment/load_grid_detail/"+row.docno,
+            url:base_url+"Stockatk/load_grid_detail/"+row.docno,
             method:'GET',
             pagePosition:"top",
             resizeHandle:"right",
@@ -140,7 +140,7 @@ function initGrid() {
 }
 function addnew(){
     clearFormInput();
-    flag = "Stockadjustment/save_data_header";
+    flag = "Stockatk/save_data_header";
         $('#modal_edit').dialog('open').dialog('center').dialog('setTitle','Add Adj'); 
     } 
  
@@ -158,7 +158,7 @@ function Opendialog(){
 
     if(row.status==="OPEN") {
         //clearFormInputDetail();
-        flag = "Stockadjustment/save_data_detail2"; 
+        flag = "Stockatk/save_data_detail2"; 
         $("#docno_idopn").textbox('setValue',row.docno);
         $('#modal_adj_stockopname').dialog('open').dialog('center').dialog('setTitle','Adjustment Stock Opname'); 
     }else{
@@ -259,7 +259,7 @@ function deleteData(id){
           myConfirm("Confirmation", "Anda yakin akan menghapus data ini ?","Ya","Tidak", function (r) {
             if(r==="Ya"){
                    $.post(
-                        base_url+"Stockadjustment/delete_data_header/"+id,function(result){
+                        base_url+"Stockatk/delete_data_header/"+id,function(result){
                             var res = $.parseJSON(result);
                             if (res.status===1){
                                 alert(res.msg)
@@ -276,7 +276,7 @@ function deleteDataDetail(id){
           myConfirm("Confirmation", "Anda yakin akan menghapus data ini ?","Ya","Tidak", function (r) {
             if(r==="Ya"){
                    $.post(
-                        base_url+"Stockadjustment/delete_data_detail/"+id,function(result){
+                        base_url+"Stockatk/delete_data_detail/"+id,function(result){
                             var res = $.parseJSON(result);
                             if (res.status===1){
                                 alert(res.msg)
@@ -294,7 +294,7 @@ function closeAdj(id){
           myConfirm("Confirmation", "Anda yakin akan close dan adjust stock ?","Ya","Tidak", function (r) {
             if(r==="Ya"){
                    $.post(
-                        base_url+"Stockadjustment/adjustclose/"+id,function(result){
+                        base_url+"Stockatk/adjustclose/"+id,function(result){
                             var res = $.parseJSON(result);
                                 if (res.status===1){
                                     alert(res.msg)
@@ -311,16 +311,16 @@ function closeAdj(id){
 function printData(){
     let row = getRow(true);
     if(row===null) return;
-    let urlss = `${base_url}Stockadjustment/report_adjustment/${row.docno}`;
+    let urlss = `${base_url}Stockatk/report_adjustment/${row.docno}`;
     window.open(urlss, '_blank')
 }
 function editData(docno){
     $.ajax({
         type:"POST",
-        url:base_url+"Stockadjustment/read_data_header/"+docno,
+        url:base_url+"Stockatk/read_data_header/"+docno,
         dataType:"html",
         success:function(result){
-            flag = "Stockadjustment/edit_data_header";
+            flag = "Stockatk/edit_data_header";
             // clearFormInput();
           //  console.log(result);
             var data = $.parseJSON(result);
@@ -342,7 +342,7 @@ function addnew2(){
 
     if(row.status==="OPEN") {
          clearFormInputDetail();
-        flag = "Stockadjustment/save_data_detail"; 
+        flag = "Stockatk/save_data_detail"; 
         $("#docno_id").textbox('setValue',row.docno);
         $('#modal_edit_detail').dialog('open').dialog('center').dialog('setTitle','Add Detail Adj'); 
     }else{
@@ -352,11 +352,10 @@ function addnew2(){
 function addnewsku() {
     let row = getRow(true);
     console.log(row)
-    if(row===null) return;     
+    if(row===null) return; 
     $('#modal_edit_detail_sku').dialog('open').dialog('center').dialog('setTitle',' Form Data'); 
-
         $('#tt_sku').datagrid({ 
-            url:base_url+"Stockadjustment/load_gridstock/"+row.outlet_code+"/"+row.periode,
+            url:base_url+"Stockatk/load_gridstock/"+row.outlet_code+"/"+row.periode,
             method:"POST",
             pagePosition:"top",
             resizeHandle:"right",
@@ -439,14 +438,14 @@ function addOpn() {
     console.log(row)
     if(row===null) return; 
 
-    $('#modal_detailOpname').dialog('open').dialog('center').dialog('setTitle',' Form Data'); 
+    $('#modal_detailOpname').dialog('open').dialog('refresh').dialog('center').dialog('setTitle',' Form Data');  
     //             $("#skuopn").textbox('setValue',"");
     //             $("#skucodeopn").textbox('setValue',"");
     //             $("#sohopn").textbox('setValue',"");  
     //             $("#adjustopn").textbox('setValue',""); 
     //             $("#remarkopn").textbox('setValue',""); 
         $('#tt_opn').datagrid({ 
-            url:base_url+"Stockadjustment/load_gridopname/"+row.outlet_code,
+            url:base_url+"Stockatk/load_gridopname/"+row.outlet_code,
             method:"POST", 
             fitColumns: true,
             pagePosition:"top",
@@ -463,15 +462,8 @@ function addOpn() {
             toolbar:'#toolbar1',
             loadFilter: function(data){
                 data.rows = [];
-                if (data.data){
-                    data.rows = data.data;
-                    return data;
-                } else {
-                    return data;
-                }
-            },
-            onLoadSuccess:function(){
-                authbutton();
+                if (data.data) data.rows = data.data;
+                return data;
             },
             columns:[[
                 { field: 'trx_no',      title: 'Nomor Opname',        width: '18%', sortable: true},
@@ -509,8 +501,8 @@ function addOpn() {
                 });
             }
         }); 
-    // $('#tt_opn').datagrid('enableFilter'); 
-   // / $('#tt_opn').datagrid('destroyFilter');
+    $('#tt_opn').datagrid('enableFilter'); 
+    $('#tt_opn').datagrid('destroyFilter');
     $('#tt_opn').datagrid('enableFilter');
-   // / $('#modal_detailOpname').dialog('open').dialog('center').dialog('setTitle',' Form Data'); 
+    $('#modal_detailOpname').dialog('open').dialog('refresh').dialog('center').dialog('setTitle',' Form Data');  
 }

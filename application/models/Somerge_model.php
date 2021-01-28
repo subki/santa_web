@@ -372,9 +372,11 @@ class Somerge_model extends CI_Model {
        $delete_a="DELETE FROM generate_opn where trx_no='$trxno'";
         $delete_b="DELETE FROM generate_opn_varience where trx_no='$trxno'";
         $delete_c="DELETE FROM generate_opndetail where trx_no='$trxno'";
+        $sql="UPDATE adjustment_hdr set status='Open' where trx_no='$trxno'";
                 $this->db->query($delete_a);
                 $this->db->query($delete_b);
-                return $this->db->query($delete_c); 
+                $this->db->query($delete_c);
+                return $this->db->query($sql);
     }
     function generateopn($trxno,$id){ 
         $delete_a="DELETE FROM generate_opn where trx_no='$trxno'";

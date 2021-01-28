@@ -1,7 +1,7 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Stockadjustment extends IO_Controller {
+class Stockatk extends IO_Controller {
 
     function __construct(){
 
@@ -13,15 +13,15 @@ class Stockadjustment extends IO_Controller {
     }
 
     function index(){
-        $data['title']      = 'Stock Adjustment';
+        $data['title']      = 'Stock Adjustment ATK';
         $data['docno']      = $this->model->getAutoNumber();
-        $data['content']    = $this->load->view('vAdjustment',$data,TRUE);
+        $data['content']    = $this->load->view('vAdjustmentatk',$data,TRUE);
 
         $this->load->view('main',$data);
     }
 
     function load_grid(){
-        $f = $this->getParamGrid(" jenis_barang='Barang Jadi'","doc_date");
+        $f = $this->getParamGrid(" jenis_barang='ATK'","doc_date");
         $data = $this->model->get_list_data($f['page'],$f['rows'],'doc_date',$f['order'],$f['role'], $f['app']);
 
         echo json_encode(array(
@@ -32,7 +32,7 @@ class Stockadjustment extends IO_Controller {
         );
     }
     function load_gridstock($location, $prd){
-        $f = $this->getParamGrid(" a.location_code='$location' and a.periode='$prd' and p.jenis_barang='Barang Jadi' ","a.nobar");
+        $f = $this->getParamGrid(" a.location_code='$location' and a.periode='$prd' and a.jenis_barang='ATK' ","a.nobar");
         $data = $this->model->get_list_datastock($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
 
         echo json_encode(array(
@@ -81,7 +81,7 @@ class Stockadjustment extends IO_Controller {
                 'outlet_code' => $input['location_code'],
                 'remark' => $input['remark'],
                 'status' => 'OPEN',
-                'jenis_barang' => 'Barang Jadi',
+                'jenis_barang' => 'ATK',
                 'crtby' => $this->session->userdata('user_id'), 
                 'crtdt' => date('Y-m-d H:i:s')
             ); 

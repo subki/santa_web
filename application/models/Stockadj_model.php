@@ -9,7 +9,7 @@ class Stockadj_model extends CI_Model {
 
     function get_list_data($page,$rows,$sort,$order,$role,$fltr){
         $sql = "create temporary table tmp2 as
-                  select a.docno, a.doc_date, a.periode, a.outlet_code, o.description
+                  select a.docno, a.doc_date, a.periode, a.outlet_code, o.description,a.jenis_barang
                    , a.remark, a.status 
                    , ifnull(u1.fullname,a.crtby) as crtby, ifnull(u2.fullname, a.updby) as updby
                   , a.crtdt tanggal_crt, a.upddt tanggal_upd
@@ -39,12 +39,13 @@ class Stockadj_model extends CI_Model {
 
     function get_list_datastock($page,$rows,$sort,$order,$role,$fltr){ 
              $sql = "create temporary table tmp as 
-                select a.id, a.nobar, a.location_code, a.periode, a.saldo_awal
+                select a.id, a.nobar, a.location_code, a.periode, a.saldo_awal,p.jenis_barang
                   , a.do_masuk, a.do_keluar, a.penyesuaian, a.penjualan, a.pengembalian, a.saldo_akhir
                   , b.description as location_name, c.nmbar
                 from stock a 
                 inner join location b on a.location_code=b.location_code
-                inner join product_barang c on a.nobar=c.nobar ";
+                inner join product_barang c on a.nobar=c.nobar
+                inner join product p on p.id=c.product_id ";
 //        $this->db->query($sql);
 //        $sql = "create temporary table tmp as select * from tmp2 ";
         if($fltr!=''){
@@ -117,10 +118,11 @@ class Stockadj_model extends CI_Model {
 
 
     function getAutoNumber(){
+        $year=date("Ym");
         $sql = "SELECT IFNULL(
                        CONCAT('ADJ',DATE_FORMAT(NOW(),'%y%m'),LPAD(MAX(RIGHT(docno,4))+1,4,'0')),
                        CONCAT('ADJ',DATE_FORMAT(NOW(),'%y%m'),LPAD(1,4,'0'))
-                   ) AS nomor FROM stock_adj order by docno desc";
+                   ) AS nomor FROM stock_adj where periode =$year order by docno desc";
         return $this->db->query($sql)->row()->nomor;
     }
 

@@ -25,6 +25,36 @@ class Somerge extends IO_Controller {
             $data['title'] = 'Add Stockopname';
             $data['docno'] = $docno;
             $data['content'] = $this->load->view('vSomerge_form', $data, TRUE);
+        }elseif($aksi=="editsummary"){
+            $data['title'] = 'View Variance Summary';
+            $data['docno'] = $this->input->get('id');
+            $trxno=$this->input->get('id'); 
+
+                  $special = "b.trx_no='$trxno'";
+                  $total1 = $this->getParamGrid_BuilderComplete(array(
+                      "table"=>"generate_opndetail b",
+                      "sortir"=>"b.varian_type",
+                      "special"=>$special,
+                      "select"=>" b.*,g.location_code", 
+                       "join"=>[ 
+                          "generate_opn g "=>"g.trx_no=b.trx_no"
+                      ]
+                  )); 
+                  $total = $total1->total;
+                  $data = $total1->data;  
+
+            $read = $this->model->read_data($trxno); 
+            $datanet=$this->model->gettotalvariance($trxno);
+            $data['total_itemplus'] =$total1->data[0]->total_item; 
+            $data['total_netplus'] =$total1->data[0]->total_net;
+            $data['total_itemminus'] =$total1->data[1]->total_item; 
+            $data['total_netminus'] =$total1->data[1]->total_net;
+            $data['total_itemvarience'] =$total1->data[0]->total_item-$total1->data[1]->total_item;
+            $data['total_netvarience'] =$datanet->row()->total_net;
+            $data['docno'] = $this->input->get('id');
+            $data['remark'] = $read->row()->remark;
+            $data['status'] = $read->row()->status;
+            $data['content'] = $this->load->view('vSomerge_formsummary', $data, TRUE);
         }else{
             $data['title'] = 'View Variance Stockopname';
             $data['docno'] = $this->input->get('id');
@@ -130,7 +160,7 @@ class Somerge extends IO_Controller {
           echo json_encode(array(
                 "status" => $result, "isError" => ($result==1),
                 "msg" => $msg, "message" => $msg,
-                "data" => $datagondola,
+                "data" => $data,
                 "id"=>$input['trx_no']
             )); 
     }
@@ -525,46 +555,67 @@ class Somerge extends IO_Controller {
 
     function load_grid_variance($docno){
      
-        $special = "b.trx_no='$docno'";
-        $total1 = $this->getParamGrid_BuilderComplete(array(
-            "table"=>"generate_opndetail b",
-            "sortir"=>"b.varian_type",
-            "special"=>$special,
-            "select"=>" b.*,g.location_code", 
-             "join"=>[ 
-                "generate_opn g "=>"g.trx_no=b.trx_no"
-            ]
-        )); 
-        $total = $total1->total;
-        $data = $total1->data; 
+        $f = $this->getParamGrid("","crtdt");  
+        $data = $this->model->get_list_data_variance($docno,$f['page'],$f['rows']," item ",$f['order'],$f['role'], $f['app']);
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
-                "total"=>$total,
+                "total"=>(count($data)>0)?$data[0]->total:0,
                 "data" =>$data)
-        );  
+        );
+
+        // $special = "b.trx_no='$docno'";
+        // $total1 = $this->getParamGrid_BuilderComplete(array(
+        //     "table"=>"generate_opndetail b",
+        //     "sortir"=>"b.varian_type",
+        //     "special"=>$special,
+        //     "select"=>" b.*,g.location_code", 
+        //      "join"=>[ 
+        //         "generate_opn g "=>"g.trx_no=b.trx_no"
+        //     ]
+        // )); 
+        // $total = $total1->total;
+        // $data = $total1->data; 
+        // echo json_encode(array(
+        //         "status" => 1,
+        //         "msg" => "OK",
+        //         "total"=>$total,
+        //         "data" =>$data)
+        // );  
     }
     function load_varian_detail($trx_no,$type){ 
+        $special = "a.trx_no='$trx_no'"; 
       if($type=='Minus'){
-        $special = "a.trx_no='$trx_no' and b.varian_type='$type' AND a.qty < 0 ";
+        $join = " b.trx_no=a.trx_no AND b.varience > 0"; 
+      }
+      elseif($type=='Plus'){
+        $join = " b.trx_no=a.trx_no AND b.varience < 0";
       }
       else{
-        $special = "a.trx_no='$trx_no' and b.varian_type='$type' AND a.qty >= 0 ";
-      }
-        $total1 = $this->getParamGrid_BuilderComplete(array(
-                "table"=>"generate_opn_varience a",
-                "sortir"=>"a.item,a.qty",
-                "special"=>$special,
-                "select"=>"a.*,b.*",
-                "join"=>[
-                    "generate_opndetail b"=>" a.trx_no=b.trx_no", 
-                ],
-                "posisi"=>["INNER"]
-            ));
+        $join = " b.trx_no=a.trx_no";
+      } 
+       $total1 = $this->getParamGrid_BuilderComplete(array(
+            "table"=>"adjustment_hdr a",
+            "sortir"=>"b.item,b.qty",
+            "special"=>$special,
+            "select"=>"b.* ",
+            "join"=>[
+                "adjustment_dtl b"=>$join , 
+            ],
+            "posisi"=>["LEFT"]
+        ));
+        // $total1 = $this->getParamGrid_BuilderComplete(array(
+        //         "table"=>"generate_opn_varience a",
+        //         "sortir"=>"a.item,a.qty",
+        //         "special"=>$special,
+        //         "select"=>"a.*,b.*",
+        //         "join"=>[
+        //             "generate_opndetail b"=>" a.trx_no=b.trx_no", 
+        //         ],
+        //         "posisi"=>["INNER"]
+        //     ));
             $total = $total1->total;
-            $data = $total1->data; 
-//        $f = $this->getParamGrid("","doc_date");
-//        $data = $this->model->get_list_data($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+            $data = $total1->data;  
         echo json_encode(array(
                 "status" => 1,
                 "msg" => "OK",
@@ -697,6 +748,11 @@ class Somerge extends IO_Controller {
     function generateopn(){    
             $trxno = $this->input->post("trxno");   
             $read = $this->model->read_discount($trxno);
+            $readopname = $this->model->read_data($trxno);  
+            $location_code=$readopname->row()->on_loc;
+            $store_code=$readopname->row()->store_code;
+            $periode=$this->formatDate("Ym",$readopname->row()->trx_date);
+            
             if($read->num_rows()==0){
               $id='';
             }else{
@@ -704,6 +760,7 @@ class Somerge extends IO_Controller {
             } 
                 $result = 0;
                 $msg="OK";
+                $this->model->insert_datadetail($periode,$location_code,$store_code,$trxno); 
                 $this->model->generateopn($trxno,$id);  
             echo json_encode(array(
                 "status" => $result, "isError" => ($result==1),
@@ -835,19 +892,7 @@ class Somerge extends IO_Controller {
                 "data" =>$data)
         );
     }
-
-    function load_gridlocation(){ 
-        $f = $this->getParamGrid("","location_code");
-        $data = $this->model->get_list_dataloc($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app'],0,$gol);
-
-        echo json_encode(array(
-                "status" => 1,
-                "msg" => "OK",
-                "total"=>(count($data)>0)?$data[0]->total:0,
-                "data" =>$data)
-        );
-
-    }
+ 
 
     function solose($code){ 
          try { 

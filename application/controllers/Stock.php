@@ -50,9 +50,21 @@ class Stock extends IO_Controller {
 
     function get_location(){
         $store = $this->session->userdata('store_code');
-        $special = " location_code in(select location_code from cabang where store_code='$store')";
-        $f = $this->getParamGrid($special,"location_code");
+//        $special = " location_code in(select location_code from cabang where store_code='$store')";
+//        $f = $this->getParamGrid($special,"location_code");
+        $f = $this->getParamGrid("","location_code");
         $data = $this->model_delivery->get_location($f['page'],$f['rows'],$f['sort'],$f['order'],$f['role'], $f['app']);
+//
+//			$total1 = $this->getParamGrid_BuilderComplete(array(
+//				"tipe"=>"total",
+//				"table"=>"location l",
+//				"sortir"=>"docno",
+//				"special"=>["location_code"=>$lokasi,'doc_date'=>$tanggal],
+//				"select"=>"l.location_code, l.description as location_name",
+//				"join"=>["profile_p b"=>"b.default_stock_l=a.location_code"]
+//			));
+//			$total = $total1->total;
+//			$data = $total1->data;
 
         echo json_encode(array(
                 "status" => 1,

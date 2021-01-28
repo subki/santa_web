@@ -97,7 +97,7 @@ class Salesorder_model extends CI_Model {
         if($prefix=="") return "";
         $sql = "SELECT IFNULL(CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(MAX(RIGHT(docno,6))+1,6,'0')),
                 CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y'),'.',LPAD(1,6,'0'))) AS nomor 
-                FROM sales_order_header WHERE LEFT(docno,7)= CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y')) ORDER BY docno DESC";
+                FROM sales_order_header WHERE LEFT(docno,8)= CONCAT('$prefix',DATE_FORMAT(NOW(),'%Y')) ORDER BY docno DESC";
         return $this->db->query($sql)->row()->nomor;
     }
 

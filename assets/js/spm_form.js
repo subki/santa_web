@@ -19,25 +19,25 @@ var options={
     },
     columns:[[
         {field:"trx_no",   title:"Base On Taking#", sortable: true},
-        {field:"varian_type",   title:"Variance Type", sortable: true},
-        {field:"location_code",   title:"Location", sortable: true}, 
+        {field:"variant_type",   title:"Variance Type", sortable: true},
+        {field:"on_loc",   title:"Location", sortable: true}, 
         {field: "total_item", title: "Total Item" , sortable: true, formatter:function (index, row) {
                 return numberFormat(row.total_item);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}},  
         {field: "total_qty", title: "Total Qty(Pcs)" , sortable: true, formatter:function (index, row) {
                 return numberFormat(row.total_qty);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}},  
-        {field: "total_gross", title: "Total Gross Retail" , sortable: true, formatter:function (index, row) {
-                return numberFormat(row.total_gross);
+        {field: "total_retail", title: "Total Gross Retail" , sortable: true, formatter:function (index, row) {
+                return numberFormat(row.total_retail);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}},  
-        {field: "total_disc", title: "Total Disc" , sortable: true, formatter:function (index, row) {
-                return numberFormat(row.total_disc);
+        {field: "diskon", title: "Total Disc" , sortable: true, formatter:function (index, row) {
+                return numberFormat(row.diskon);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}},  
-        {field: "total_net", title: "Total Net Retail" , sortable: true, formatter:function (index, row) {
-                return numberFormat(row.total_net);
+        {field: "nett", title: "Total Net Retail" , sortable: true, formatter:function (index, row) {
+                return numberFormat(row.nett);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}}, 
         {field:"action", title:"Action",    width:"20%", formatter: function(value, row){  
-               var a = `<a href="#" onclick="variance('`+row.varian_type+`');" title="Edit" class="easyui-tooltip l-btn l-btn-small l-btn-plain" group="" id="generatevariance">
+               var a = `<a href="#" onclick="variance('`+row.variant_type+`');" title="Edit" class="easyui-tooltip l-btn l-btn-small l-btn-plain" group="" id="generatevariance">
                         <span class="l-btn-left l-btn-icon-left" style="margin-top: -5px;">
                         <span class="l-btn-text l-btn-empty">&nbsp;</span>
                         <span class="l-btn-icon icon-eye">&nbsp;</span></span>
@@ -104,23 +104,23 @@ function variance(type){
         columns: [
         [
             {field: "item", title: "Product Code", width: '10%', formatter:function(index, row){return row.item;}, sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
-            {field: "product_code", title: "Level Category", width: '12%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
+            {field: "product_code", title: "Product Code", width: '12%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
            // {field: "tipe", title: "Type", width: '5%', sortable: true, editor: {type: 'textbox', options:{disabled:true}}},
             {field: "qty" , title: "Qty", width: '8%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}},
             {field: "uom", title: "UOM", width: '5%', sortable: true, editor: {type: 'textbox',options:{disabled:true}}}, 
-            {field: "retail_price",  title: "Retail Price",width: '8%', sortable: true, formatter:function (index, row) {
-                return numberFormat(row.retail_price);
+            {field: "unit_retail",  title: "Retail Price",width: '8%', sortable: true, formatter:function (index, row) {
+                return numberFormat(row.unit_retail);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}}, 
             {field: "disc",title: "Disc%",  sortable: true, editor: {type: 'textbox',options:{disabled:false}}}, 
             {field: "disc_amaount", title: "Disc Amount",width: '8%', sortable: true, formatter:function (index, row) {
                 return numberFormat(row.disc_amaount);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}}, 
             {field: "margin",title: "Margin%",  sortable: true, editor: {type: 'textbox',options:{disabled:false}}},    
-            {field: "margin_amaount", title: "Margin Amount",width: '8%', sortable: true, formatter:function (index, row) {
+            {field: "margin_amaount", title: "Margin Amount",width: '10%', sortable: true, formatter:function (index, row) {
                 return numberFormat(row.margin_amaount);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}}, 
-            {field: "subtotal_retail", title: "Subtotal",width: '15%', sortable: true, formatter:function (index, row) {
-                return numberFormat(row.subtotal_retail);
+            {field: "total_cost",align:"right", title: "Subtotal",width: '15%', sortable: true, formatter:function (index, row) {
+                return numberFormat(row.total_cost);
             }, editor: {type: 'textbox',options:{disabled:true,readonly:true}}}, 
         ]],
         onSuccess: function (index, row) {
@@ -132,7 +132,7 @@ function variance(type){
             }
             $('#dg').edatagrid('reload');
             $('#dgdetail').edatagrid('reload');
-            reload_header()
+            //reload_header()
         },
         onError: function (index, e) {
             $.messager.show({
@@ -141,6 +141,9 @@ function variance(type){
             });
         }
     }) 
+    $('#dgdetail').datagrid('enableFilter'); 
+    $('#dgdetail').datagrid('destroyFilter');
+    $('#dgdetail').datagrid('enableFilter');
 } 
 
 function getRow() {

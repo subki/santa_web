@@ -384,8 +384,8 @@
             <div id="sm"></div>
         </div>
         <div class="main-body f-full">
-            <div id="main-layout" class="easyui-layout" fit="true" style="width: 100%; height: 600px;">
-                <div region="center" title=" " style="padding:5px;" id="contentdata">
+            <div id="main-layout" class="easyui-layout" fit="true" style="width: 100%; height: 720px;">
+                <div region="center" title="<?php echo isset($title_main) ? $title_main : ' ' ?>" style="padding:5px;" id="contentdata">
                     <?php if(isset($content)) echo $content; ?>
                 </div>
             </div>
